@@ -1,0 +1,2987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuoteHub | The Sierra Suites</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1e40af;
+            --primary-light: #3b82f6;
+            --primary-ultralight: #eff6ff;
+            --secondary-color: #f97316;
+            --secondary-dark: #ea580c;
+            --secondary-light: #fb923c;
+            --text-color: #1e293b;
+            --text-light: #64748b;
+            --text-lighter: #94a3b8;
+            --bg-dark: #0f172a;
+            --bg-darker: #0a0f1c;
+            --bg-card: #ffffff;
+            --white: #ffffff;
+            --black: #000000;
+            --navy-dark: #0f172a;
+            --navy-darker: #0a0f1c;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --info-color: #3b82f6;
+            --border-color: #e2e8f0;
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            --radius-sm: 0.25rem;
+            --radius: 0.5rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+            --radius-full: 9999px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
+            background-color: #f8fafc;
+            line-height: 1.6;
+        }
+
+        /* Dashboard Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles - Updated to match dashboard */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-dark);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+            border-right: 1px solid var(--border-color);
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--white);
+        }
+        
+        .logo img {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius);
+        }
+        
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .user-profile {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .avatar img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .user-info h4 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+            color: var(--white);
+        }
+        
+        .user-info p {
+            font-size: 0.875rem;
+            color: var(--text-lighter);
+            margin-bottom: 0;
+        }
+        
+        .profile-menu {
+            background: none;
+            border: none;
+            color: var(--text-lighter);
+            cursor: pointer;
+            margin-left: auto;
+            transition: color 0.2s ease;
+        }
+        
+        .profile-menu:hover {
+            color: var(--white);
+        }
+        
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 1rem 0;
+            flex-grow: 1;
+        }
+        
+        .sidebar-nav li {
+            margin-bottom: 0.25rem;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-lighter);
+            text-decoration: none;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .sidebar-nav a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+        
+        .sidebar-nav a.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--white);
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .sidebar-nav i {
+            width: 1.25rem;
+            margin-right: 0.75rem;
+            text-align: center;
+        }
+        
+        .nav-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 0.5rem 0;
+        }
+        
+        .sidebar-footer {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .upgrade-card {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+            color: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            text-align: center;
+        }
+        
+        .upgrade-card h4 {
+            margin-bottom: 0.5rem;
+            color: var(--white);
+        }
+        
+        .upgrade-card p {
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8fafc;
+        }
+        
+        /* Topbar - Updated to match dashboard */
+        .topbar {
+            background-color: var(--bg-dark);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--white);
+            cursor: pointer;
+            font-size: 1.25rem;
+            display: none;
+        }
+        
+        .topbar h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0;
+        }
+        
+        .status-filter select {
+            padding: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            font-family: inherit;
+        }
+        
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .search-bar {
+            position: relative;
+        }
+        
+        .search-bar i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-lighter);
+        }
+        
+        .search-bar input {
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            width: 250px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .search-bar input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.6s ease;
+        }
+        
+        .btn:hover:before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            padding: 0;
+            border-radius: 50%;
+            background-color: transparent;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-icon:hover {
+            background-color: var(--bg-dark);
+            color: var(--primary-color);
+        }
+        
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        
+        .notification-btn:hover {
+            color: var(--white);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger-color);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* Content Container */
+        .content-container {
+            padding: 1.5rem;
+            flex-grow: 1;
+            overflow-y: auto;
+            background-color: #f8fafc;
+        }
+        
+        .estimates-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .summary-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        
+        .summary-card h4 {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+        
+        .summary-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        .estimates-table {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .table-header {
+            background-color: #f8fafc;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .table-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr auto;
+            gap: 1rem;
+            padding: 1rem;
+            align-items: center;
+        }
+        
+        .table-body .table-row {
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .table-body .table-row:last-child {
+            border-bottom: none;
+        }
+        
+        .table-col {
+            font-size: 0.875rem;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-badge.draft {
+            background-color: rgba(107, 114, 128, 0.2);
+            color: #6b7280;
+        }
+        
+        .status-badge.sent {
+            background-color: rgba(59, 130, 246, 0.2);
+            color: var(--info-color);
+        }
+        
+        .status-badge.approved {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--success-color);
+        }
+        
+        .status-badge.rejected {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--danger-color);
+        }
+        
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .page-numbers {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .page-numbers span {
+            width: 2.25rem;
+            height: 2.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            cursor: pointer;
+            background-color: var(--white);
+            color: var(--text-color);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .page-numbers span.active {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+        
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .modal-content.large {
+            max-width: 1000px;
+        }
+        
+        .modal-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .modal-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.125rem;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+        
+        /* Form Styles */
+        .estimate-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-group label {
+            font-weight: 500;
+            color: var(--text-color);
+            font-size: 0.875rem;
+        }
+        
+        .form-group select, 
+        .form-group input, 
+        .form-group textarea {
+            padding: 0.625rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-family: inherit;
+            background-color: var(--white);
+            color: var(--text-color);
+        }
+        
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .line-items {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .line-items-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .line-items-table {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        
+        .line-items-table .table-header {
+            display: grid;
+            grid-template-columns: 1fr 2fr 0.5fr 1fr 1fr auto;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            background-color: #f8fafc;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .line-items-table .table-body {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .line-item {
+            display: grid;
+            grid-template-columns: 1fr 2fr 0.5fr 1fr 1fr auto;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+        }
+        
+        .line-item:last-child {
+            border-bottom: none;
+        }
+        
+        .line-item input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+        }
+        
+        .line-items-footer {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .estimate-totals {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .totals-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .grand-total {
+            font-weight: 700;
+            font-size: 1.125rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        /* View Estimate Styles */
+        .estimate-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .details-client,
+        .details-project,
+        .details-items,
+        .details-notes {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .details-items h4,
+        .details-notes h4 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .items-table th,
+        .items-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .items-table th {
+            background-color: #f8fafc;
+            font-weight: 600;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                height: 100vh;
+                z-index: 100;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .search-bar input {
+                width: 200px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .topbar-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-bar input {
+                width: 100%;
+            }
+            
+            .estimates-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .table-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            
+            .table-col.actions {
+                display: flex;
+                gap: 0.5rem;
+            }
+            
+            .content-container {
+                padding: 1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .estimates-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+            }
+            
+            .line-items-table .table-header,
+            .line-item {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+        }
+
+        /* New styles for additional features */
+        .feature-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+        
+        .feature-badge.pro {
+            background-color: rgba(59, 130, 246, 0.2);
+            color: var(--info-color);
+        }
+        
+        .feature-badge.enterprise {
+            background-color: rgba(139, 92, 246, 0.2);
+            color: #8b5cf6;
+        }
+        
+        .template-card {
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .template-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow);
+        }
+        
+        .template-card.selected {
+            border-color: var(--primary-color);
+            background-color: var(--primary-ultralight);
+        }
+        
+        .ai-generate-btn {
+            margin-top: 1rem;
+            width: 100%;
+        }
+        
+        .rate-library-item {
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+        
+        .rate-library-item:hover {
+            background-color: #f8fafc;
+        }
+        
+        .email-composer {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .email-composer .form-group {
+            margin-bottom: 0;
+        }
+        
+        .subscription-upgrade-prompt {
+            background-color: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="dashboard-page">
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="https://raw.githubusercontent.com/luckyask/test/main/TSS%20logo%20white.jpg" alt="The Sierra Suites Logo">
+                    <span>The Sierra Suites</span>
+                </div>
+                <button class="sidebar-toggle">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+            
+            <div class="user-profile">
+                <div class="avatar">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="User Avatar" id="userAvatar">
+                </div>
+                <div class="user-info">
+                    <h4 id="userName">Loading...</h4>
+                    <p id="userCompany">Loading...</p>
+                </div>
+                <button class="profile-menu">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="dashboard.html">
+                            <i class="fas fa-home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-project-diagram"></i>
+                            <span>Projects</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="taskflow.html">
+                            <i class="fas fa-tasks"></i>
+                            <span>TaskFlow</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="fieldsnap.html">
+                            <i class="fas fa-camera"></i>
+                            <span>FieldSnap</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="quotehub.html">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                            <span>QuoteHub</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="reportcenter.html">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>ReportCenter</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="upgrade-card">
+                    <h4>Upgrade to Pro</h4>
+                    <p>Unlock professional estimate templates and client approval tracking</p>
+                    <a href="pricing.html" class="btn btn-primary btn-small">Upgrade Now</a>
+                </div>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2>QuoteHub</h2>
+                    <div class="status-filter">
+                        <select id="status-filter">
+                            <option value="all">All Statuses</option>
+                            <option value="draft">Draft</option>
+                            <option value="sent">Sent</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search estimates..." id="search-input">
+                    </div>
+                    <div class="topbar-actions">
+                        <button class="btn btn-primary" id="new-estimate-btn">
+                            <i class="fas fa-plus"></i>
+                            New Estimate
+                        </button>
+                        <button class="notification-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge">1</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="content-container">
+                <div class="estimates-summary">
+                    <div class="summary-card">
+                        <h4>Total Estimates</h4>
+                        <p class="summary-value" id="total-estimates">0</p>
+                    </div>
+                    <div class="summary-card">
+                        <h4>Pending Approval</h4>
+                        <p class="summary-value" id="pending-estimates">0</p>
+                    </div>
+                    <div class="summary-card">
+                        <h4>Approved</h4>
+                        <p class="summary-value" id="approved-estimates">0</p>
+                    </div>
+                    <div class="summary-card">
+                        <h4>Total Value</h4>
+                        <p class="summary-value" id="total-value">$0</p>
+                    </div>
+                </div>
+                
+                <div class="estimates-table">
+                    <div class="table-header">
+                        <div class="table-row">
+                            <div class="table-col">Estimate #</div>
+                            <div class="table-col">Project</div>
+                            <div class="table-col">Client</div>
+                            <div class="table-col">Date</div>
+                            <div class="table-col">Amount</div>
+                            <div class="table-col">Status</div>
+                            <div class="table-col">Actions</div>
+                        </div>
+                    </div>
+                    <div class="table-body" id="estimates-list">
+                        <div class="table-row">
+                            <div class="table-col" colspan="7" style="text-align: center; padding: 20px;">
+                                Loading estimates...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pagination">
+                    <button class="btn btn-outline" id="prev-page" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                        Previous
+                    </button>
+                    <div class="page-numbers" id="page-numbers">
+                        <span class="active">1</span>
+                    </div>
+                    <button class="btn btn-outline" id="next-page">
+                        Next
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Estimate Modal -->
+    <div class="modal" id="estimate-modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Create New Estimate</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="estimate-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="estimate-project">Project</label>
+                            <select id="estimate-project">
+                                <option value="">Select Project</option>
+                                <!-- Projects will be loaded dynamically -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="estimate-client">Client</label>
+                            <select id="estimate-client">
+                                <option value="">Select Client</option>
+                                <!-- Clients will be loaded dynamically -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="estimate-template">Template</label>
+                            <select id="estimate-template">
+                                <option value="">Select Template</option>
+                                <option value="kitchen">Kitchen Renovation</option>
+                                <option value="bathroom">Bathroom Remodel</option>
+                                <option value="residential">Residential Addition</option>
+                                <option value="commercial">Commercial Build</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="estimate-date">Estimate Date</label>
+                            <input type="date" id="estimate-date">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="estimate-notes">Notes (optional)</label>
+                        <textarea id="estimate-notes" placeholder="Add any notes for this estimate"></textarea>
+                    </div>
+                    
+                    <div class="line-items">
+                        <div class="line-items-header">
+                            <h4>Line Items</h4>
+                            <div>
+                                <button class="btn btn-outline btn-small" id="browse-rate-library" style="display: none;">
+                                    <i class="fas fa-book"></i>
+                                    Browse Rate Library
+                                </button>
+                                <button class="btn btn-outline btn-small" id="add-line-item">
+                                    <i class="fas fa-plus"></i>
+                                    Add Item
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="line-items-table">
+                            <div class="table-header">
+                                <div class="table-col">Item</div>
+                                <div class="table-col">Description</div>
+                                <div class="table-col">Qty</div>
+                                <div class="table-col">Unit Price</div>
+                                <div class="table-col">Total</div>
+                                <div class="table-col">Actions</div>
+                            </div>
+                            <div class="table-body" id="line-items-body">
+                                <div class="table-row line-item">
+                                    <div class="table-col">
+                                        <input type="text" placeholder="Item name" class="item-name">
+                                    </div>
+                                    <div class="table-col">
+                                        <input type="text" placeholder="Description" class="item-description">
+                                    </div>
+                                    <div class="table-col">
+                                        <input type="number" placeholder="Qty" class="item-quantity" value="1" min="1">
+                                    </div>
+                                    <div class="table-col">
+                                        <input type="number" placeholder="Unit Price" class="item-price" value="0" min="0" step="0.01">
+                                    </div>
+                                    <div class="table-col item-total">
+                                        <span>$0.00</span>
+                                    </div>
+                                    <div class="table-col actions">
+                                        <button class="btn btn-icon remove-item">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                        <button class="btn btn-icon request-quote" style="display: none;">
+                                            <i class="fas fa-file-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="line-items-footer">
+                            <button class="btn btn-link" id="add-discount">
+                                <i class="fas fa-plus-circle"></i>
+                                Add Discount
+                            </button>
+                            <button class="btn btn-link" id="add-tax">
+                                <i class="fas fa-plus-circle"></i>
+                                Add Tax
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="estimate-totals">
+                        <div class="totals-row">
+                            <span>Subtotal</span>
+                            <span id="subtotal">$0.00</span>
+                        </div>
+                        <div class="totals-row discount-row" style="display: none;">
+                            <span>Discount (<span id="discount-percentage">0</span>%)</span>
+                            <span id="discount-amount">-$0.00</span>
+                        </div>
+                        <div class="totals-row tax-row" style="display: none;">
+                            <span>Tax (<span id="tax-percentage">0</span>%)</span>
+                            <span id="tax-amount">$0.00</span>
+                        </div>
+                        <div class="totals-row grand-total">
+                            <span>Total</span>
+                            <span id="grand-total">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="save-draft">Save Draft</button>
+                <button class="btn btn-primary" id="create-proposal" style="display: none;">
+                    <i class="fas fa-magic"></i>
+                    Create Proposal
+                </button>
+                <button class="btn btn-primary" id="save-send">Save & Send to Client</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Estimate Modal -->
+    <div class="modal" id="view-estimate-modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Estimate Details</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="estimate-details">
+                    <div class="details-header">
+                        <div>
+                            <h4 id="view-estimate-number">EST-2023-0012</h4>
+                            <p id="view-estimate-date">Date: Jun 10, 2023</p>
+                        </div>
+                        <div>
+                            <span class="status-badge" id="view-estimate-status">Approved</span>
+                        </div>
+                    </div>
+                    
+                    <div class="details-client">
+                        <h4>Client Information</h4>
+                        <p id="view-client-name">Johnson Family</p>
+                        <p id="view-client-email">johnson@example.com</p>
+                        <p id="view-client-phone">(555) 123-4567</p>
+                    </div>
+                    
+                    <div class="details-project">
+                        <h4>Project</h4>
+                        <p id="view-project-name">Maple Street Renovation</p>
+                        <p id="view-project-address">123 Maple St, Anytown, USA</p>
+                    </div>
+                    
+                    <div class="details-items">
+                        <h4>Line Items</h4>
+                        <table class="items-table">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="view-items-list">
+                                <!-- Items will be loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="details-totals">
+                        <div class="totals-row">
+                            <span>Subtotal</span>
+                            <span id="view-subtotal">$0.00</span>
+                        </div>
+                        <div class="totals-row">
+                            <span>Discount</span>
+                            <span id="view-discount">-$0.00</span>
+                        </div>
+                        <div class="totals-row">
+                            <span>Tax</span>
+                            <span id="view-tax">$0.00</span>
+                        </div>
+                        <div class="totals-row grand-total">
+                            <span>Total</span>
+                            <span id="view-grand-total">$0.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="details-notes">
+                        <h4>Notes</h4>
+                        <p id="view-notes">No notes provided.</p>
+                    </div>
+
+                    <div class="change-orders-section" style="display: none;">
+                        <h4>Change Orders</h4>
+                        <button class="btn btn-outline btn-small" id="create-change-order">Create Change Order</button>
+                        <div id="change-orders-list"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="download-pdf">
+                    <i class="fas fa-download"></i>
+                    Download PDF
+                </button>
+                <button class="btn btn-primary" id="send-for-signature" style="display: none;">
+                    <i class="fas fa-signature"></i>
+                    Send for Signature
+                </button>
+                <button class="btn btn-primary" id="send-reminder">
+                    <i class="fas fa-envelope"></i>
+                    Send Reminder
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rate Library Modal -->
+    <div class="modal" id="rate-library-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Rate Library</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search rate library..." id="rate-library-search">
+                </div>
+                <div id="rate-library-items" style="max-height: 300px; overflow-y: auto; margin-top: 1rem;">
+                    <!-- Rate library items will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="close-rate-library">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Proposal Builder Modal -->
+    <div class="modal" id="proposal-builder-modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Create Proposal</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="proposal-template">Template</label>
+                    <select id="proposal-template">
+                        <option value="">Select Template</option>
+                        <!-- Templates will be loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="proposal-content">Content</label>
+                    <textarea id="proposal-content" rows="10" placeholder="Proposal content will be generated here..."></textarea>
+                </div>
+                <button class="btn btn-outline ai-generate-btn" id="ai-generate">
+                    <i class="fas fa-robot"></i>
+                    Generate with AI
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="save-proposal-draft">Save Draft</button>
+                <button class="btn btn-primary" id="send-proposal">Send Proposal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Composer Modal -->
+    <div class="modal" id="email-composer-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Send Estimate to Client</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="email-composer">
+                    <div class="form-group">
+                        <label for="email-to">To</label>
+                        <input type="email" id="email-to" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="email-subject">Subject</label>
+                        <input type="text" id="email-subject" value="Estimate for Your Project">
+                    </div>
+                    <div class="form-group">
+                        <label for="email-body">Message</label>
+                        <textarea id="email-body" rows="6">Dear Client,\n\nPlease find attached the estimate for your project.\n\nThank you,\nThe Sierra Suites Team</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="include-pdf" checked>
+                            Include PDF attachment
+                        </label>
+                    </div>
+                    <div class="form-group" id="docusign-option" style="display: none;">
+                        <label>
+                            <input type="checkbox" id="request-signature">
+                            Request electronic signature (DocuSign)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-email">Cancel</button>
+                <button class="btn btn-primary" id="send-email">Send Email</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Order Modal -->
+    <div class="modal" id="change-order-modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Create Change Order</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="change-order-reason">Reason for Change</label>
+                    <textarea id="change-order-reason" rows="3" placeholder="Explain the reason for this change order..."></textarea>
+                </div>
+                <div class="line-items">
+                    <div class="line-items-header">
+                        <h4>Change Items</h4>
+                        <button class="btn btn-outline btn-small" id="add-change-item">
+                            <i class="fas fa-plus"></i>
+                            Add Item
+                        </button>
+                    </div>
+                    <div class="line-items-table">
+                        <div class="table-header">
+                            <div class="table-col">Item</div>
+                            <div class="table-col">Description</div>
+                            <div class="table-col">Qty</div>
+                            <div class="table-col">Unit Price</div>
+                            <div class="table-col">Total</div>
+                            <div class="table-col">Actions</div>
+                        </div>
+                        <div class="table-body" id="change-items-body">
+                            <div class="table-row line-item">
+                                <div class="table-col">
+                                    <input type="text" placeholder="Item name" class="item-name">
+                                </div>
+                                <div class="table-col">
+                                    <input type="text" placeholder="Description" class="item-description">
+                                </div>
+                                <div class="table-col">
+                                    <input type="number" placeholder="Qty" class="item-quantity" value="1" min="1">
+                                </div>
+                                <div class="table-col">
+                                    <input type="number" placeholder="Unit Price" class="item-price" value="0" min="0" step="0.01">
+                                </div>
+                                <div class="table-col item-total">
+                                    <span>$0.00</span>
+                                </div>
+                                <div class="table-col actions">
+                                    <button class="btn btn-icon remove-item">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="estimate-totals">
+                    <div class="totals-row grand-total">
+                        <span>Change Order Total</span>
+                        <span id="change-order-total">$0.00</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="save-change-order-draft">Save Draft</button>
+                <button class="btn btn-primary" id="send-change-order">Send Change Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subcontractor Quote Modal -->
+    <div class="modal" id="subcontractor-quote-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Request Quote from Subcontractor</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="subcontractor-select">Subcontractor</label>
+                    <select id="subcontractor-select">
+                        <option value="">Select Subcontractor</option>
+                        <!-- Subcontractors will be loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quote-item-description">Item Description</label>
+                    <textarea id="quote-item-description" rows="3" readonly></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="quote-notes">Notes (optional)</label>
+                    <textarea id="quote-notes" rows="3" placeholder="Add any specific notes for the subcontractor..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-quote-request">Cancel</button>
+                <button class="btn btn-primary" id="send-quote-request">Send Request</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        const supabaseUrl = 'https://qjswuwcqyzeuqqqltykz.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3d1d2NxeXpldXFxcWx0eWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMjk0MDUsImV4cCI6MjA3MDgwNTQwNX0.qgH8DMJEoJVuYOXSyr0RAj01Yt7bBR8EYL6qw3YXyAs';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        
+        // Global variables
+        let currentUser = null;
+        let currentCompanyId = null;
+        let currentSubscriptionTier = 'starter';
+        let estimates = [];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        
+        // DOM Content Loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            setupEventListeners();
+        });
+        
+        // Initialize the application
+        async function initializeApp() {
+            try {
+                // Get current session
+                const { data: { session } } = await supabase.auth.getSession();
+                
+                if (session) {
+                    currentUser = session.user;
+                    await loadUserCompanyData();
+                    await loadEstimates();
+                    await loadProjects();
+                    await loadClients();
+                    
+                    // Update user info in sidebar
+                    updateUserInfo();
+                } else {
+                    // If no session, show a message but don't redirect
+                    showNotification('Please log in to access all features', 'info');
+                    
+                    // You can still try to load public data or show a login prompt
+                    document.getElementById('estimates-list').innerHTML = `
+                        <div class="table-row">
+                            <div class="table-col" colspan="7" style="text-align: center; padding: 20px;">
+                                Please log in to view estimates.
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error initializing app:', error);
+                showNotification('Error initializing application', 'error');
+            }
+        }
+        
+        // Update user info in sidebar
+        async function updateUserInfo() {
+            try {
+                if (!currentUser) return;
+                
+                // Get user profile
+                const { data: profile, error } = await supabase
+                    .from('user_profiles')
+                    .select('first_name, last_name, company_name')
+                    .eq('id', currentUser.id)
+                    .single();
+                
+                if (error) {
+                    console.error('Error fetching profile:', error);
+                    return;
+                }
+                
+                // Update DOM elements
+                document.getElementById('userName').textContent = `${profile.first_name} ${profile.last_name}`;
+                document.getElementById('userCompany').textContent = profile.company_name;
+                
+            } catch (error) {
+                console.error('Error updating user info:', error);
+            }
+        }
+        
+        // Load user company data
+        async function loadUserCompanyData() {
+            if (!currentUser) return;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('user_companies')
+                    .select('company_id, companies(subscription_tier)')
+                    .eq('user_id', currentUser.id)
+                    .single();
+                
+                if (data) {
+                    currentCompanyId = data.company_id;
+                    currentSubscriptionTier = data.companies.subscription_tier || 'starter';
+                    
+                    // Show/hide features based on subscription
+                    updateFeatureVisibility();
+                }
+            } catch (error) {
+                console.error('Error loading user company data:', error);
+            }
+        }
+        
+        // Update feature visibility based on subscription tier
+        function updateFeatureVisibility() {
+            // Rate Library (Pro/Enterprise)
+            if (hasFeature('rate_library')) {
+                document.getElementById('browse-rate-library').style.display = 'inline-block';
+            }
+            
+            // Proposal Builder (Enterprise)
+            if (hasFeature('proposal_builder')) {
+                document.getElementById('create-proposal').style.display = 'inline-block';
+            }
+            
+            // Subcontractor Quoting (Enterprise)
+            if (hasFeature('subcontractor_quoting')) {
+                document.querySelectorAll('.request-quote').forEach(el => {
+                    el.style.display = 'inline-block';
+                });
+            }
+            
+            // DocuSign (Enterprise)
+            if (hasFeature('docusign')) {
+                document.getElementById('send-for-signature').style.display = 'inline-block';
+                document.getElementById('docusign-option').style.display = 'block';
+            }
+            
+            // Change Orders (Enterprise)
+            if (hasFeature('change_orders')) {
+                document.querySelector('.change-orders-section').style.display = 'block';
+            }
+        }
+        
+        // Check if user has access to a feature
+        function hasFeature(feature) {
+            const featuresByTier = {
+                'rate_library': ['pro', 'enterprise'],
+                'proposal_builder': ['enterprise'],
+                'change_orders': ['enterprise'],
+                'subcontractor_quoting': ['enterprise'],
+                'in_app_email': ['pro', 'enterprise'],
+                'docusign': ['enterprise']
+            };
+            return featuresByTier[feature]?.includes(currentSubscriptionTier);
+        }
+        
+        // Show upgrade prompt for features
+        function showUpgradePrompt(feature) {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Upgrade Required</h3>
+                        <button class="modal-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="subscription-upgrade-prompt">
+                            <h4>This feature requires a ${feature === 'proposal_builder' || feature === 'change_orders' || feature === 'subcontractor_quoting' || feature === 'docusign' ? 'Enterprise' : 'Pro'} plan</h4>
+                            <p>Upgrade your subscription to access this feature and more.</p>
+                            <a href="pricing.html" class="btn btn-primary">View Plans</a>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline" id="close-upgrade-prompt">Maybe Later</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            modal.querySelector('.modal-close').addEventListener('click', () => {
+                modal.remove();
+            });
+            
+            modal.querySelector('#close-upgrade-prompt').addEventListener('click', () => {
+                modal.remove();
+            });
+        }
+        
+        // Load estimates from Supabase
+        async function loadEstimates() {
+            if (!currentCompanyId) return;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('estimates')
+                    .select(`*, projects(name), clients(name, email, phone)`)
+                    .eq('company_id', currentCompanyId)
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Error loading estimates:', error);
+                    showNotification('Failed to load estimates', 'error');
+                    return;
+                }
+                
+                estimates = data || [];
+                renderEstimates();
+                updateSummary();
+            } catch (error) {
+                console.error('Error loading estimates:', error);
+                showNotification('Failed to load estimates', 'error');
+            }
+        }
+        
+        // Load projects for dropdown
+        async function loadProjects() {
+            if (!currentCompanyId) return;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('projects')
+                    .select('id, name')
+                    .eq('company_id', currentCompanyId)
+                    .eq('status', 'active')
+                    .order('name');
+                
+                if (error) {
+                    console.error('Error loading projects:', error);
+                    return;
+                }
+                
+                const projectSelect = document.getElementById('estimate-project');
+                projectSelect.innerHTML = '<option value="">Select Project</option>';
+                
+                data.forEach(project => {
+                    const option = document.createElement('option');
+                    option.value = project.id;
+                    option.textContent = project.name;
+                    projectSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading projects:', error);
+            }
+        }
+        
+        // Load clients for dropdown
+        async function loadClients() {
+            if (!currentCompanyId) return;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('clients')
+                    .select('id, name')
+                    .eq('company_id', currentCompanyId)
+                    .order('name');
+                
+                if (error) {
+                    console.error('Error loading clients:', error);
+                    return;
+                }
+                
+                const clientSelect = document.getElementById('estimate-client');
+                clientSelect.innerHTML = '<option value="">Select Client</option>';
+                
+                data.forEach(client => {
+                    const option = document.createElement('option');
+                    option.value = client.id;
+                    option.textContent = client.name;
+                    clientSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading clients:', error);
+            }
+        }
+        
+        // Load rate library items
+        async function loadRateLibrary() {
+            if (!currentCompanyId) return;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('rate_libraries')
+                    .select('*')
+                    .eq('company_id', currentCompanyId)
+                    .order('name');
+                
+                if (error) {
+                    console.error('Error loading rate library:', error);
+                    return;
+                }
+                
+                const rateLibraryContainer = document.getElementById('rate-library-items');
+                rateLibraryContainer.innerHTML = '';
+                
+                if (data.length === 0) {
+                    rateLibraryContainer.innerHTML = '<p>No rate library items found. Add some in your company settings.</p>';
+                    return;
+                }
+                
+                data.forEach(item => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'rate-library-item';
+                    itemElement.innerHTML = `
+                        <strong>${item.name}</strong> - $${item.unit_price}
+                        <div>${item.description || 'No description'}</div>
+                    `;
+                    itemElement.addEventListener('click', () => {
+                        // Add this item to the estimate
+                        addLineItemFromLibrary(item);
+                        document.getElementById('rate-library-modal').classList.remove('active');
+                    });
+                    rateLibraryContainer.appendChild(itemElement);
+                });
+            } catch (error) {
+                console.error('Error loading rate library:', error);
+            }
+        }
+        
+        // Add line item from rate library
+        function addLineItemFromLibrary(item) {
+            const lineItemsBody = document.getElementById('line-items-body');
+            const newItem = document.createElement('div');
+            newItem.className = 'table-row line-item';
+            newItem.innerHTML = `
+                <div class="table-col">
+                    <input type="text" placeholder="Item name" class="item-name" value="${item.name}">
+                </div>
+                <div class="table-col">
+                    <input type="text" placeholder="Description" class="item-description" value="${item.description || ''}">
+                </div>
+                <div class="table-col">
+                    <input type="number" placeholder="Qty" class="item-quantity" value="1" min="1">
+                </div>
+                <div class="table-col">
+                    <input type="number" placeholder="Unit Price" class="item-price" value="${item.unit_price}" min="0" step="0.01">
+                </div>
+                <div class="table-col item-total">
+                    <span>$${item.unit_price.toFixed(2)}</span>
+                </div>
+                <div class="table-col actions">
+                    <button class="btn btn-icon remove-item">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button class="btn btn-icon request-quote" style="${hasFeature('subcontractor_quoting') ? 'display: inline-block;' : 'display: none;'}">
+                        <i class="fas fa-file-alt"></i>
+                    </button>
+                </div>
+            `;
+            lineItemsBody.appendChild(newItem);
+            
+            // Add event listeners
+            newItem.querySelector('.item-quantity').addEventListener('input', () => {
+                calculateLineItemTotal(newItem);
+                calculateEstimateTotal();
+            });
+            
+            newItem.querySelector('.item-price').addEventListener('input', () => {
+                calculateLineItemTotal(newItem);
+                calculateEstimateTotal();
+            });
+            
+            newItem.querySelector('.remove-item').addEventListener('click', () => {
+                newItem.remove();
+                calculateEstimateTotal();
+            });
+            
+            if (hasFeature('subcontractor_quoting')) {
+                newItem.querySelector('.request-quote').addEventListener('click', () => {
+                    const itemName = newItem.querySelector('.item-name').value;
+                    const itemDescription = newItem.querySelector('.item-description').value;
+                    openSubcontractorQuoteModal(itemName, itemDescription);
+                });
+            }
+            
+            calculateEstimateTotal();
+        }
+        
+        // Load subcontractors for dropdown
+        async function loadSubcontractors() {
+            if (!currentCompanyId) return;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('contacts')
+                    .select('id, name, email')
+                    .eq('company_id', currentCompanyId)
+                    .eq('contact_type', 'Subcontractor')
+                    .order('name');
+                
+                if (error) {
+                    console.error('Error loading subcontractors:', error);
+                    return;
+                }
+                
+                const subcontractorSelect = document.getElementById('subcontractor-select');
+                subcontractorSelect.innerHTML = '<option value="">Select Subcontractor</option>';
+                
+                data.forEach(subcontractor => {
+                    const option = document.createElement('option');
+                    option.value = subcontractor.id;
+                    option.textContent = `${subcontractor.name} (${subcontractor.email})`;
+                    subcontractorSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading subcontractors:', error);
+            }
+        }
+        
+        // Load proposal templates
+        async function loadProposalTemplates() {
+            if (!currentCompanyId) return;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('proposal_templates')
+                    .select('*')
+                    .eq('company_id', currentCompanyId)
+                    .order('name');
+                
+                if (error) {
+                    console.error('Error loading proposal templates:', error);
+                    return;
+                }
+                
+                const templateSelect = document.getElementById('proposal-template');
+                templateSelect.innerHTML = '<option value="">Select Template</option>';
+                
+                data.forEach(template => {
+                    const option = document.createElement('option');
+                    option.value = template.id;
+                    option.textContent = template.name;
+                    templateSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading proposal templates:', error);
+            }
+        }
+        
+        // Render estimates in the table
+        function renderEstimates() {
+            const estimatesList = document.getElementById('estimates-list');
+            
+            // Apply filters
+            const statusFilter = document.getElementById('status-filter').value;
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            
+            let filteredEstimates = estimates;
+            
+            if (statusFilter !== 'all') {
+                filteredEstimates = filteredEstimates.filter(estimate => estimate.status === statusFilter);
+            }
+            
+            if (searchTerm) {
+                filteredEstimates = filteredEstimates.filter(estimate => 
+                    estimate.estimate_number.toLowerCase().includes(searchTerm) ||
+                    (estimate.projects && estimate.projects.name.toLowerCase().includes(searchTerm)) ||
+                    (estimate.clients && estimate.clients.name.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            // Pagination
+            const totalPages = Math.ceil(filteredEstimates.length / itemsPerPage);
+            updatePagination(totalPages);
+            
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const paginatedEstimates = filteredEstimates.slice(startIndex, startIndex + itemsPerPage);
+            
+            if (paginatedEstimates.length === 0) {
+                estimatesList.innerHTML = `
+                    <div class="table-row">
+                        <div class="table-col" colspan="7" style="text-align: center; padding: 20px;">
+                            No estimates found
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            estimatesList.innerHTML = '';
+            
+            paginatedEstimates.forEach(estimate => {
+                const row = document.createElement('div');
+                row.className = 'table-row';
+                row.innerHTML = `
+                    <div class="table-col">${estimate.estimate_number}</div>
+                    <div class="table-col">${estimate.projects?.name || 'N/A'}</div>
+                    <div class="table-col">${estimate.clients?.name || 'N/A'}</div>
+                    <div class="table-col">${new Date(estimate.estimate_date).toLocaleDateString()}</div>
+                    <div class="table-col">$${estimate.total_amount.toLocaleString()}</div>
+                    <div class="table-col">
+                        <span class="status-badge ${estimate.status}">${estimate.status.charAt(0).toUpperCase() + estimate.status.slice(1)}</span>
+                    </div>
+                    <div class="table-col actions">
+                        <button class="btn btn-icon view-estimate" data-id="${estimate.id}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-icon download-estimate" data-id="${estimate.id}">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="btn btn-icon more-actions" data-id="${estimate.id}">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                `;
+                estimatesList.appendChild(row);
+            });
+            
+            // Add event listeners to action buttons
+            document.querySelectorAll('.view-estimate').forEach(button => {
+                button.addEventListener('click', () => viewEstimate(button.dataset.id));
+            });
+            
+            document.querySelectorAll('.download-estimate').forEach(button => {
+                button.addEventListener('click', () => downloadEstimate(button.dataset.id));
+            });
+            
+            document.querySelectorAll('.more-actions').forEach(button => {
+                button.addEventListener('click', () => showMoreActions(button.dataset.id));
+            });
+        }
+        
+        // Update summary cards
+        function updateSummary() {
+            const totalEstimates = estimates.length;
+            const pendingEstimates = estimates.filter(e => e.status === 'pending').length;
+            const approvedEstimates = estimates.filter(e => e.status === 'approved').length;
+            const totalValue = estimates.reduce((sum, estimate) => sum + estimate.total_amount, 0);
+            
+            document.getElementById('total-estimates').textContent = totalEstimates;
+            document.getElementById('pending-estimates').textContent = pendingEstimates;
+            document.getElementById('approved-estimates').textContent = approvedEstimates;
+            document.getElementById('total-value').textContent = `$${totalValue.toLocaleString()}`;
+        }
+        
+        // Update pagination controls
+        function updatePagination(totalPages) {
+            const pageNumbers = document.getElementById('page-numbers');
+            const prevButton = document.getElementById('prev-page');
+            const nextButton = document.getElementById('next-page');
+            
+            pageNumbers.innerHTML = '';
+            
+            for (let i = 1; i <= totalPages; i++) {
+                const page = document.createElement('span');
+                page.textContent = i;
+                if (i === currentPage) {
+                    page.className = 'active';
+                }
+                page.addEventListener('click', () => {
+                    currentPage = i;
+                    renderEstimates();
+                });
+                pageNumbers.appendChild(page);
+            }
+            
+            prevButton.disabled = currentPage === 1;
+            nextButton.disabled = currentPage === totalPages || totalPages === 0;
+            
+            prevButton.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderEstimates();
+                }
+            });
+            
+            nextButton.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderEstimates();
+                }
+            });
+        }
+        
+        // View estimate details
+        async function viewEstimate(estimateId) {
+            try {
+                const { data, error } = await supabase
+                    .from('estimates')
+                    .select(`*, projects(name, address), clients(name, email, phone), estimate_items(*)`)
+                    .eq('id', estimateId)
+                    .single();
+                
+                if (error) {
+                    console.error('Error loading estimate:', error);
+                    showNotification('Failed to load estimate details', 'error');
+                    return;
+                }
+                
+                // Populate the view modal
+                document.getElementById('view-estimate-number').textContent = data.estimate_number;
+                document.getElementById('view-estimate-date').textContent = `Date: ${new Date(data.estimate_date).toLocaleDateString()}`;
+                document.getElementById('view-estimate-status').textContent = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+                document.getElementById('view-estimate-status').className = `status-badge ${data.status}`;
+                
+                document.getElementById('view-client-name').textContent = data.clients?.name || 'N/A';
+                document.getElementById('view-client-email').textContent = data.clients?.email || 'N/A';
+                document.getElementById('view-client-phone').textContent = data.clients?.phone || 'N/A';
+                
+                document.getElementById('view-project-name').textContent = data.projects?.name || 'N/A';
+                document.getElementById('view-project-address').textContent = data.projects?.address || 'N/A';
+                
+                // Populate line items
+                const itemsList = document.getElementById('view-items-list');
+                itemsList.innerHTML = '';
+                
+                if (data.estimate_items && data.estimate_items.length > 0) {
+                    data.estimate_items.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${item.description}</td>
+                            <td>${item.quantity}</td>
+                            <td>$${item.unit_price.toFixed(2)}</td>
+                            <td>$${(item.quantity * item.unit_price).toFixed(2)}</td>
+                        `;
+                        itemsList.appendChild(row);
+                    });
+                }
+                
+                // Populate totals
+                document.getElementById('view-subtotal').textContent = `$${data.subtotal.toFixed(2)}`;
+                document.getElementById('view-discount').textContent = `-$${data.discount_amount.toFixed(2)}`;
+                document.getElementById('view-tax').textContent = `$${data.tax_amount.toFixed(2)}`;
+                document.getElementById('view-grand-total').textContent = `$${data.total_amount.toFixed(2)}`;
+                
+                // Populate notes
+                document.getElementById('view-notes').textContent = data.notes || 'No notes provided.';
+                
+                // Load change orders if Enterprise plan
+                if (hasFeature('change_orders')) {
+                    await loadChangeOrders(estimateId);
+                }
+                
+                // Show the modal
+                document.getElementById('view-estimate-modal').classList.add('active');
+            } catch (error) {
+                console.error('Error viewing estimate:', error);
+                showNotification('Failed to load estimate details', 'error');
+            }
+        }
+        
+        // Load change orders for an estimate
+        async function loadChangeOrders(estimateId) {
+            try {
+                const { data, error } = await supabase
+                    .from('change_orders')
+                    .select('*')
+                    .eq('estimate_id', estimateId)
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Error loading change orders:', error);
+                    return;
+                }
+                
+                const changeOrdersList = document.getElementById('change-orders-list');
+                changeOrdersList.innerHTML = '';
+                
+                if (data.length === 0) {
+                    changeOrdersList.innerHTML = '<p>No change orders found.</p>';
+                    return;
+                }
+                
+                data.forEach(changeOrder => {
+                    const changeOrderElement = document.createElement('div');
+                    changeOrderElement.className = 'change-order-item';
+                    changeOrderElement.innerHTML = `
+                        <div><strong>Change Order #${changeOrder.id.slice(-4)}</strong> - $${changeOrder.total_amount.toFixed(2)}</div>
+                        <div>Status: <span class="status-badge ${changeOrder.status}">${changeOrder.status}</span></div>
+                        <div>Reason: ${changeOrder.reason || 'No reason provided'}</div>
+                    `;
+                    changeOrdersList.appendChild(changeOrderElement);
+                });
+            } catch (error) {
+                console.error('Error loading change orders:', error);
+            }
+        }
+        
+        // Download estimate as PDF
+        async function downloadEstimate(estimateId) {
+            try {
+                const { data, error } = await supabase
+                    .from('estimates')
+                    .select(`*, projects(name, address), clients(name, email, phone), estimate_items(*), companies(name, address, phone, email)`)
+                    .eq('id', estimateId)
+                    .single();
+                
+                if (error) {
+                    console.error('Error loading estimate:', error);
+                    showNotification('Failed to download estimate', 'error');
+                    return;
+                }
+                
+                // Create PDF
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // Add company info
+                doc.setFontSize(16);
+                doc.text(data.companies.name, 20, 20);
+                doc.setFontSize(10);
+                doc.text(data.companies.address, 20, 30);
+                doc.text(`Phone: ${data.companies.phone} | Email: ${data.companies.email}`, 20, 40);
+                
+                // Add estimate info
+                doc.setFontSize(14);
+                doc.text(`ESTIMATE: ${data.estimate_number}`, 20, 60);
+                doc.setFontSize(10);
+                doc.text(`Date: ${new Date(data.estimate_date).toLocaleDateString()}`, 20, 70);
+                doc.text(`Status: ${data.status.charAt(0).toUpperCase() + data.status.slice(1)}`, 20, 80);
+                
+                // Add client info
+                doc.text(`Client: ${data.clients.name}`, 20, 100);
+                doc.text(`Email: ${data.clients.email}`, 20, 110);
+                doc.text(`Phone: ${data.clients.phone}`, 20, 120);
+                
+                // Add project info
+                doc.text(`Project: ${data.projects.name}`, 20, 140);
+                doc.text(`Address: ${data.projects.address}`, 20, 150);
+                
+                // Add line items
+                doc.setFontSize(12);
+                doc.text('Description', 20, 170);
+                doc.text('Qty', 120, 170);
+                doc.text('Unit Price', 140, 170);
+                doc.text('Total', 170, 170);
+                
+                let y = 180;
+                data.estimate_items.forEach(item => {
+                    doc.setFontSize(10);
+                    doc.text(item.description, 20, y);
+                    doc.text(item.quantity.toString(), 120, y);
+                    doc.text(`$${item.unit_price.toFixed(2)}`, 140, y);
+                    doc.text(`$${(item.quantity * item.unit_price).toFixed(2)}`, 170, y);
+                    y += 10;
+                });
+                
+                // Add totals
+                y += 10;
+                doc.text(`Subtotal: $${data.subtotal.toFixed(2)}`, 140, y);
+                y += 10;
+                doc.text(`Discount: -$${data.discount_amount.toFixed(2)}`, 140, y);
+                y += 10;
+                doc.text(`Tax: $${data.tax_amount.toFixed(2)}`, 140, y);
+                y += 10;
+                doc.setFontSize(12);
+                doc.text(`TOTAL: $${data.total_amount.toFixed(2)}`, 140, y);
+                
+                // Add notes
+                if (data.notes) {
+                    y += 20;
+                    doc.setFontSize(10);
+                    doc.text('Notes:', 20, y);
+                    y += 10;
+                    const splitNotes = doc.splitTextToSize(data.notes, 170);
+                    doc.text(splitNotes, 20, y);
+                }
+                
+                // Save the PDF
+                doc.save(`Estimate-${data.estimate_number}.pdf`);
+            } catch (error) {
+                console.error('Error downloading estimate:', error);
+                showNotification('Failed to download estimate', 'error');
+            }
+        }
+        
+        // Show more actions menu
+        function showMoreActions(estimateId) {
+            // This would typically show a context menu with options like Edit, Duplicate, Delete, etc.
+            // For simplicity, we'll just show an alert
+            alert(`More actions for estimate ${estimateId}`);
+        }
+        
+        // Open subcontractor quote modal
+        function openSubcontractorQuoteModal(itemName, itemDescription) {
+            if (!hasFeature('subcontractor_quoting')) {
+                showUpgradePrompt('subcontractor_quoting');
+                return;
+            }
+            
+            document.getElementById('quote-item-description').value = `${itemName}: ${itemDescription}`;
+            document.getElementById('subcontractor-quote-modal').classList.add('active');
+        }
+        
+        // Open proposal builder modal
+        function openProposalBuilderModal() {
+            if (!hasFeature('proposal_builder')) {
+                showUpgradePrompt('proposal_builder');
+                return;
+            }
+            
+            document.getElementById('proposal-builder-modal').classList.add('active');
+        }
+        
+        // Open email composer modal
+        function openEmailComposer(clientEmail) {
+            if (!hasFeature('in_app_email')) {
+                showUpgradePrompt('in_app_email');
+                return;
+            }
+            
+            document.getElementById('email-to').value = clientEmail;
+            document.getElementById('email-composer-modal').classList.add('active');
+        }
+        
+        // Open change order modal
+        function openChangeOrderModal() {
+            if (!hasFeature('change_orders')) {
+                showUpgradePrompt('change_orders');
+                return;
+            }
+            
+            document.getElementById('change-order-modal').classList.add('active');
+        }
+        
+        // Calculate line item total
+        function calculateLineItemTotal(lineItem) {
+            const quantity = parseFloat(lineItem.querySelector('.item-quantity').value) || 0;
+            const price = parseFloat(lineItem.querySelector('.item-price').value) || 0;
+            const total = quantity * price;
+            
+            lineItem.querySelector('.item-total span').textContent = `$${total.toFixed(2)}`;
+        }
+        
+        // Calculate estimate total
+        function calculateEstimateTotal() {
+            let subtotal = 0;
+            
+            document.querySelectorAll('.line-item').forEach(item => {
+                const quantity = parseFloat(item.querySelector('.item-quantity').value) || 0;
+                const price = parseFloat(item.querySelector('.item-price').value) || 0;
+                subtotal += quantity * price;
+            });
+            
+            const discountPercentage = parseFloat(document.getElementById('discount-percentage').textContent) || 0;
+            const discountAmount = subtotal * (discountPercentage / 100);
+            
+            const taxPercentage = parseFloat(document.getElementById('tax-percentage').textContent) || 0;
+            const taxAmount = (subtotal - discountAmount) * (taxPercentage / 100);
+            
+            const total = subtotal - discountAmount + taxAmount;
+            
+            document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('discount-amount').textContent = `-$${discountAmount.toFixed(2)}`;
+            document.getElementById('tax-amount').textContent = `$${taxAmount.toFixed(2)}`;
+            document.getElementById('grand-total').textContent = `$${total.toFixed(2)}`;
+        }
+        
+        // Add new line item
+        function addLineItem() {
+            const lineItemsBody = document.getElementById('line-items-body');
+            const newItem = document.createElement('div');
+            newItem.className = 'table-row line-item';
+            newItem.innerHTML = `
+                <div class="table-col">
+                    <input type="text" placeholder="Item name" class="item-name">
+                </div>
+                <div class="table-col">
+                    <input type="text" placeholder="Description" class="item-description">
+                </div>
+                <div class="table-col">
+                    <input type="number" placeholder="Qty" class="item-quantity" value="1" min="1">
+                </div>
+                <div class="table-col">
+                    <input type="number" placeholder="Unit Price" class="item-price" value="0" min="0" step="0.01">
+                </div>
+                <div class="table-col item-total">
+                    <span>$0.00</span>
+                </div>
+                <div class="table-col actions">
+                    <button class="btn btn-icon remove-item">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button class="btn btn-icon request-quote" style="${hasFeature('subcontractor_quoting') ? 'display: inline-block;' : 'display: none;'}">
+                        <i class="fas fa-file-alt"></i>
+                    </button>
+                </div>
+            `;
+            lineItemsBody.appendChild(newItem);
+            
+            // Add event listeners to the new inputs
+            newItem.querySelector('.item-quantity').addEventListener('input', () => {
+                calculateLineItemTotal(newItem);
+                calculateEstimateTotal();
+            });
+            
+            newItem.querySelector('.item-price').addEventListener('input', () => {
+                calculateLineItemTotal(newItem);
+                calculateEstimateTotal();
+            });
+            
+            newItem.querySelector('.remove-item').addEventListener('click', () => {
+                newItem.remove();
+                calculateEstimateTotal();
+            });
+            
+            if (hasFeature('subcontractor_quoting')) {
+                newItem.querySelector('.request-quote').addEventListener('click', () => {
+                    const itemName = newItem.querySelector('.item-name').value;
+                    const itemDescription = newItem.querySelector('.item-description').value;
+                    openSubcontractorQuoteModal(itemName, itemDescription);
+                });
+            }
+        }
+        
+        // Add discount
+        function addDiscount() {
+            const discountPercentage = prompt('Enter discount percentage:', '5');
+            if (discountPercentage !== null && !isNaN(discountPercentage)) {
+                document.getElementById('discount-percentage').textContent = discountPercentage;
+                document.querySelector('.discount-row').style.display = 'flex';
+                calculateEstimateTotal();
+            }
+        }
+        
+        // Add tax
+        function addTax() {
+            const taxPercentage = prompt('Enter tax percentage:', '7');
+            if (taxPercentage !== null && !isNaN(taxPercentage)) {
+                document.getElementById('tax-percentage').textContent = taxPercentage;
+                document.querySelector('.tax-row').style.display = 'flex';
+                calculateEstimateTotal();
+            }
+        }
+        
+        // Save estimate to Supabase
+        async function saveEstimate(status, callback) {
+            try {
+                const projectId = document.getElementById('estimate-project').value;
+                const clientId = document.getElementById('estimate-client').value;
+                const template = document.getElementById('estimate-template').value;
+                const date = document.getElementById('estimate-date').value;
+                const notes = document.getElementById('estimate-notes').value;
+                
+                if (!projectId || !clientId || !date) {
+                    showNotification('Please fill in all required fields', 'error');
+                    return;
+                }
+                
+                // Calculate totals
+                let subtotal = 0;
+                const lineItems = [];
+                
+                document.querySelectorAll('.line-item').forEach(item => {
+                    const name = item.querySelector('.item-name').value;
+                    const description = item.querySelector('.item-description').value;
+                    const quantity = parseFloat(item.querySelector('.item-quantity').value) || 0;
+                    const price = parseFloat(item.querySelector('.item-price').value) || 0;
+                    const total = quantity * price;
+                    
+                    if (name && quantity > 0 && price > 0) {
+                        lineItems.push({
+                            name,
+                            description,
+                            quantity,
+                            unit_price: price,
+                            total
+                        });
+                        subtotal += total;
+                    }
+                });
+                
+                if (lineItems.length === 0) {
+                    showNotification('Please add at least one line item', 'error');
+                    return;
+                }
+                
+                const discountPercentage = parseFloat(document.getElementById('discount-percentage').textContent) || 0;
+                const discountAmount = subtotal * (discountPercentage / 100);
+                
+                const taxPercentage = parseFloat(document.getElementById('tax-percentage').textContent) || 0;
+                const taxAmount = (subtotal - discountAmount) * (taxPercentage / 100);
+                
+                const totalAmount = subtotal - discountAmount + taxAmount;
+                
+                // Generate estimate number
+                const estimateCount = estimates.length + 1;
+                const estimateNumber = `EST-${new Date().getFullYear()}-${estimateCount.toString().padStart(4, '0')}`;
+                
+                // Save to Supabase
+                const { data: estimateData, error: estimateError } = await supabase
+                    .from('estimates')
+                    .insert({
+                        estimate_number: estimateNumber,
+                        company_id: currentCompanyId,
+                        project_id: projectId,
+                        client_id: clientId,
+                        estimate_date: date,
+                        subtotal: subtotal,
+                        discount_percentage: discountPercentage,
+                        discount_amount: discountAmount,
+                        tax_percentage: taxPercentage,
+                        tax_amount: taxAmount,
+                        total_amount: totalAmount,
+                        notes: notes,
+                        status: status,
+                        created_by: currentUser.id
+                    })
+                    .select()
+                    .single();
+                
+                if (estimateError) {
+                    console.error('Error saving estimate:', estimateError);
+                    showNotification('Failed to save estimate', 'error');
+                    return;
+                }
+                
+                // Save line items
+                for (const item of lineItems) {
+                    const { error: itemError } = await supabase
+                        .from('estimate_items')
+                        .insert({
+                            estimate_id: estimateData.id,
+                            name: item.name,
+                            description: item.description,
+                            quantity: item.quantity,
+                            unit_price: item.unit_price,
+                            total: item.total
+                        });
+                    
+                    if (itemError) {
+                        console.error('Error saving line item:', itemError);
+                    }
+                }
+                
+                showNotification('Estimate saved successfully!', 'success');
+                
+                if (callback) {
+                    callback(estimateData.id);
+                } else {
+                    document.getElementById('estimate-modal').classList.remove('active');
+                }
+                
+                // Reload estimates
+                await loadEstimates();
+            } catch (error) {
+                console.error('Error saving estimate:', error);
+                showNotification('Failed to save estimate', 'error');
+            }
+        }
+        
+        // Generate AI proposal
+        async function generateAIProposal() {
+            try {
+                // This would call your backend API which integrates with OpenAI
+                // For now, we'll simulate a response
+                showNotification('Generating proposal with AI...', 'info');
+                
+                // Simulate API call delay
+                setTimeout(() => {
+                    const sampleProposal = `PROPOSAL
+
+Project: ${document.getElementById('estimate-project').options[document.getElementById('estimate-project').selectedIndex].text}
+Client: ${document.getElementById('estimate-client').options[document.getElementById('estimate-client').selectedIndex].text}
+
+Dear Client,
+
+We are pleased to present this proposal for your construction project. Our team has carefully reviewed your requirements and prepared the following plan.
+
+SCOPE OF WORK:
+- Professional execution of all items listed in the estimate
+- High-quality materials and craftsmanship
+- Project management and coordination
+- Cleanup and disposal of debris
+
+TIMELINE:
+We anticipate completing your project within 4-6 weeks from the start date, pending weather conditions and material availability.
+
+TERMS AND CONDITIONS:
+- Payment: 50% deposit upon signing, 50% upon completion
+- Warranty: 1-year warranty on all workmanship
+- Change orders: Any changes to the scope will be documented and priced separately
+
+Thank you for considering The Sierra Suites for your project. We look forward to working with you.
+
+Sincerely,
+The Sierra Suites Team`;
+                    
+                    document.getElementById('proposal-content').value = sampleProposal;
+                    showNotification('Proposal generated successfully!', 'success');
+                }, 2000);
+            } catch (error) {
+                console.error('Error generating AI proposal:', error);
+                showNotification('Failed to generate proposal', 'error');
+            }
+        }
+        
+        // Send email with estimate
+        async function sendEmail(estimateId, toEmail, subject, body, includePdf, requestSignature) {
+            try {
+                showNotification('Sending email...', 'info');
+                
+                // This would integrate with your email service (SendGrid, Supabase Email, etc.)
+                // For now, we'll simulate the process
+                
+                // Log the email
+                const { error: emailError } = await supabase
+                    .from('email_logs')
+                    .insert({
+                        company_id: currentCompanyId,
+                        to_email: toEmail,
+                        subject: subject,
+                        body: body,
+                        status: 'sent'
+                    });
+                
+                if (emailError) {
+                    console.error('Error logging email:', emailError);
+                }
+                
+                // If DocuSign is requested
+                if (requestSignature && hasFeature('docusign')) {
+                    // This would integrate with DocuSign API
+                    // For now, we'll simulate the process
+                    
+                    const { error: docusignError } = await supabase
+                        .from('document_signatures')
+                        .insert({
+                            document_type: 'estimate',
+                            document_id: estimateId,
+                            status: 'pending',
+                            signer_email: toEmail
+                        });
+                    
+                    if (docusignError) {
+                        console.error('Error creating DocuSign record:', docusignError);
+                    }
+                    
+                    showNotification('Estimate sent for electronic signature', 'success');
+                } else {
+                    showNotification('Email sent successfully!', 'success');
+                }
+                
+                // Update estimate status to "sent"
+                const { error: updateError } = await supabase
+                    .from('estimates')
+                    .update({ status: 'sent' })
+                    .eq('id', estimateId);
+                
+                if (updateError) {
+                    console.error('Error updating estimate status:', updateError);
+                }
+                
+                document.getElementById('email-composer-modal').classList.remove('active');
+                
+                // Reload estimates to update status
+                await loadEstimates();
+            } catch (error) {
+                console.error('Error sending email:', error);
+                showNotification('Failed to send email', 'error');
+            }
+        }
+        
+        // Request subcontractor quote
+        async function requestSubcontractorQuote(subcontractorId, itemDescription, notes) {
+            try {
+                showNotification('Requesting quote...', 'info');
+                
+                // This would create a record in the subcontractor_quotes table
+                const { error } = await supabase
+                    .from('subcontractor_quotes')
+                    .insert({
+                        subcontractor_id: subcontractorId,
+                        description: itemDescription,
+                        notes: notes,
+                        status: 'requested'
+                    });
+                
+                if (error) {
+                    console.error('Error requesting quote:', error);
+                    showNotification('Failed to request quote', 'error');
+                    return;
+                }
+                
+                showNotification('Quote request sent to subcontractor!', 'success');
+                document.getElementById('subcontractor-quote-modal').classList.remove('active');
+            } catch (error) {
+                console.error('Error requesting subcontractor quote:', error);
+                showNotification('Failed to request quote', 'error');
+            }
+        }
+        
+        // Create change order
+        async function createChangeOrder(estimateId, reason, items) {
+            try {
+                // Calculate change order total
+                const total = items.reduce((sum, item) => sum + (item.quantity * item.unit_price), 0);
+                
+                // Save to Supabase
+                const { error } = await supabase
+                    .from('change_orders')
+                    .insert({
+                        estimate_id: estimateId,
+                        reason: reason,
+                        total_amount: total,
+                        status: 'pending'
+                    });
+                
+                if (error) {
+                    console.error('Error creating change order:', error);
+                    showNotification('Failed to create change order', 'error');
+                    return;
+                }
+                
+                showNotification('Change order created successfully!', 'success');
+                document.getElementById('change-order-modal').classList.remove('active');
+                
+                // Reload change orders
+                await loadChangeOrders(estimateId);
+            } catch (error) {
+                console.error('Error creating change order:', error);
+                showNotification('Failed to create change order', 'error');
+            }
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // New estimate button
+            document.getElementById('new-estimate-btn').addEventListener('click', () => {
+                document.getElementById('estimate-modal').classList.add('active');
+            });
+            
+            // Modal close buttons
+            document.querySelectorAll('.modal-close').forEach(button => {
+                button.addEventListener('click', () => {
+                    button.closest('.modal').classList.remove('active');
+                });
+            });
+            
+            // Filter and search
+            document.getElementById('status-filter').addEventListener('change', renderEstimates);
+            document.getElementById('search-input').addEventListener('input', renderEstimates);
+            
+            // Line item calculations
+            document.addEventListener('input', function(e) {
+                if (e.target.classList.contains('item-quantity') || e.target.classList.contains('item-price')) {
+                    calculateLineItemTotal(e.target.closest('.line-item'));
+                    calculateEstimateTotal();
+                }
+            });
+            
+            // Add line item
+            document.getElementById('add-line-item').addEventListener('click', addLineItem);
+            
+            // Remove line item
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-item')) {
+                    e.target.closest('.line-item').remove();
+                    calculateEstimateTotal();
+                }
+            });
+            
+            // Add discount
+            document.getElementById('add-discount').addEventListener('click', addDiscount);
+            
+            // Add tax
+            document.getElementById('add-tax').addEventListener('click', addTax);
+            
+            // Save draft
+            document.getElementById('save-draft').addEventListener('click', () => saveEstimate('draft'));
+            
+            // Save and send
+            document.getElementById('save-send').addEventListener('click', () => {
+                saveEstimate('draft', (estimateId) => {
+                    // After saving, open email composer
+                    const clientEmail = 'client@example.com'; // This should be fetched from the client record
+                    openEmailComposer(clientEmail);
+                });
+            });
+            
+            // Create proposal
+            document.getElementById('create-proposal').addEventListener('click', openProposalBuilderModal);
+            
+            // AI generate proposal
+            document.getElementById('ai-generate').addEventListener('click', generateAIProposal);
+            
+            // Browse rate library
+            document.getElementById('browse-rate-library').addEventListener('click', () => {
+                loadRateLibrary();
+                document.getElementById('rate-library-modal').classList.add('active');
+            });
+            
+            // Close rate library
+            document.getElementById('close-rate-library').addEventListener('click', () => {
+                document.getElementById('rate-library-modal').classList.remove('active');
+            });
+            
+            // Send quote request
+            document.getElementById('send-quote-request').addEventListener('click', () => {
+                const subcontractorId = document.getElementById('subcontractor-select').value;
+                const itemDescription = document.getElementById('quote-item-description').value;
+                const notes = document.getElementById('quote-notes').value;
+                
+                if (!subcontractorId) {
+                    showNotification('Please select a subcontractor', 'error');
+                    return;
+                }
+                
+                requestSubcontractorQuote(subcontractorId, itemDescription, notes);
+            });
+            
+            // Cancel quote request
+            document.getElementById('cancel-quote-request').addEventListener('click', () => {
+                document.getElementById('subcontractor-quote-modal').classList.remove('active');
+            });
+            
+            // Send email
+            document.getElementById('send-email').addEventListener('click', () => {
+                const toEmail = document.getElementById('email-to').value;
+                const subject = document.getElementById('email-subject').value;
+                const body = document.getElementById('email-body').value;
+                const includePdf = document.getElementById('include-pdf').checked;
+                const requestSignature = document.getElementById('request-signature').checked;
+                
+                // For this demo, we'll use a placeholder estimate ID
+                const estimateId = 'placeholder-estimate-id';
+                
+                sendEmail(estimateId, toEmail, subject, body, includePdf, requestSignature);
+            });
+            
+            // Cancel email
+            document.getElementById('cancel-email').addEventListener('click', () => {
+                document.getElementById('email-composer-modal').classList.remove('active');
+            });
+            
+            // Create change order
+            document.getElementById('create-change-order').addEventListener('click', openChangeOrderModal);
+            
+            // Send change order
+            document.getElementById('send-change-order').addEventListener('click', () => {
+                const reason = document.getElementById('change-order-reason').value;
+                
+                if (!reason) {
+                    showNotification('Please provide a reason for the change order', 'error');
+                    return;
+                }
+                
+                // For this demo, we'll use a placeholder estimate ID and items
+                const estimateId = 'placeholder-estimate-id';
+                const items = [
+                    { name: 'Change item', description: 'Description', quantity: 1, unit_price: 100 }
+                ];
+                
+                createChangeOrder(estimateId, reason, items);
+            });
+            
+            // Toggle sidebar on mobile
+            document.getElementById('menuToggle').addEventListener('click', () => {
+                document.getElementById('sidebar').classList.toggle('active');
+            });
+            
+            // Load additional data when modals are opened
+            document.getElementById('rate-library-modal').addEventListener('click', loadRateLibrary);
+            document.getElementById('subcontractor-quote-modal').addEventListener('click', loadSubcontractors);
+            document.getElementById('proposal-builder-modal').addEventListener('click', loadProposalTemplates);
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+            
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <span>${message}</span>
+                <button class="notification-close">&times;</button>
+            `;
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+            
+            // Close button
+            notification.querySelector('.notification-close').addEventListener('click', () => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            });
+        }
+        
+        // Add notification styles if not already added
+        if (!document.getElementById('notification-styles')) {
+            const styles = document.createElement('style');
+            styles.id = 'notification-styles';
+            styles.textContent = `
+                .notification {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 15px 20px;
+                    border-radius: 5px;
+                    color: white;
+                    z-index: 10000;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    min-width: 300px;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    animation: slideIn 0.3s ease;
+                }
+                
+                .notification-success { background-color: #10B981; }
+                .notification-error { background-color: #EF4444; }
+                .notification-info { background-color: #3B82F6; }
+                .notification-warning { background-color: #F59E0B; }
+                
+                .notification-close {
+                    background: none;
+                    border: none;
+                    color: white;
+                    font-size: 20px;
+                    cursor: pointer;
+                    margin-left: 15px;
+                }
+                
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(styles);
+        }
+    </script>
+</body>
+</html>

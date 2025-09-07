@@ -1,0 +1,2556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReportCenter | The Sierra Suites</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.25/dist/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #1a56db;
+            --primary-dark: #1e40af;
+            --primary-light: #3b82f6;
+            --secondary-color: #ea580c;
+            --secondary-dark: #9a3412;
+            --secondary-light: #fb923c;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --text-lighter: #9ca3af;
+            --bg-color: #f9fafb;
+            --bg-dark: #f3f4f6;
+            --white: #ffffff;
+            --black: #000000;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --danger-color: #dc2626;
+            --info-color: #2563eb;
+            --border-color: #e5e7eb;
+            --sidebar-bg: #1e293b;
+            --sidebar-text: #f1f5f9;
+            --sidebar-hover: #334155;
+            --topbar-bg: #ffffff;
+            --topbar-text: #1f2937;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius-sm: 0.125rem;
+            --radius: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-full: 9999px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            line-height: 1.25;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+            color: var(--text-light);
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--primary-dark);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Dashboard Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--sidebar-text);
+        }
+
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: var(--sidebar-text);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            gap: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .user-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+            color: var(--sidebar-text);
+        }
+
+        .user-info p {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0;
+        }
+
+        .profile-menu {
+            background: none;
+            border: none;
+            color: var(--sidebar-text);
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1.5rem 0;
+        }
+
+        .sidebar-nav ul {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 0.875rem 1.5rem;
+            color: var(--sidebar-text);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .sidebar-nav a:hover {
+            background-color: var(--sidebar-hover);
+            color: var(--white);
+        }
+
+        .sidebar-nav a.active {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .sidebar-nav i {
+            width: 1.5rem;
+            margin-right: 0.75rem;
+            font-size: 1.125rem;
+        }
+
+        .upgrade-badge {
+            background-color: var(--secondary-color);
+            color: var(--white);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-full);
+            margin-left: auto;
+        }
+
+        .nav-divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+
+        .sidebar-footer {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .upgrade-card {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            text-align: center;
+        }
+
+        .upgrade-card h4 {
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .upgrade-card p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            background-color: var(--topbar-bg);
+            box-shadow: var(--shadow-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+
+        .topbar h2 {
+            margin-bottom: 0;
+            font-size: 1.5rem;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .report-selector select {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background-color: var(--white);
+            font-family: inherit;
+            font-size: 0.875rem;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .date-range select {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background-color: var(--white);
+            font-family: inherit;
+            font-size: 0.875rem;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-link {
+            background-color: transparent;
+            color: var(--primary-color);
+            padding: 0;
+            font-weight: 500;
+        }
+
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn-icon {
+            width: 2.25rem;
+            height: 2.25rem;
+            padding: 0;
+            border-radius: 50%;
+            background-color: transparent;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon:hover {
+            background-color: var(--bg-dark);
+            color: var(--primary-color);
+        }
+
+        .notification-btn {
+            position: relative;
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .notification-btn:hover {
+            background-color: var(--bg-dark);
+            color: var(--primary-color);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -0.25rem;
+            right: -0.25rem;
+            background-color: var(--danger-color);
+            color: var(--white);
+            font-size: 0.75rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Content Container */
+        .content-container {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .report-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            background-color: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .summary-card h4 {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+        }
+
+        .summary-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-change {
+            font-size: 0.875rem;
+            margin-bottom: 0;
+        }
+
+        .summary-change.up {
+            color: var(--success-color);
+        }
+
+        .summary-change.down {
+            color: var(--danger-color);
+        }
+
+        .report-charts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background-color: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chart-header h3 {
+            font-size: 1.125rem;
+            margin-bottom: 0;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .chart-container {
+            padding: 1.5rem;
+            height: 300px;
+        }
+
+        .report-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-header h3 {
+            font-size: 1.125rem;
+            margin-bottom: 0;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .time-entries {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .time-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--bg-color);
+            border-radius: var(--radius);
+        }
+
+        .entry-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .entry-info p {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-bottom: 0;
+        }
+
+        .entry-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            font-size: 0.875rem;
+        }
+
+        .entry-hours {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .milestones {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .milestone-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--bg-color);
+            border-radius: var(--radius);
+            gap: 1rem;
+        }
+
+        .milestone-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .milestone-item.completed .milestone-icon {
+            background-color: var(--success-color);
+            color: var(--white);
+        }
+
+        .milestone-item.upcoming .milestone-icon {
+            background-color: var(--warning-color);
+            color: var(--white);
+        }
+
+        .milestone-content h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .milestone-content p {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-bottom: 0;
+        }
+
+        /* Tier-specific features */
+        .tier-feature {
+            border-left: 3px solid var(--primary-color);
+            padding-left: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .tier-label {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .tier-starter {
+            background-color: #e0f2fe;
+            color: var(--primary-dark);
+        }
+
+        .tier-pro {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .tier-enterprise {
+            background-color: #ede9fe;
+            color: #5b21b6;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            margin-bottom: 0;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .export-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .export-option {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .export-option:hover {
+            border-color: var(--primary-color);
+            background-color: var(--bg-color);
+        }
+
+        .export-option i {
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+            color: var(--primary-color);
+        }
+
+        .export-option span {
+            font-weight: 500;
+        }
+
+        /* Loading state */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+            position: relative;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 3px solid var(--primary-light);
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Custom date range picker */
+        .custom-range-modal .modal-content {
+            max-width: 600px;
+        }
+
+        .date-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .date-input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .date-input-group label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .date-input-group input {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            font-family: inherit;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .report-charts,
+            .report-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: fixed;
+                height: 100%;
+                left: -100%;
+                transition: left 0.3s ease;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .topbar-left h2 {
+                display: none;
+            }
+            
+            .report-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .topbar {
+                flex-wrap: wrap;
+                padding: 1rem;
+            }
+            
+            .topbar-left,
+            .topbar-right {
+                width: 100%;
+                justify-content: space-between;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .report-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .content-container {
+                padding: 1rem;
+            }
+            
+            .time-entry,
+            .milestone-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .entry-details {
+                align-items: flex-start;
+            }
+        }
+
+        /* Accessibility improvements */
+        .btn:focus,
+        select:focus,
+        a:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .export-option:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .summary-card,
+            .chart-card,
+            .card {
+                border: 1px solid var(--text-color);
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="dashboard-page">
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span>The Sierra Suites</span>
+                </div>
+                <button class="sidebar-toggle" aria-label="Toggle sidebar">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+            
+            <div class="user-profile">
+                <div class="avatar" id="user-avatar">
+                    U
+                </div>
+                <div class="user-info">
+                    <h4 id="user-name">User</h4>
+                    <p id="user-email">user@example.com</p>
+                    <small id="user-tier" class="tier-label tier-pro">Pro Plan</small>
+                </div>
+                <button class="profile-menu" aria-label="Profile menu">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </div>
+            
+            <nav class="sidebar-nav" aria-label="Main navigation">
+                <ul>
+                    <li>
+                        <a href="dashboard.html">
+                            <i class="fas fa-home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-project-diagram"></i>
+                            <span>Projects</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="taskflow.html">
+                            <i class="fas fa-tasks"></i>
+                            <span>TaskFlow</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="fieldsnap.html">
+                            <i class="fas fa-camera"></i>
+                            <span>FieldSnap</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="quotehub.html">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                            <span>QuoteHub</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="reportcenter.html">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>ReportCenter</span>
+                        </a>
+                    </li>
+                    <li class="nav-divider"></li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-users"></i>
+                            <span>CRM</span>
+                            <span class="upgrade-badge">Pro</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-file-contract"></i>
+                            <span>Proposals</span>
+                            <span class="upgrade-badge">Pro</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-tools"></i>
+                            <span>Subcontractors</span>
+                            <span class="upgrade-badge">Enterprise</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="upgrade-card">
+                    <h4>Upgrade to Enterprise</h4>
+                    <p>Unlock advanced reporting and business intelligence</p>
+                    <a href="pricing.html" class="btn btn-primary btn-small">Upgrade Now</a>
+                </div>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" aria-label="Toggle menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2>ReportCenter</h2>
+                    <div class="report-selector">
+                        <select id="report-type" aria-label="Select report type">
+                            <option value="time-tracking">Time Tracking</option>
+                            <option value="project-progress">Project Progress</option>
+                            <option value="financial-overview">Financial Overview</option>
+                            <option value="task-completion">Task Completion</option>
+                            <option value="project-analytics">Project Analytics</option>
+                            <option value="financial-reporting">Financial Reporting</option>
+                            <option value="operations-efficiency">Operations Efficiency</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <div class="date-range">
+                        <select id="report-range" aria-label="Select date range">
+                            <option value="7">Last 7 days</option>
+                            <option value="30" selected>Last 30 days</option>
+                            <option value="this-month">This month</option>
+                            <option value="last-month">Last month</option>
+                            <option value="custom">Custom range...</option>
+                        </select>
+                    </div>
+                    <div class="topbar-actions">
+                        <button class="btn btn-primary" id="export-report-btn">
+                            <i class="fas fa-file-export"></i>
+                            Export
+                        </button>
+                        <button class="notification-btn" aria-label="Notifications">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge">1</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="content-container" id="content-container">
+                <div class="report-summary">
+                    <div class="summary-card">
+                        <h4>Total Hours Tracked</h4>
+                        <p class="summary-value" id="total-hours">0</p>
+                        <p class="summary-change up" id="hours-change">Loading...</p>
+                    </div>
+                    <div class="summary-card">
+                        <h4>Active Projects</h4>
+                        <p class="summary-value" id="active-projects">0</p>
+                    </div>
+                    <div class="summary-card">
+                        <h4>Tasks Completed</h4>
+                        <p class="summary-value" id="completed-tasks">0</p>
+                        <p class="summary-change up" id="tasks-change">Loading...</p>
+                    </div>
+                    <div class="summary-card">
+                        <h4>Estimated Revenue</h4>
+                        <p class="summary-value" id="estimated-revenue">$0</p>
+                    </div>
+                </div>
+                
+                <!-- Tier-specific features -->
+                <div class="tier-feature" id="starter-feature">
+                    <span class="tier-label tier-starter">Starter Feature</span>
+                    <h3>Labor Productivity Report</h3>
+                    <p>Compare estimated vs. actual labor hours across your projects.</p>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Labor Productivity</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn-icon">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="laborChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tier-feature" id="pro-feature">
+                    <span class="tier-label tier-pro">Pro Feature</span>
+                    <h3>Material Cost Tracking</h3>
+                    <p>Monitor budget vs. actual material expenses for better cost control.</p>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Material Costs</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn-icon">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="materialChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tier-feature" id="enterprise-feature">
+                    <span class="tier-label tier-enterprise">Enterprise Feature</span>
+                    <h3>Subcontractor Performance</h3>
+                    <p>Evaluate timeliness and quality of subcontractors with detailed analytics.</p>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Subcontractor Ratings</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn-icon">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="subcontractorChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Advanced Project Performance Analytics (Pro/Enterprise Tier) -->
+                <div class="tier-feature" id="project-analytics-feature">
+                    <span class="tier-label tier-pro">Pro & Enterprise Feature</span>
+                    <h3>Project Performance Analytics</h3>
+                    <p>Track project profitability and performance with earned value management.</p>
+                    <div class="report-charts">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Project Profitability</h3>
+                                <div class="chart-actions">
+                                    <button class="btn btn-icon">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="profitabilityChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Earned Value Management</h3>
+                                <div class="chart-actions">
+                                    <button class="btn btn-icon">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="evmChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deeper Financial Reporting (Pro/Enterprise Tier) -->
+                <div class="tier-feature" id="financial-reporting-feature">
+                    <span class="tier-label tier-pro">Pro & Enterprise Feature</span>
+                    <h3>Financial Reporting</h3>
+                    <p>Manage cash flow and track accounts aging for better financial control.</p>
+                    <div class="report-charts">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Accounts Aging</h3>
+                                <div class="chart-actions">
+                                    <button class="btn btn-icon">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="agingChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Cash Flow Forecast</h3>
+                                <div class="chart-actions">
+                                    <button class="btn btn-icon">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="cashflowChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Field & Operations Efficiency (All Tiers) -->
+                <div class="tier-feature" id="operations-efficiency-feature">
+                    <h3>Field & Operations Efficiency</h3>
+                    <p>Monitor equipment utilization and safety incidents.</p>
+                    <div class="report-charts">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Equipment Utilization</h3>
+                                <div class="chart-actions">
+                                    <button class="btn btn-icon">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="equipmentChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Safety Incidents</h3>
+                                <div class="chart-actions">
+                                    <button class="btn btn-icon">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="safetyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="report-charts">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Time Tracking</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn-icon">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="timeChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Project Progress</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn-icon">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="progressChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Task Completion</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn-icon">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="taskChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Financial Overview</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn-icon">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="financialChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="report-details">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Recent Time Entries</h3>
+                            <a href="#" class="btn btn-link">View All</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="time-entries" id="time-entries-list">
+                                <div class="time-entry">
+                                    <div class="entry-info">
+                                        <h4>Loading data...</h4>
+                                        <p>Please wait while we fetch your information</p>
+                                    </div>
+                                    <div class="entry-details">
+                                        <span>--</span>
+                                        <span class="entry-hours">0 hours</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Project Milestones</h3>
+                            <a href="#" class="btn btn-link">View All</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="milestones" id="milestones-list">
+                                <div class="milestone-item upcoming">
+                                    <div class="milestone-icon">
+                                        <i class="fas fa-flag"></i>
+                                    </div>
+                                    <div class="milestone-content">
+                                        <h4>Loading data...</h4>
+                                        <p>Please wait while we fetch your information</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="modal" id="export-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Export Report</h3>
+                <button class="modal-close" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="export-options">
+                <div class="export-option" data-format="excel">
+                    <i class="fas fa-file-excel"></i>
+                    <span>Export to Excel</span>
+                </div>
+                <div class="export-option" data-format="pdf">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>Export to PDF</span>
+                </div>
+                <div class="export-option" data-format="csv">
+                    <i class="fas fa-file-csv"></i>
+                    <span>Export to CSV</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Date Range Modal -->
+    <div class="modal custom-range-modal" id="custom-range-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Select Custom Date Range</h3>
+                <button class="modal-close" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="date-inputs">
+                <div class="date-input-group">
+                    <label for="start-date">Start Date</label>
+                    <input type="date" id="start-date" value="">
+                </div>
+                <div class="date-input-group">
+                    <label for="end-date">End Date</label>
+                    <input type="date" id="end-date" value="">
+                </div>
+            </div>
+            <button class="btn btn-primary" id="apply-date-range">Apply Date Range</button>
+        </div>
+    </div>
+
+    <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://qjswuwcqyzeuqqqltykz.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3d1d2NxeXpldXFxcWx0eWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMjk0MDAsImV4cCI6MjA3MDgwNTQwMH0.qgH8DMJEoJVuYOXSyr0RAj01Yt7bBR8EYL6qw3YXyAs';
+
+        // Initialize Supabase client
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // DOM Elements
+        const menuToggle = document.querySelector('.menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarToggle = document.querySelector('.sidebar-toggle');
+        const exportReportBtn = document.getElementById('export-report-btn');
+        const exportModal = document.getElementById('export-modal');
+        const customRangeModal = document.getElementById('custom-range-modal');
+        const modalCloseButtons = document.querySelectorAll('.modal-close');
+        const exportOptions = document.querySelectorAll('.export-option');
+        const userTierElement = document.getElementById('user-tier');
+        const userNameElement = document.getElementById('user-name');
+        const userEmailElement = document.getElementById('user-email');
+        const userAvatarElement = document.getElementById('user-avatar');
+        const reportTypeSelector = document.getElementById('report-type');
+        const dateRangeSelector = document.getElementById('report-range');
+        const contentContainer = document.getElementById('content-container');
+        const applyDateRangeBtn = document.getElementById('apply-date-range');
+        const startDateInput = document.getElementById('start-date');
+        const endDateInput = document.getElementById('end-date');
+
+        // Set default date values
+        const today = new Date();
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(today.getDate() - 30);
+        
+        startDateInput.value = thirtyDaysAgo.toISOString().split('T')[0];
+        endDateInput.value = today.toISOString().split('T')[0];
+
+        // Global variables
+        let currentReportType = 'time-tracking';
+        let currentDateRange = '30';
+        let currentStartDate = thirtyDaysAgo;
+        let currentEndDate = today;
+        let chartInstances = {};
+        let reportData = {};
+
+        // Mobile menu toggle
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Sidebar toggle for desktop
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            const icon = sidebarToggle.querySelector('i');
+            if (sidebar.classList.contains('collapsed')) {
+                icon.classList.remove('fa-chevron-left');
+                icon.classList.add('fa-chevron-right');
+            } else {
+                icon.classList.remove('fa-chevron-right');
+                icon.classList.add('fa-chevron-left');
+            }
+        });
+
+        // Export modal
+        exportReportBtn.addEventListener('click', () => {
+            exportModal.classList.add('active');
+        });
+
+        // Close modals
+        modalCloseButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                exportModal.classList.remove('active');
+                customRangeModal.classList.remove('active');
+            });
+        });
+
+        exportOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const format = option.getAttribute('data-format');
+                exportData(format);
+                exportModal.classList.remove('active');
+            });
+        });
+
+        // Report type change
+        reportTypeSelector.addEventListener('change', (e) => {
+            currentReportType = e.target.value;
+            loadReportData();
+        });
+
+        // Date range change
+        dateRangeSelector.addEventListener('change', (e) => {
+            const value = e.target.value;
+            
+            if (value === 'custom') {
+                customRangeModal.classList.add('active');
+            } else {
+                currentDateRange = value;
+                calculateDateRange();
+                loadReportData();
+            }
+        });
+
+        // Apply custom date range
+        applyDateRangeBtn.addEventListener('click', () => {
+            currentStartDate = new Date(startDateInput.value);
+            currentEndDate = new Date(endDateInput.value);
+            currentDateRange = 'custom';
+            customRangeModal.classList.remove('active');
+            loadReportData();
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === exportModal) {
+                exportModal.classList.remove('active');
+            }
+            if (e.target === customRangeModal) {
+                customRangeModal.classList.remove('active');
+            }
+        });
+
+        // Calculate date range based on selection
+        function calculateDateRange() {
+            const today = new Date();
+            today.setHours(23, 59, 59, 999); // End of day
+            
+            switch (currentDateRange) {
+                case '7':
+                    currentStartDate = new Date();
+                    currentStartDate.setDate(today.getDate() - 7);
+                    currentStartDate.setHours(0, 0, 0, 0);
+                    break;
+                case '30':
+                    currentStartDate = new Date();
+                    currentStartDate.setDate(today.getDate() - 30);
+                    currentStartDate.setHours(0, 0, 0, 0);
+                    break;
+                case 'this-month':
+                    currentStartDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                    currentStartDate.setHours(0, 0, 0, 0);
+                    break;
+                case 'last-month':
+                    const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                    currentStartDate = new Date(lastMonth.getFullYear(), lastMonth.getMonth(), 1);
+                    currentStartDate.setHours(0, 0, 0, 0);
+                    currentEndDate = new Date(lastMonth.getFullYear(), lastMonth.getMonth() + 1, 0);
+                    currentEndDate.setHours(23, 59, 59, 999);
+                    break;
+            }
+            
+            if (currentDateRange !== 'last-month' && currentDateRange !== 'custom') {
+                currentEndDate = today;
+            }
+        }
+
+        // Load user data from Supabase
+        async function loadUserData() {
+            try {
+                // Get the current user from Supabase
+                const { data: { user }, error } = await supabase.auth.getUser();
+                
+                if (error) {
+                    console.error('Error fetching user:', error);
+                    return;
+                }
+                
+                if (user) {
+                    // Update user info in the UI
+                    userNameElement.textContent = user.user_metadata?.full_name || 'User';
+                    userEmailElement.textContent = user.email;
+                    userAvatarElement.textContent = user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0) || 'U';
+                    
+                    // Fetch user profile from your profiles table
+                    const { data: profile, error: profileError } = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', user.id)
+                        .single();
+                    
+                    if (!profileError && profile) {
+                        // Update tier information if available
+                        if (profile.tier) {
+                            userTierElement.textContent = `${profile.tier.charAt(0).toUpperCase() + profile.tier.slice(1)} Plan`;
+                            userTierElement.className = `tier-label tier-${profile.tier}`;
+                            
+                            // Show/hide features based on tier
+                            document.getElementById('starter-feature').style.display = 'block';
+                            document.getElementById('pro-feature').style.display = profile.tier === 'pro' || profile.tier === 'enterprise' ? 'block' : 'none';
+                            document.getElementById('enterprise-feature').style.display = profile.tier === 'enterprise' ? 'block' : 'none';
+                            document.getElementById('project-analytics-feature').style.display = profile.tier === 'pro' || profile.tier === 'enterprise' ? 'block' : 'none';
+                            document.getElementById('financial-reporting-feature').style.display = profile.tier === 'pro' || profile.tier === 'enterprise' ? 'block' : 'none';
+                            document.getElementById('operations-efficiency-feature').style.display = 'block';
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+        }
+
+        // Load report data from Supabase
+        async function loadReportData() {
+            // Show loading state
+            contentContainer.classList.add('loading');
+            
+            try {
+                // Calculate date range
+                calculateDateRange();
+                
+                // Format dates for Supabase query
+                const startDateStr = currentStartDate.toISOString();
+                const endDateStr = currentEndDate.toISOString();
+                
+                // Get the current user
+                const { data: { user } } = await supabase.auth.getUser();
+                
+                if (!user) {
+                    console.error('No user logged in');
+                    return;
+                }
+                
+                // Fetch data based on report type
+                switch (currentReportType) {
+                    case 'time-tracking':
+                        await fetchTimeTrackingData(user.id, startDateStr, endDateStr);
+                        break;
+                    case 'project-progress':
+                        await fetchProjectProgressData(user.id, startDateStr, endDateStr);
+                        break;
+                    case 'financial-overview':
+                        await fetchFinancialData(user.id, startDateStr, endDateStr);
+                        break;
+                    case 'task-completion':
+                        await fetchTaskCompletionData(user.id, startDateStr, endDateStr);
+                        break;
+                    case 'project-analytics':
+                        await fetchProjectPerformanceData(user.id, startDateStr, endDateStr);
+                        break;
+                    case 'financial-reporting':
+                        await fetchFinancialReportingData(user.id, startDateStr, endDateStr);
+                        break;
+                    case 'operations-efficiency':
+                        await fetchOperationsEfficiencyData(user.id, startDateStr, endDateStr);
+                        break;
+                }
+                
+                // Update UI with new data
+                updateReportUI();
+                
+            } catch (error) {
+                console.error('Error loading report data:', error);
+                alert('Failed to load report data. Please try again.');
+            } finally {
+                // Remove loading state
+                contentContainer.classList.remove('loading');
+            }
+        }
+
+        // Fetch time tracking data from Supabase
+        async function fetchTimeTrackingData(userId, startDate, endDate) {
+            try {
+                // Fetch time entries for the user within the date range
+                const { data: timeEntries, error } = await supabase
+                    .from('time_entries')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .gte('date', startDate)
+                    .lte('date', endDate)
+                    .order('date', { ascending: false });
+                
+                if (error) {
+                    console.error('Error fetching time entries:', error);
+                    return;
+                }
+                
+                // Fetch projects for the user
+                const { data: projects } = await supabase
+                    .from('projects')
+                    .select('*')
+                    .eq('user_id', userId);
+                
+                // Fetch milestones for the user
+                const { data: milestones } = await supabase
+                    .from('milestones')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .order('due_date', { ascending: true });
+                
+                // Calculate summary data
+                const totalHours = timeEntries.reduce((sum, entry) => sum + (entry.hours || 0), 0);
+                const activeProjects = projects ? projects.filter(p => p.status === 'active').length : 0;
+                
+                // For demo purposes, we'll use mock data for charts
+                // In a real implementation, you would process your actual data
+                reportData = {
+                    totalHours: totalHours,
+                    hoursChange: 12, // This would be calculated by comparing to previous period
+                    activeProjects: activeProjects,
+                    completedTasks: 24, // This would come from your tasks data
+                    tasksChange: 8, // This would be calculated by comparing to previous period
+                    estimatedRevenue: 24500, // This would be calculated from your projects
+                    timeEntries: timeEntries.map(entry => ({
+                        project: entry.project_name || 'Unknown Project',
+                        task: entry.task_description || 'No description',
+                        date: entry.date,
+                        hours: entry.hours
+                    })),
+                    milestones: milestones ? milestones.map(milestone => ({
+                        name: milestone.name,
+                        project: milestone.project_name || 'Unknown Project',
+                        status: milestone.status,
+                        date: milestone.due_date
+                    })) : [],
+                    timeChartData: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                        data: [6.5, 8, 7.5, 9, 8.5, 4]
+                    },
+                    progressChartData: {
+                        labels: ['Completed', 'In Progress', 'Not Started'],
+                        data: [45, 35, 20]
+                    },
+                    taskChartData: {
+                        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                        data: [12, 19, 15, 24]
+                    },
+                    financialChartData: {
+                        labels: ['Materials', 'Labor', 'Subcontractors', 'Equipment', 'Other'],
+                        budget: [12000, 15000, 8000, 4000, 3000],
+                        actual: [12500, 14500, 8500, 4200, 3200]
+                    }
+                };
+                
+            } catch (error) {
+                console.error('Error fetching time tracking data:', error);
+            }
+        }
+
+        // Fetch project performance data (Pro/Enterprise tier)
+        async function fetchProjectPerformanceData(userId, startDate, endDate) {
+            try {
+                // Fetch projects with budget and actual costs
+                const { data: projects, error } = await supabase
+                    .from('projects')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .gte('created_at', startDate)
+                    .lte('created_at', endDate);
+
+                if (error) {
+                    console.error('Error fetching projects:', error);
+                    return;
+                }
+
+                // Calculate profitability and EVM metrics (simplified)
+                const profitabilityData = {
+                    labels: projects ? projects.map(p => p.name) : ['Project A', 'Project B', 'Project C'],
+                    budget: projects ? projects.map(p => p.budget || 0) : [50000, 75000, 60000],
+                    actual: projects ? projects.map(p => p.actual_cost || 0) : [52000, 70000, 62000]
+                };
+
+                const evmData = {
+                    labels: ['PV', 'EV', 'AC'],
+                    data: [30000, 25000, 28000] // Example values
+                };
+
+                // Add to reportData
+                reportData.profitabilityData = profitabilityData;
+                reportData.evmData = evmData;
+                
+                // Update summary data for this report type
+                reportData.totalHours = 92.5;
+                reportData.hoursChange = 8;
+                reportData.activeProjects = projects ? projects.length : 3;
+                reportData.completedTasks = 32;
+                reportData.tasksChange = 12;
+                reportData.estimatedRevenue = 38500;
+                
+            } catch (error) {
+                console.error('Error fetching project performance data:', error);
+            }
+        }
+
+        // Fetch financial reporting data (Pro/Enterprise tier)
+        async function fetchFinancialReportingData(userId, startDate, endDate) {
+            try {
+                // Mock data for demonstration - replace with actual Supabase queries
+                // Example: fetch invoices and payments
+                const agingData = {
+                    labels: ['0-30 days', '31-60 days', '61-90 days', '90+ days'],
+                    data: [15000, 5000, 3000, 1000] // Example values
+                };
+
+                const cashflowData = {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    inflow: [10000, 15000, 12000, 18000],
+                    outflow: [8000, 12000, 10000, 14000]
+                };
+
+                // Add to reportData
+                reportData.agingData = agingData;
+                reportData.cashflowData = cashflowData;
+                
+                // Update summary data for this report type
+                reportData.totalHours = 87.3;
+                reportData.hoursChange = 5;
+                reportData.activeProjects = 4;
+                reportData.completedTasks = 28;
+                reportData.tasksChange = 9;
+                reportData.estimatedRevenue = 42500;
+                
+            } catch (error) {
+                console.error('Error fetching financial reporting data:', error);
+            }
+        }
+
+        // Fetch operations efficiency data (All tiers)
+        async function fetchOperationsEfficiencyData(userId, startDate, endDate) {
+            try {
+                // Mock data for demonstration - replace with actual Supabase queries
+                // Example: fetch equipment and safety data
+                const equipmentData = {
+                    labels: ['Excavator', 'Bulldozer', 'Crane', 'Truck'],
+                    utilization: [75, 60, 85, 90] // Percentage
+                };
+
+                const safetyData = {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    incidents: [5, 3, 2, 4, 1, 2]
+                };
+
+                // Add to reportData
+                reportData.equipmentData = equipmentData;
+                reportData.safetyData = safetyData;
+                
+                // Update summary data for this report type
+                reportData.totalHours = 105.2;
+                reportData.hoursChange = 15;
+                reportData.activeProjects = 5;
+                reportData.completedTasks = 38;
+                reportData.tasksChange = 18;
+                reportData.estimatedRevenue = 51200;
+                
+            } catch (error) {
+                console.error('Error fetching operations efficiency data:', error);
+            }
+        }
+
+        // Fetch project progress data (placeholder)
+        async function fetchProjectProgressData(userId, startDate, endDate) {
+            // Similar implementation to fetchTimeTrackingData but for project progress
+            // This would query your projects table and related data
+            await new Promise(resolve => setTimeout(resolve, 800));
+            
+            // Different mock data for project progress report
+            reportData = {
+                totalHours: 92.3,
+                hoursChange: -5,
+                activeProjects: 4,
+                completedTasks: 32,
+                tasksChange: 15,
+                estimatedRevenue: 31200,
+                // ... other data specific to project progress
+            };
+        }
+
+        // Fetch financial data (placeholder)
+        async function fetchFinancialData(userId, startDate, endDate) {
+            // Similar implementation to fetchTimeTrackingData but for financial data
+            // This would query your financial data tables
+            await new Promise(resolve => setTimeout(resolve, 800));
+            
+            // Different mock data for financial report
+            reportData = {
+                totalHours: 67.8,
+                hoursChange: 8,
+                activeProjects: 3,
+                completedTasks: 28,
+                tasksChange: 12,
+                estimatedRevenue: 28750,
+                // ... other data specific to financial overview
+            };
+        }
+
+        // Fetch task completion data (placeholder)
+        async function fetchTaskCompletionData(userId, startDate, endDate) {
+            // Similar implementation to fetchTimeTrackingData but for task completion
+            // This would query your tasks table
+            await new Promise(resolve => setTimeout(resolve, 800));
+            
+            // Different mock data for task completion report
+            reportData = {
+                totalHours: 78.2,
+                hoursChange: 15,
+                activeProjects: 3,
+                completedTasks: 42,
+                tasksChange: 22,
+                estimatedRevenue: 26500,
+                // ... other data specific to task completion
+            };
+        }
+
+        // Update UI with report data
+        function updateReportUI() {
+            // Update summary cards
+            document.getElementById('total-hours').textContent = reportData.totalHours.toFixed(1);
+            document.getElementById('hours-change').textContent = 
+                `${reportData.hoursChange >= 0 ? '+' : ''}${reportData.hoursChange}% from last period`;
+            document.getElementById('hours-change').className = `summary-change ${reportData.hoursChange >= 0 ? 'up' : 'down'}`;
+            
+            document.getElementById('active-projects').textContent = reportData.activeProjects;
+            
+            document.getElementById('completed-tasks').textContent = reportData.completedTasks;
+            document.getElementById('tasks-change').textContent = 
+                `${reportData.tasksChange >= 0 ? '+' : ''}${reportData.tasksChange}% from last period`;
+            document.getElementById('tasks-change').className = `summary-change ${reportData.tasksChange >= 0 ? 'up' : 'down'}`;
+            
+            document.getElementById('estimated-revenue').textContent = `$${reportData.estimatedRevenue.toLocaleString()}`;
+            
+            // Update time entries
+            const timeEntriesList = document.getElementById('time-entries-list');
+            timeEntriesList.innerHTML = '';
+            
+            if (reportData.timeEntries && reportData.timeEntries.length > 0) {
+                reportData.timeEntries.forEach(entry => {
+                    const entryElement = document.createElement('div');
+                    entryElement.className = 'time-entry';
+                    entryElement.innerHTML = `
+                        <div class="entry-info">
+                            <h4>${entry.project}</h4>
+                            <p>${entry.task}</p>
+                        </div>
+                        <div class="entry-details">
+                            <span>${new Date(entry.date).toLocaleDateString()}</span>
+                            <span class="entry-hours">${entry.hours} hours</span>
+                        </div>
+                    `;
+                    timeEntriesList.appendChild(entryElement);
+                });
+            } else {
+                timeEntriesList.innerHTML = `
+                    <div class="time-entry">
+                        <div class="entry-info">
+                            <h4>No time entries found</h4>
+                            <p>Try selecting a different date range</p>
+                        </div>
+                        <div class="entry-details">
+                            <span>--</span>
+                            <span class="entry-hours">0 hours</span>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Update milestones
+            const milestonesList = document.getElementById('milestones-list');
+            milestonesList.innerHTML = '';
+            
+            if (reportData.milestones && reportData.milestones.length > 0) {
+                reportData.milestones.forEach(milestone => {
+                    const milestoneElement = document.createElement('div');
+                    milestoneElement.className = `milestone-item ${milestone.status}`;
+                    milestoneElement.innerHTML = `
+                        <div class="milestone-icon">
+                            <i class="fas ${milestone.status === 'completed' ? 'fa-check-circle' : 'fa-flag'}"></i>
+                        </div>
+                        <div class="milestone-content">
+                            <h4>${milestone.name}</h4>
+                            <p>${milestone.project} • ${milestone.status === 'completed' ? 'Completed ' : 'Due '}${new Date(milestone.date).toLocaleDateString()}</p>
+                        </div>
+                    `;
+                    milestonesList.appendChild(milestoneElement);
+                });
+            } else {
+                milestonesList.innerHTML = `
+                    <div class="milestone-item upcoming">
+                        <div class="milestone-icon">
+                            <i class="fas fa-flag"></i>
+                        </div>
+                        <div class="milestone-content">
+                            <h4>No milestones found</h4>
+                            <p>Try selecting a different date range</p>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Update charts
+            updateCharts();
+        }
+
+        // Initialize and update charts
+        function updateCharts() {
+            // Destroy existing chart instances
+            Object.values(chartInstances).forEach(chart => {
+                if (chart) {
+                    chart.destroy();
+                }
+            });
+            
+            // Reinitialize charts with new data
+            initCharts();
+        }
+
+        // Initialize charts
+        function initCharts() {
+            // Time Tracking Chart
+            const timeCtx = document.getElementById('timeChart').getContext('2d');
+            chartInstances.timeChart = new Chart(timeCtx, {
+                type: 'bar',
+                data: {
+                    labels: reportData.timeChartData?.labels || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                    datasets: [{
+                        label: 'Hours Tracked',
+                        data: reportData.timeChartData?.data || [6.5, 8, 7.5, 9, 8.5, 4],
+                        backgroundColor: '#3b82f6',
+                        borderColor: '#2563eb',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Hours'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Project Progress Chart
+            const progressCtx = document.getElementById('progressChart').getContext('2d');
+            chartInstances.progressChart = new Chart(progressCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: reportData.progressChartData?.labels || ['Completed', 'In Progress', 'Not Started'],
+                    datasets: [{
+                        data: reportData.progressChartData?.data || [45, 35, 20],
+                        backgroundColor: ['#10b981', '#3b82f6', '#e5e7eb'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Task Completion Chart
+            const taskCtx = document.getElementById('taskChart').getContext('2d');
+            chartInstances.taskChart = new Chart(taskCtx, {
+                type: 'line',
+                data: {
+                    labels: reportData.taskChartData?.labels || ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    datasets: [{
+                        label: 'Tasks Completed',
+                        data: reportData.taskChartData?.data || [12, 19, 15, 24],
+                        fill: false,
+                        backgroundColor: '#8b5cf6',
+                        borderColor: '#8b5cf6',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Financial Overview Chart
+            const financialCtx = document.getElementById('financialChart').getContext('2d');
+            chartInstances.financialChart = new Chart(financialCtx, {
+                type: 'bar',
+                data: {
+                    labels: reportData.financialChartData?.labels || ['Materials', 'Labor', 'Subcontractors', 'Equipment', 'Other'],
+                    datasets: [{
+                        label: 'Budget',
+                        data: reportData.financialChartData?.budget || [12000, 15000, 8000, 4000, 3000],
+                        backgroundColor: '#3b82f6',
+                        borderColor: '#2563eb',
+                        borderWidth: 1
+                    }, {
+                        label: 'Actual',
+                        data: reportData.financialChartData?.actual || [12500, 14500, 8500, 4200, 3200],
+                        backgroundColor: '#10b981',
+                        borderColor: '#059669',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'USD'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Labor Productivity Chart (Starter feature)
+            const laborCtx = document.getElementById('laborChart').getContext('2d');
+            chartInstances.laborChart = new Chart(laborCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Project A', 'Project B', 'Project C'],
+                    datasets: [{
+                        label: 'Estimated Hours',
+                        data: [120, 180, 150],
+                        backgroundColor: '#3b82f6',
+                        borderColor: '#2563eb',
+                        borderWidth: 1
+                    }, {
+                        label: 'Actual Hours',
+                        data: [115, 195, 145],
+                        backgroundColor: '#10b981',
+                        borderColor: '#059669',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Hours'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Material Cost Chart (Pro feature)
+            const materialCtx = document.getElementById('materialChart').getContext('2d');
+            chartInstances.materialChart = new Chart(materialCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Lumber', 'Concrete', 'Electrical', 'Plumbing', 'Finishing'],
+                    datasets: [{
+                        label: 'Budget',
+                        data: [5000, 3500, 2800, 3200, 4500],
+                        backgroundColor: '#3b82f6',
+                        borderColor: '#2563eb',
+                        borderWidth: 1
+                    }, {
+                        label: 'Actual',
+                        data: [5200, 3700, 3000, 3100, 4800],
+                        backgroundColor: '#10b981',
+                        borderColor: '#059669',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'USD'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Subcontractor Performance Chart (Enterprise feature)
+            const subcontractorCtx = document.getElementById('subcontractorChart').getContext('2d');
+            chartInstances.subcontractorChart = new Chart(subcontractorCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Timeliness', 'Quality', 'Communication', 'Cost Efficiency', 'Safety'],
+                    datasets: [{
+                        label: 'ABC Electrical',
+                        data: [85, 90, 75, 80, 95],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: '#3b82f6',
+                        pointBackgroundColor: '#3b82f6'
+                    }, {
+                        label: 'XYZ Plumbing',
+                        data: [75, 85, 90, 70, 80],
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                        borderColor: '#10b981',
+                        pointBackgroundColor: '#10b981'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    }
+                }
+            });
+
+            // Project Profitability Chart (Pro/Enterprise feature)
+            const profitabilityCtx = document.getElementById('profitabilityChart').getContext('2d');
+            if (profitabilityCtx) {
+                chartInstances.profitabilityChart = new Chart(profitabilityCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: reportData.profitabilityData?.labels || ['Project A', 'Project B', 'Project C'],
+                        datasets: [{
+                            label: 'Budget',
+                            data: reportData.profitabilityData?.budget || [50000, 75000, 60000],
+                            backgroundColor: '#3b82f6',
+                            borderColor: '#2563eb',
+                            borderWidth: 1
+                        }, {
+                            label: 'Actual',
+                            data: reportData.profitabilityData?.actual || [52000, 70000, 62000],
+                            backgroundColor: '#10b981',
+                            borderColor: '#059669',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'USD'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Earned Value Management Chart (Pro/Enterprise feature)
+            const evmCtx = document.getElementById('evmChart').getContext('2d');
+            if (evmCtx) {
+                chartInstances.evmChart = new Chart(evmCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: reportData.evmData?.labels || ['PV', 'EV', 'AC'],
+                        datasets: [{
+                            label: 'Value',
+                            data: reportData.evmData?.data || [30000, 25000, 28000],
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.5)',
+                                'rgba(75, 192, 192, 0.5)',
+                                'rgba(255, 99, 132, 0.5)'
+                            ],
+                            borderColor: [
+                                'rgb(54, 162, 235)',
+                                'rgb(75, 192, 192)',
+                                'rgb(255, 99, 132)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'USD'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Accounts Aging Chart (Pro/Enterprise feature)
+            const agingCtx = document.getElementById('agingChart').getContext('2d');
+            if (agingCtx) {
+                chartInstances.agingChart = new Chart(agingCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: reportData.agingData?.labels || ['0-30 days', '31-60 days', '61-90 days', '90+ days'],
+                        datasets: [{
+                            data: reportData.agingData?.data || [15000, 5000, 3000, 1000],
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.7)',
+                                'rgba(75, 192, 192, 0.7)',
+                                'rgba(255, 205, 86, 0.7)',
+                                'rgba(255, 99, 132, 0.7)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.label + ': $' + context.raw.toLocaleString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Cash Flow Forecast Chart (Pro/Enterprise feature)
+            const cashflowCtx = document.getElementById('cashflowChart').getContext('2d');
+            if (cashflowCtx) {
+                chartInstances.cashflowChart = new Chart(cashflowCtx, {
+                    type: 'line',
+                    data: {
+                        labels: reportData.cashflowData?.labels || ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                        datasets: [{
+                            label: 'Cash Inflow',
+                            data: reportData.cashflowData?.inflow || [10000, 15000, 12000, 18000],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }, {
+                            label: 'Cash Outflow',
+                            data: reportData.cashflowData?.outflow || [8000, 12000, 10000, 14000],
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'USD'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Equipment Utilization Chart (All tiers)
+            const equipmentCtx = document.getElementById('equipmentChart').getContext('2d');
+            if (equipmentCtx) {
+                chartInstances.equipmentChart = new Chart(equipmentCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: reportData.equipmentData?.labels || ['Excavator', 'Bulldozer', 'Crane', 'Truck'],
+                        datasets: [{
+                            label: 'Utilization %',
+                            data: reportData.equipmentData?.utilization || [75, 60, 85, 90],
+                            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                            borderColor: '#3b82f6',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: 'Percentage'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Safety Incidents Chart (All tiers)
+            const safetyCtx = document.getElementById('safetyChart').getContext('2d');
+            if (safetyCtx) {
+                chartInstances.safetyChart = new Chart(safetyCtx, {
+                    type: 'line',
+                    data: {
+                        labels: reportData.safetyData?.labels || ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Safety Incidents',
+                            data: reportData.safetyData?.incidents || [5, 3, 2, 4, 1, 2],
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Incidents'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Export data function
+        function exportData(format) {
+            // Use the current reportData
+            const data = reportData.timeEntries || [];
+            const filename = `${currentReportType}_report_${new Date().toISOString().slice(0, 10)}`;
+
+            switch (format) {
+                case 'csv':
+                    exportToCSV(data, filename);
+                    break;
+                case 'excel':
+                    exportToExcel(data, filename);
+                    break;
+                case 'pdf':
+                    exportToPDF(data, `${currentReportType.replace(/-/g, ' ')} Report`.toUpperCase());
+                    break;
+            }
+        }
+
+        function exportToCSV(data, filename) {
+            const csv = Papa.unparse(data);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `${filename}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function exportToExcel(data, filename) {
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Report');
+            XLSX.writeFile(workbook, `${filename}.xlsx`);
+        }
+
+        function exportToPDF(data, title) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add title
+            doc.setFontSize(16);
+            doc.text(title, 14, 15);
+            
+            // Add date range info
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            doc.text(`Date Range: ${currentStartDate.toLocaleDateString()} - ${currentEndDate.toLocaleDateString()}`, 14, 22);
+            
+            // Add table
+            doc.autoTable({
+                startY: 30,
+                head: [Object.keys(data[0])],
+                body: data.map(row => Object.values(row))
+            });
+            
+            // Save the PDF
+            doc.save(`${title.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.pdf`);
+        }
+
+        // Save user preferences
+        async function saveUserPreferences() {
+            try {
+                const preferences = {
+                    report_type: currentReportType,
+                    date_range: currentDateRange,
+                    start_date: currentStartDate.toISOString(),
+                    end_date: currentEndDate.toISOString()
+                };
+                
+                // In a real implementation, this would save to Supabase
+                localStorage.setItem('reportCenterPreferences', JSON.stringify(preferences));
+            } catch (error) {
+                console.error('Error saving preferences:', error);
+            }
+        }
+
+        // Load user preferences
+        function loadUserPreferences() {
+            try {
+                const preferences = JSON.parse(localStorage.getItem('reportCenterPreferences'));
+                
+                if (preferences) {
+                    currentReportType = preferences.report_type || 'time-tracking';
+                    currentDateRange = preferences.date_range || '30';
+                    
+                    if (preferences.start_date) {
+                        currentStartDate = new Date(preferences.start_date);
+                    }
+                    
+                    if (preferences.end_date) {
+                        currentEndDate = new Date(preferences.end_date);
+                    }
+                    
+                    // Update UI to match preferences
+                    reportTypeSelector.value = currentReportType;
+                    dateRangeSelector.value = currentDateRange;
+                    
+                    if (currentDateRange === 'custom') {
+                        startDateInput.value = currentStartDate.toISOString().split('T')[0];
+                        endDateInput.value = currentEndDate.toISOString().split('T')[0];
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading preferences:', error);
+            }
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Load user data
+            await loadUserData();
+            
+            // Load user preferences
+            loadUserPreferences();
+            
+            // Initialize charts with empty data first
+            initCharts();
+            
+            // Load initial report data
+            await loadReportData();
+            
+            // Set up periodic data refresh (every 5 minutes)
+            setInterval(loadReportData, 5 * 60 * 1000);
+            
+            // Save preferences when leaving the page
+            window.addEventListener('beforeunload', saveUserPreferences);
+        });
+    </script>
+</body>
+</html>

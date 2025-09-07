@@ -1,0 +1,2057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sierra Suites - Professional Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Updated color scheme to match About Us page for specific elements */
+            --primary-color: #2563eb;
+            --primary-dark: #1e40af;
+            --primary-light: #3b82f6;
+            --primary-ultralight: #eff6ff;
+            --secondary-color: #f97316;
+            --secondary-dark: #ea580c;
+            --secondary-light: #fb923c;
+            --text-color: #1e293b;
+            --text-light: #64748b;
+            --text-lighter: #94a3b8;
+            --bg-dark: #0f172a; /* For sidebar, topbar, welcome banner */
+            --bg-darker: #0a0f1c;
+            --bg-card: #ffffff; /* Light card background */
+            --white: #ffffff;
+            --black: #000000;
+            --navy-dark: #0f172a;
+            --navy-darker: #0a0f1c;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --info-color: #3b82f6;
+            --border-color: #e2e8f0; /* Light border for cards */
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            --radius-sm: 0.25rem;
+            --radius: 0.5rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+            --radius-full: 9999px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
+            background-color: #f8fafc; /* Light background for main content */
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.25;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2.25rem; }
+        h3 { font-size: 1.875rem; }
+        h4 { font-size: 1.5rem; }
+        h5 { font-size: 1.25rem; }
+        h6 { font-size: 1.125rem; }
+
+        p {
+            margin-bottom: 1.25rem;
+            color: var(--text-light);
+        }
+
+        a {
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--primary-color);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        ul, ol {
+            list-style: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Verification Banner Styles */
+        .verification-banner {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+            display: none;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .banner-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .banner-content i {
+            font-size: 1.5rem;
+        }
+        
+        .banner-content .btn-small {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .banner-content .btn-small:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .banner-content .btn-icon {
+            width: 2rem;
+            height: 2rem;
+            padding: 0;
+            border-radius: 50%;
+            background-color: transparent;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .banner-content {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Dashboard Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar - Updated to match About Us page */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-dark);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            transition: all 0.3s ease;
+            border-right: 1px solid var(--border-color);
+            color: var(--white);
+        }
+
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        .sidebar.collapsed .logo span,
+        .sidebar.collapsed .user-info,
+        .sidebar.collapsed .sidebar-nav span,
+        .sidebar.collapsed .upgrade-card,
+        .sidebar.collapsed .upgrade-badge {
+            display: none;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--white);
+        }
+
+        .sidebar-toggle {
+            display: none; /* Hide the sidebar toggle button */
+        }
+
+        .user-profile {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-info h4 {
+            margin-bottom: 0.25rem;
+            font-size: 1rem;
+            color: var(--white);
+        }
+
+        .user-info p {
+            margin-bottom: 0;
+            font-size: 0.875rem;
+            color: var(--text-lighter);
+        }
+
+        .profile-menu {
+            background: none;
+            border: none;
+            color: var(--text-lighter);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 200px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-xl);
+            z-index: 1000;
+            display: none;
+            margin-top: 0.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .profile-dropdown.active {
+            display: block;
+        }
+
+        .profile-dropdown a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--text-color);
+            transition: all 0.2s ease;
+        }
+
+        .profile-dropdown a:hover {
+            background-color: var(--bg-dark);
+            color: var(--white);
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+        }
+
+        .sidebar-nav ul {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-lighter);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .sidebar-nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .sidebar-nav a.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: var(--white);
+        }
+
+        .sidebar-nav a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: var(--secondary-color);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        }
+
+        .sidebar-nav i {
+            width: 1.25rem;
+            text-align: center;
+        }
+
+        .nav-divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 0.5rem 0;
+        }
+
+        .upgrade-badge {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-dark) 100%);
+            color: var(--white);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            margin-left: auto;
+        }
+
+        .sidebar-footer {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .upgrade-card {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+            color: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            text-align: center;
+        }
+
+        .upgrade-card h4 {
+            margin-bottom: 0.5rem;
+            color: var(--white);
+        }
+
+        .upgrade-card p {
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.6s ease;
+        }
+
+        .btn:hover:before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Fix for Quick Tour button in welcome banner */
+        .welcome-banner .btn-outline {
+            color: var(--white);
+            border-color: var(--white);
+        }
+
+        .welcome-banner .btn-outline:hover {
+            background-color: var(--white);
+            color: var(--primary-color);
+        }
+
+        .btn-link {
+            background-color: transparent;
+            color: var(--primary-color);
+            padding: 0;
+            font-weight: 500;
+        }
+
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            padding: 0;
+            border-radius: 50%;
+            background-color: transparent;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon:hover {
+            background-color: var(--bg-dark);
+            color: var(--primary-color);
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1.125rem;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8fafc; /* Light background for main content */
+        }
+
+        /* Topbar - Updated to match sidebar color */
+        .topbar {
+            background-color: var(--bg-dark);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--white);
+            cursor: pointer;
+            font-size: 1.25rem;
+            display: none;
+        }
+
+        .page-title {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-title h2 {
+            margin-bottom: 0.25rem;
+            font-size: 1.5rem;
+            color: var(--white);
+        }
+
+        .page-title p {
+            margin-bottom: 0;
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            position: relative;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .search-bar input {
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            width: 250px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-bar input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .help-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            font-size: 1.25rem;
+            position: relative;
+            transition: color 0.2s ease;
+        }
+
+        .help-btn:hover {
+            color: var(--white);
+        }
+
+        .content-container {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            background-color: #f8fafc; /* Light background for content area */
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+            color: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(-15deg);
+        }
+
+        .welcome-content h3 {
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            font-size: 1.75rem;
+        }
+
+        .welcome-content p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            max-width: 600px;
+        }
+
+        .welcome-image {
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome-image img {
+            height: 140px;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-icon {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-info h4 {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .stat-link {
+            color: var(--primary-color);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .content-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .content-col {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .card-header h3 {
+            margin-bottom: 0;
+            font-size: 1.25rem;
+            color: var(--text-color);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .project-list, .activity-list, .task-list, .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .project-item, .activity-item, .task-item, .timeline-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: var(--radius);
+            transition: background-color 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .project-item:hover, .activity-item:hover, .task-item:hover {
+            background-color: #f8fafc;
+            border-color: var(--border-color);
+        }
+
+        .project-info, .task-content, .timeline-content {
+            flex: 1;
+        }
+
+        .project-info h4, .task-content h4, .timeline-content h4 {
+            margin-bottom: 0.25rem;
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+
+        .project-info p, .task-content p, .timeline-content p {
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .project-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background-color: var(--primary-color);
+            border-radius: 3px;
+        }
+
+        .project-actions, .task-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .activity-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--radius);
+            background-color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-content p {
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+        }
+
+        .checkbox-container input {
+            display: none;
+        }
+
+        .checkmark {
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .checkbox-container input:checked + .checkmark {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .checkbox-container input:checked + .checkmark::after {
+            content: "✓";
+            color: white;
+            font-size: 0.75rem;
+        }
+
+        .task-item.priority-high .task-content h4 {
+            color: var(--danger-color);
+        }
+
+        .task-item.priority-medium .task-content h4 {
+            color: var(--warning-color);
+        }
+
+        .task-item.priority-low .task-content h4 {
+            color: var(--success-color);
+        }
+
+        .task-item.completed .task-content {
+            opacity: 0.6;
+        }
+
+        .task-item.completed .task-content h4 {
+            text-decoration: line-through;
+        }
+
+        .timeline {
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.75rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 2.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            border: 2px solid var(--bg-card);
+        }
+
+        .timeline-date {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        /* New Calendar Styles */
+        .calendar-container {
+            height: 400px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* New Filter Bar Styles */
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: #f8fafc;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+        }
+
+        .filter-label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            white-space: nowrap;
+        }
+
+        .filter-select {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background-color: var(--bg-card);
+            color: var(--text-color);
+            font-family: inherit;
+        }
+
+        /* New Priority Styles */
+        .task-priority {
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .priority-high {
+            background: #FEF2F2;
+            color: #DC2626;
+        }
+
+        .priority-medium {
+            background: #FFFBEB;
+            color: #D97706;
+        }
+
+        .priority-low {
+            background: #F0FDF4;
+            color: #059669;
+        }
+
+        /* Feature Lock Styles */
+        .feature-locked {
+            position: relative;
+            opacity: 0.6;
+        }
+
+        .feature-locked::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-weight: 600;
+            cursor: not-allowed;
+        }
+
+        .nav-item-locked {
+            position: relative;
+        }
+
+        .nav-item-locked a {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .upgrade-prompt {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 1rem;
+            box-shadow: var(--shadow-lg);
+            z-index: 10;
+            margin-top: 0.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .nav-item-locked:hover .upgrade-prompt {
+            display: block;
+        }
+
+        .upgrade-prompt p {
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-color);
+        }
+
+        /* Empty states */
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--text-lighter);
+        }
+
+        .empty-state h4 {
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Loading states */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, 
+                #f1f5f9 25%, 
+                #e2e8f0 50%, 
+                #f1f5f9 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: var(--radius);
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .skeleton-text {
+            height: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: var(--radius);
+        }
+
+        .skeleton-circle {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .content-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                height: 100vh;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .search-bar input {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .welcome-banner {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+            
+            .search-bar {
+                display: none;
+            }
+            
+            .filter-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .topbar {
+                padding: 1rem;
+            }
+            
+            .content-container {
+                padding: 1rem;
+            }
+            
+            .welcome-banner {
+                padding: 1.5rem;
+            }
+            
+            .card-header, .card-body {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .topbar {
+                padding: 0.75rem;
+            }
+            
+            .page-title h2 {
+                font-size: 1.25rem;
+            }
+            
+            .page-title p {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body class="dashboard-page">
+    <!-- Verification Banner -->
+    <div id="verification-banner" class="verification-banner">
+        <div class="banner-content">
+            <i class="fas fa-envelope"></i>
+            <span>Please verify your email address to access all features.</span>
+            <button onclick="resendVerificationEmail()" class="btn btn-small">Resend Email</button>
+            <button onclick="dismissBanner()" class="btn btn-icon"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span>The Sierra Suites</span>
+                </div>
+                <!-- Removed the sidebar toggle button -->
+            </div>
+            
+            <div class="user-profile">
+                <div class="avatar">
+                    <img src="https://ui-avatars.com/api/?name=User&background=2563eb&color=fff" alt="User Avatar" id="userAvatar">
+                </div>
+                <div class="user-info">
+                    <h4 id="userName">Loading...</h4>
+                    <p id="userCompany">Loading...</p>
+                </div>
+                <button class="profile-menu" id="profileMenu">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+                    <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active">
+                        <a href="dashboard.html">
+                            <i class="fas fa-home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="projects.html">
+                            <i class="fas fa-project-diagram"></i>
+                            <span>Projects</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="taskflow.html">
+                            <i class="fas fa-tasks"></i>
+                            <span>TaskFlow</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="fieldsnap.html">
+                            <i class="fas fa-camera"></i>
+                            <span>FieldSnap</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="quotehub.html">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                            <span>QuoteHub</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="reportcenter.html">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>ReportCenter</span>
+                        </a>
+                    </li>
+                    <li class="nav-divider"></li>
+                    <li class="nav-item-locked" id="crmNavItem">
+                        <a href="crm.html">
+                            <i class="fas fa-users"></i>
+                            <span>CRM</span>
+                            <span class="upgrade-badge">Pro</span>
+                        </a>
+                        <div class="upgrade-prompt">
+                            <p>Upgrade to Pro to access CRM features</p>
+                            <a href="pricing.html" class="btn btn-primary btn-small">Upgrade Now</a>
+                        </div>
+                    </li>
+                    <li class="nav-item-locked" id="proposalsNavItem">
+                        <a href="proposals.html">
+                            <i class="fas fa-file-contract"></i>
+                            <span>Proposals</span>
+                            <span class="upgrade-badge">Pro</span>
+                        </a>
+                        <div class="upgrade-prompt">
+                            <p>Upgrade to Pro to access Proposals features</p>
+                            <a href="pricing.html" class="btn btn-primary btn-small">Upgrade Now</a>
+                        </div>
+                    </li>
+                    <li class="nav-item-locked" id="subcontractorsNavItem">
+                        <a href="subcontractors.html">
+                            <i class="fas fa-tools"></i>
+                            <span>Subcontractors</span>
+                            <span class="upgrade-badge">Enterprise</span>
+                        </a>
+                        <div class="upgrade-prompt">
+                            <p>Upgrade to Enterprise to access Subcontractors features</p>
+                            <a href="pricing.html" class="btn btn-primary btn-small">Upgrade Now</a>
+                        </div>
+                    </li>
+                    <li class="nav-item-locked" id="advancedCrmNavItem">
+                        <a href="advanced-crm.html">
+                            <i class="fas fa-user-friends"></i>
+                            <span>Advanced CRM</span>
+                            <span class="upgrade-badge">Enterprise</span>
+                        </a>
+                        <div class="upgrade-prompt">
+                            <p>Upgrade to Enterprise to access Advanced CRM features</p>
+                            <a href="pricing.html" class="btn btn-primary btn-small">Upgrade Now</a>
+                        </div>
+                    </li>
+                    <li class="nav-item-locked" id="aiProposalsNavItem">
+                        <a href="ai-proposals.html">
+                            <i class="fas fa-robot"></i>
+                            <span>AI Proposals</span>
+                            <span class="upgrade-badge">Enterprise</span>
+                        </a>
+                        <div class="upgrade-prompt">
+                            <p>Upgrade to Enterprise to access AI Proposals</p>
+                            <a href="pricing.html" class="btn btn-primary btn-small">Upgrade Now</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="upgrade-card">
+                    <h4>Upgrade to Pro</h4>
+                    <p>Unlock CRM features and team collaboration</p>
+                    <a href="pricing.html" class="btn btn-primary btn-small">Upgrade Now</a>
+                </div>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="page-title">
+                        <h2>Dashboard</h2>
+                        <p>Welcome back! Here's what's happening with your projects today.</p>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search projects, tasks..." id="searchInput">
+                    </div>
+                    <div class="topbar-actions">
+                        <button class="help-btn" onclick="window.location.href='help.html'">
+                            <i class="fas fa-question-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="content-container">
+                <div class="welcome-banner">
+                    <div class="welcome-content">
+                        <h3 id="welcomeMessage">Welcome back!</h3>
+                        <p id="dashboardSummary">You have <span id="activeProjectsCount">0</span> active projects and <span id="dueTasksCount">0</span> tasks due today.</p>
+                        <a href="tour.html" class="btn btn-outline">Quick Tour</a>
+                    </div>
+                    <div class="welcome-image">
+                        <img src="https://placehold.co/200x120/ffffff/2563eb/png?text=Dashboard" alt="Welcome">
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Active Projects</h4>
+                            <p class="stat-value" id="statProjects">0</p>
+                        </div>
+                        <a href="projects.html" class="stat-link">View all</a>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Tasks Today</h4>
+                            <p class="stat-value" id="statTasks">0</p>
+                        </div>
+                        <a href="taskflow.html" class="stat-link">View tasks</a>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Open Estimates</h4>
+                            <p class="stat-value" id="statEstimates">0</p>
+                        </div>
+                        <a href="quotehub.html" class="stat-link">View estimates</a>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Recent Photos</h4>
+                            <p class="stat-value" id="statPhotos">0</p>
+                        </div>
+                        <a href="fieldsnap.html" class="stat-link">View photos</a>
+                    </div>
+                </div>
+                
+                <div class="content-row">
+                    <div class="content-col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Active Projects</h3>
+                                <a href="projects.html" class="btn btn-link">View All</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="project-list" id="projectsList">
+                                    <div class="skeleton-text" style="width: 70%"></div>
+                                    <div class="skeleton-text" style="width: 50%"></div>
+                                    <div class="skeleton-text" style="width: 30%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Recent Activity</h3>
+                                <a href="activity.html" class="btn btn-link">View All</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="activity-list" id="activitiesList">
+                                    <div class="skeleton-text" style="width: 80%"></div>
+                                    <div class="skeleton-text" style="width: 60%"></div>
+                                    <div class="skeleton-text" style="width: 70%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="content-col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Upcoming Tasks</h3>
+                                <a href="taskflow.html" class="btn btn-link">View All</a>
+                            </div>
+                            <div class="card-body">
+                                <!-- Filter Bar -->
+                                <div class="filter-bar">
+                                    <div class="filter-group">
+                                        <span class="filter-label">Project:</span>
+                                        <select class="filter-select" id="project-filter">
+                                            <option value="all">All Projects</option>
+                                            <!-- Projects will be dynamically added here -->
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="filter-group">
+                                        <span class="filter-label">Status:</span>
+                                        <select class="filter-select" id="status-filter">
+                                            <option value="all">All Status</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="in-progress">In Progress</option>
+                                            <option value="completed">Completed</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="task-list" id="tasksList">
+                                    <div class="skeleton-text" style="width: 90%"></div>
+                                    <div class="skeleton-text" style="width: 75%"></div>
+                                    <div class="skeleton-text" style="width: 85%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Project Timeline</h3>
+                                <a href="calendar.html" class="btn btn-link">View Calendar</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="calendar-container" id="calendar"></div>
+                                <div class="timeline" id="timelineList">
+                                    <div class="skeleton-text" style="width: 65%"></div>
+                                    <div class="skeleton-text" style="width: 80%"></div>
+                                    <div class="skeleton-text" style="width: 70%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    
+    <script>
+        // Initialize Supabase
+        const supabaseUrl = 'https://qjswuwcqyzeuqqqltykz.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhbmFzZSIsInJlZiI6InFqc3d1d2NxeXpldXFxcWx0eWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMjk0MDUsImV4cCI6MjA3MDgwNTQwNX0.qgH8DMJEoJVuYOXSyr0RAj01Yt7bBR8EYL6qw3YXyAs';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // DOM Elements
+        const sidebar = document.getElementById('sidebar');
+        const menuToggle = document.getElementById('menuToggle');
+        const userName = document.getElementById('userName');
+        const userCompany = document.getElementById('userCompany');
+        const userAvatar = document.getElementById('userAvatar');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const dashboardSummary = document.getElementById('dashboardSummary');
+        const activeProjectsCount = document.getElementById('activeProjectsCount');
+        const dueTasksCount = document.getElementById('dueTasksCount');
+        const statProjects = document.getElementById('statProjects');
+        const statTasks = document.getElementById('statTasks');
+        const statEstimates = document.getElementById('statEstimates');
+        const statPhotos = document.getElementById('statPhotos');
+        const projectsList = document.getElementById('projectsList');
+        const activitiesList = document.getElementById('activitiesList');
+        const tasksList = document.getElementById('tasksList');
+        const timelineList = document.getElementById('timelineList');
+        const crmNavItem = document.getElementById('crmNavItem');
+        const proposalsNavItem = document.getElementById('proposalsNavItem');
+        const subcontractorsNavItem = document.getElementById('subcontractorsNavItem');
+        const advancedCrmNavItem = document.getElementById('advancedCrmNavItem');
+        const aiProposalsNavItem = document.getElementById('aiProposalsNavItem');
+        const profileMenu = document.getElementById('profileMenu');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const searchInput = document.getElementById('searchInput');
+        const projectFilter = document.getElementById('project-filter');
+        const statusFilter = document.getElementById('status-filter');
+        const verificationBanner = document.getElementById('verification-banner');
+
+        // State
+        let userData = null;
+        let companyData = null;
+        let subscriptionTier = 'starter';
+        let userProjects = [];
+
+        // Check authentication and load data
+        async function initDashboard() {
+            const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+            
+            if (sessionError || !session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Get user data
+            const { data: user, error: userError } = await supabase.auth.getUser();
+            if (userError) {
+                console.error('Error getting user:', userError);
+                return;
+            }
+
+            userData = user.user;
+            
+            // Check if user needs email verification
+            if (userData && !userData.email_confirmed_at) {
+                verificationBanner.style.display = 'block';
+            }
+            
+            // Get user profile
+            const { data: profile, error: profileError } = await supabase
+                .from('user_profiles')
+                .select('*')
+                .eq('id', userData.id)
+                .single();
+
+            if (profileError) {
+                console.error('Error fetching profile:', profileError);
+                // Create default profile if doesn't exist
+                const { data: newProfile, error: insertError } = await supabase
+                    .from('user_profiles')
+                    .insert([{
+                        id: userData.id,
+                        first_name: userData.user_metadata.first_name || 'User',
+                        last_name: userData.user_metadata.last_name || 'Name',
+                        company_name: userData.user_metadata.company_name || 'Company'
+                    }])
+                    .select()
+                    .single();
+
+                if (insertError) {
+                    console.error('Error creating profile:', insertError);
+                } else {
+                    profile = newProfile;
+                }
+            }
+
+            // Get company data
+            const { data: company, error: companyError } = await supabase
+                .from('companies')
+                .select('*')
+                .eq('id', userData.user_metadata.company_id)
+                .single();
+
+            if (companyError) {
+                console.error('Error fetching company:', companyError);
+            } else {
+                companyData = company;
+                subscriptionTier = company.subscription_tier || 'starter';
+            }
+
+            // Update UI with user data
+            updateUserUI(profile, company);
+            
+            // Load dashboard data
+            await loadDashboardData();
+            
+            // Handle feature locking based on subscription tier
+            handleFeatureLocking();
+            
+            // Initialize calendar
+            initCalendar();
+        }
+
+        // Initialize calendar
+        function initCalendar() {
+            const calendarEl = document.getElementById('calendar');
+            if (calendarEl) {
+                const calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                    },
+                    events: []
+                });
+                
+                calendar.render();
+            }
+        }
+
+        // Update UI with user data
+        function updateUserUI(profile, company) {
+            const firstName = profile?.first_name || userData.user_metadata.first_name || 'User';
+            const lastName = profile?.last_name || userData.user_metadata.last_name || 'Name';
+            const companyName = company?.name || userData.user_metadata.company_name || 'Company';
+            
+            userName.textContent = `${firstName} ${lastName}`;
+            userCompany.textContent = companyName;
+            userAvatar.src = `https://ui-avatars.com/api/?name=${firstName}+${lastName}&background=2563eb&color=fff`;
+            
+            welcomeMessage.textContent = `Welcome back, ${firstName}!`;
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            // Load projects
+            const { data: projects, error: projectsError } = await supabase
+                .from('projects')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(20);
+
+            if (!projectsError && projects) {
+                userProjects = projects;
+                statProjects.textContent = projects.length;
+                activeProjectsCount.textContent = projects.length;
+                renderProjects(projects);
+                
+                // Populate project filter dropdown with user's actual projects
+                populateProjectFilter(projects);
+            }
+
+            // Load tasks
+            const today = new Date().toISOString().split('T')[0];
+            const { data: tasks, error: tasksError } = await supabase
+                .from('tasks')
+                .select('*')
+                .gte('due_date', today)
+                .lte('due_date', today)
+                .order('due_date', { ascending: true });
+
+            if (!tasksError && tasks) {
+                statTasks.textContent = tasks.length;
+                dueTasksCount.textContent = tasks.length;
+                renderTasks(tasks);
+            }
+
+            // Load activities
+            const { data: activities, error: activitiesError } = await supabase
+                .from('activities')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(4);
+
+            if (!activitiesError && activities) {
+                renderActivities(activities);
+            }
+
+            // Load timeline events (from tasks with due dates)
+            const { data: timelineTasks, error: timelineError } = await supabase
+                .from('tasks')
+                .select('*')
+                .gte('due_date', new Date().toISOString())
+                .order('due_date', { ascending: true })
+                .limit(5);
+
+            if (!timelineError && timelineTasks) {
+                renderTimeline(timelineTasks);
+            }
+        }
+
+        // Populate project filter dropdown with user's projects
+        function populateProjectFilter(projects) {
+            if (!projectFilter) return;
+            
+            // Clear existing options except the first one
+            while (projectFilter.options.length > 1) {
+                projectFilter.remove(1);
+            }
+            
+            // Add user's projects to the dropdown
+            projects.forEach(project => {
+                const option = document.createElement('option');
+                option.value = project.id;
+                option.textContent = project.name;
+                projectFilter.appendChild(option);
+            });
+        }
+
+        // Render projects
+        function renderProjects(projects) {
+            projectsList.innerHTML = '';
+            
+            if (projects.length === 0) {
+                projectsList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <h4>No projects yet</h4>
+                        <p>Get started by creating your first project</p>
+                        <a href="projects.html" class="btn btn-primary">Create Project</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Show only the first 3 projects
+            const projectsToShow = projects.slice(0, 3);
+            
+            projectsToShow.forEach(project => {
+                const projectItem = document.createElement('div');
+                projectItem.className = 'project-item';
+                projectItem.innerHTML = `
+                    <div class="project-info">
+                        <h4>${project.name}</h4>
+                        <p>${project.type || 'No type specified'}</p>
+                        <div class="project-progress">
+                            <div class="progress-bar" style="width: ${project.progress || 0}%"></div>
+                            <span>${project.progress || 0}% complete</span>
+                        </div>
+                    </div>
+                    <div class="project-actions">
+                        <button class="btn btn-icon">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                `;
+                projectsList.appendChild(projectItem);
+            });
+        }
+
+        // Render tasks
+        function renderTasks(tasks) {
+            tasksList.innerHTML = '';
+            
+            if (tasks.length === 0) {
+                tasksList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-tasks"></i>
+                        <h4>No tasks due</h4>
+                        <p>You're all caught up on tasks</p>
+                        <a href="taskflow.html" class="btn btn-primary">Create Task</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            tasks.forEach(task => {
+                const dueDate = new Date(task.due_date);
+                const today = new Date();
+                const isToday = dueDate.toDateString() === today.toDateString();
+                const isHighPriority = task.priority === 'high';
+                const isMediumPriority = task.priority === 'medium';
+                const isCompleted = task.completed;
+                
+                // Get project name for this task
+                const project = userProjects.find(p => p.id === task.project_id);
+                const projectName = project ? project.name : 'No Project';
+                
+                // Determine priority class
+                let priorityClass = '';
+                let priorityText = '';
+                if (isHighPriority) {
+                    priorityClass = 'priority-high';
+                    priorityText = 'High Priority';
+                } else if (isMediumPriority) {
+                    priorityClass = 'priority-medium';
+                    priorityText = 'Medium Priority';
+                } else {
+                    priorityClass = 'priority-low';
+                    priorityText = 'Low Priority';
+                }
+                
+                const taskItem = document.createElement('div');
+                taskItem.className = `task-item ${isHighPriority ? 'priority-high' : isMediumPriority ? 'priority-medium' : ''} ${isCompleted ? 'completed' : ''}`;
+                taskItem.innerHTML = `
+                    <label class="checkbox-container">
+                        <input type="checkbox" ${isCompleted ? 'checked' : ''}>
+                        <span class="checkmark"></span>
+                    </label>
+                    <div class="task-content">
+                        <h4>${task.title}</h4>
+                        <p>Project: ${projectName} • Due ${isToday ? 'today' : dueDate.toLocaleDateString()}</p>
+                        <div class="task-meta">
+                            <span>Due: ${isToday ? 'Today' : dueDate.toLocaleDateString()}</span>
+                            <span>Project: ${projectName}</span>
+                            <span>Assigned to: You</span>
+                            <span class="task-priority ${priorityClass}">${priorityText}</span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="btn btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-icon" title="Delete"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                tasksList.appendChild(taskItem);
+            });
+        }
+
+        // Render activities
+        function renderActivities(activities) {
+            activitiesList.innerHTML = '';
+            
+            if (activities.length === 0) {
+                activitiesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-history"></i>
+                        <h4>No activity yet</h4>
+                        <p>Your recent activity will appear here</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            activities.forEach(activity => {
+                const activityItem = document.createElement('div');
+                activityItem.className = 'activity-item';
+                
+                // Determine icon based on activity type
+                let iconClass = 'fas fa-';
+                switch(activity.type) {
+                    case 'photo':
+                        iconClass += 'camera';
+                        break;
+                    case 'estimate':
+                        iconClass += 'file-invoice-dollar';
+                        break;
+                    case 'task':
+                        iconClass += 'check-circle';
+                        break;
+                    case 'message':
+                        iconClass += 'comment';
+                        break;
+                    default:
+                        iconClass += 'bell';
+                }
+                
+                const timeAgo = getTimeAgo(new Date(activity.created_at));
+                
+                activityItem.innerHTML = `
+                    <div class="activity-icon">
+                        <i class="${iconClass}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <p>${activity.description}</p>
+                        <span class="activity-time">${timeAgo}</span>
+                    </div>
+                `;
+                activitiesList.appendChild(activityItem);
+            });
+        }
+
+        // Render timeline
+        function renderTimeline(tasks) {
+            timelineList.innerHTML = '';
+            
+            if (tasks.length === 0) {
+                timelineList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calendar"></i>
+                        <h4>No upcoming events</h4>
+                        <p>Your project timeline will appear here</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            tasks.forEach(task => {
+                const dueDate = new Date(task.due_date);
+                // Get project name for this task
+                const project = userProjects.find(p => p.id === task.project_id);
+                const projectName = project ? project.name : 'No Project';
+                
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item';
+                timelineItem.innerHTML = `
+                    <div class="timeline-date">${dueDate.toLocaleDateString()}</div>
+                    <div class="timeline-content">
+                        <h4>${task.title}</h4>
+                        <p>${projectName}</p>
+                    </div>
+                `;
+                timelineList.appendChild(timelineItem);
+            });
+        }
+
+        // Handle feature locking based on subscription tier
+        function handleFeatureLocking() {
+            // Enable features based on subscription tier
+            if (subscriptionTier === 'pro' || subscriptionTier === 'enterprise') {
+                crmNavItem.classList.remove('nav-item-locked');
+                proposalsNavItem.classList.remove('nav-item-locked');
+            }
+            
+            if (subscriptionTier === 'enterprise') {
+                subcontractorsNavItem.classList.remove('nav-item-locked');
+                advancedCrmNavItem.classList.remove('nav-item-locked');
+                aiProposalsNavItem.classList.remove('nav-item-locked');
+            }
+        }
+
+        // Utility function to get time ago
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            
+            if (diffInSeconds < 60) {
+                return 'Just now';
+            } else if (diffInSeconds < 3600) {
+                const minutes = Math.floor(diffInSeconds / 60);
+                return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+            } else if (diffInSeconds < 86400) {
+                const hours = Math.floor(diffInSeconds / 3600);
+                return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+            } else if (diffInSeconds < 2592000) {
+                const days = Math.floor(diffInSeconds / 86400);
+                return `${days} day${days !== 1 ? 's' : ''} ago`;
+            } else {
+                return date.toLocaleDateString();
+            }
+        }
+
+        // Resend verification email
+        async function resendVerificationEmail() {
+            if (!userData || !userData.email) {
+                alert('No email found. Please log in again.');
+                return;
+            }
+
+            const { error } = await supabase.auth.resend({
+                type: "signup",
+                email: userData.email
+            });
+            
+            if (error) {
+                alert("Error: " + error.message);
+            } else {
+                alert("Verification email resent! Please check your inbox.");
+            }
+        }
+        
+        // Dismiss banner
+        function dismissBanner() {
+            verificationBanner.style.display = 'none';
+        }
+
+        // Filter functionality
+        function filterTasks() {
+            // This would filter tasks based on selected criteria
+            console.log('Filtering tasks...');
+        }
+
+        // Event Listeners
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Profile dropdown
+        profileMenu.addEventListener('click', () => {
+            profileDropdown.classList.toggle('active');
+        });
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', async () => {
+            const { error } = await supabase.auth.signOut();
+            if (!error) {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Search functionality
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                const searchTerm = searchInput.value.trim();
+                if (searchTerm) {
+                    window.location.href = `search.html?q=${encodeURIComponent(searchTerm)}`;
+                }
+            }
+        });
+
+        // Filter event listeners
+        if (projectFilter) {
+            projectFilter.addEventListener('change', filterTasks);
+        }
+        
+        if (statusFilter) {
+            statusFilter.addEventListener('change', filterTasks);
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!profileMenu.contains(e.target) && !profileDropdown.contains(e.target)) {
+                profileDropdown.classList.remove('active');
+            }
+        });
+
+        // Initialize dashboard
+        initDashboard();
+    </script>
+</body>
+</html>

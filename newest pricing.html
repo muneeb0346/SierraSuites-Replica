@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing | The Sierra Suites</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1e40af;
+            --primary-light: #3b82f6;
+            --primary-ultralight: #eff6ff;
+            --secondary-color: #f97316;
+            --secondary-dark: #ea580c;
+            --secondary-light: #fb923c;
+            --text-color: #f8fafc;
+            --text-light: #cbd5e1;
+            --text-lighter: #94a3b8;
+            --bg-dark: #0f172a;
+            --bg-darker: #0a0f1c;
+            --bg-card: #1e293b;
+            --white: #ffffff;
+            --black: #000000;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --info-color: #3b82f6;
+            --border-color: #334155;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius-sm: 0.25rem;
+            --radius: 0.5rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+            --radius-full: 9999px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
+            background-color: var(--bg-darker);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.25;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        h1 { font-size: 3.5rem; }
+        h2 { font-size: 2.5rem; }
+        h3 { font-size: 2rem; }
+        h4 { font-size: 1.5rem; }
+        h5 { font-size: 1.25rem; }
+        h6 { font-size: 1.125rem; }
+
+        p {
+            margin-bottom: 1.25rem;
+            color: var(--text-light);
+        }
+
+        a {
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--primary-color);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        ul, ol {
+            list-style: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-sm);
+            z-index: 100;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled {
+            height: 70px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--white);
+        }
+
+        .nav ul {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav a {
+            color: var(--text-color);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav a:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav a:hover:after {
+            width: 100%;
+        }
+
+        .nav a.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .auth-buttons {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.75rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.6s ease;
+        }
+
+        .btn:hover:before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white) !important;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary * {
+            color: var(--white) !important;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            color: var(--white) !important;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Fix for Login button in header */
+        .auth-buttons .btn-outline:hover {
+            color: var(--white) !important;
+        }
+
+        .btn-link {
+            background-color: transparent;
+            color: var(--primary-color);
+            padding: 0;
+            font-weight: 500;
+        }
+
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            padding: 0;
+            border-radius: 50%;
+            background-color: transparent;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon:hover {
+            background-color: var(--bg-card);
+            color: var(--primary-color);
+        }
+
+        .btn-small {
+            padding: 0.5rem 1.25rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-large {
+            padding: 1rem 2.5rem;
+            font-size: 1.125rem;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-color);
+            cursor: pointer;
+            z-index: 101;
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-dark);
+            padding: 5rem 2rem 2rem;
+            flex-direction: column;
+            gap: 1.5rem;
+            z-index: 99;
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mobile-nav.active {
+            transform: translateX(0);
+            display: flex;
+        }
+
+        .mobile-nav a {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        /* Pricing Hero Section */
+        .pricing-hero {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            padding: 8rem 0 3rem;
+        }
+
+        .pricing-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .pricing-header {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            color: var(--text-color);
+        }
+
+        .pricing-header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            color: var(--white);
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.03em;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            margin-bottom: 3rem;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        /* Billing Toggle */
+        .billing-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 4rem;
+            font-weight: 500;
+            font-size: 1.125rem;
+            color: var(--text-light);
+            position: relative;
+            z-index: 1;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 32px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border-color);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 24px;
+            width: 24px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: var(--shadow-sm);
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .discount-badge {
+            background-color: var(--success-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.875rem;
+            margin-left: 0.5rem;
+            font-weight: 600;
+        }
+
+        /* Pricing Cards */
+        .pricing-section {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            animation: rotate 25s linear infinite;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-header h2 {
+            font-size: 2.75rem;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pricing-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            text-align: center;
+            border: 1px solid transparent;
+            opacity: 0;
+            transform: translateY(20px);
+            color: var(--text-color);
+        }
+
+        .pricing-card.animate {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .pricing-card:nth-child(1) { animation-delay: 0.2s; }
+        .pricing-card:nth-child(2) { animation-delay: 0.4s; }
+        .pricing-card:nth-child(3) { animation-delay: 0.6s; }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-ultralight);
+        }
+
+        .pricing-card.featured {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            transform: scale(1.03);
+            border: none;
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.03) translateY(-8px);
+            box-shadow: var(--shadow-xl), 0 25px 50px -12px rgba(37, 99, 235, 0.25);
+        }
+
+        .pricing-card.featured * {
+            color: var(--white);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -0.75rem;
+            right: 2rem;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            padding: 0.5rem 1.5rem;
+            border-radius: var(--radius-full);
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+        }
+
+        .limited-badge {
+            position: absolute;
+            top: -0.75rem;
+            right: 2rem;
+            background-color: var(--warning-color);
+            color: var(--white);
+            padding: 0.5rem 1.5rem;
+            border-radius: var(--radius-full);
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+        }
+
+        .package-badge {
+            position: absolute;
+            top: -0.75rem;
+            right: 2rem;
+            background-color: var(--success-color);
+            color: var(--white);
+            padding: 0.5rem 1.5rem;
+            border-radius: var(--radius-full);
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+        }
+
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            font-weight: 700;
+        }
+
+        .pricing-card.featured h3 {
+            color: var(--white);
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+            line-height: 1;
+        }
+
+        .pricing-card.featured .price {
+            color: var(--white);
+        }
+
+        .price span {
+            font-size: 1.125rem;
+            font-weight: 500;
+        }
+
+        .billed-annually {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .pricing-card.featured .billed-annually {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .features-list {
+            margin-bottom: 2.5rem;
+            text-align: left;
+        }
+
+        .features-list h4 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .features-list ul {
+            margin-bottom: 1.5rem;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+
+        .pricing-card.featured .features-list li {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .features-list i {
+            color: var(--success-color);
+            font-size: 1.125rem;
+        }
+
+        .limitations i {
+            color: var(--danger-color);
+        }
+
+        /* Feature Comparison */
+        .feature-comparison {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-comparison::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            animation: rotate 25s linear infinite;
+        }
+
+        .comparison-table {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .comparison-table th {
+            background-color: var(--primary-color);
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .comparison-table th:first-child {
+            border-radius: var(--radius-xl) 0 0 0;
+        }
+
+        .comparison-table th:last-child {
+            border-radius: 0 var(--radius-xl) 0 0;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: rgba(30, 41, 59, 0.5);
+        }
+
+        .comparison-table i.fa-check {
+            color: var(--success-color);
+        }
+
+        .comparison-table i.fa-times {
+            color: var(--danger-color);
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .faq-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            animation: rotate 25s linear infinite;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .faq-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .faq-card.animate {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .faq-card:nth-child(1) { animation-delay: 0.1s; }
+        .faq-card:nth-child(2) { animation-delay: 0.2s; }
+        .faq-card:nth-child(3) { animation-delay: 0.3s; }
+        .faq-card:nth-child(4) { animation-delay: 0.4s; }
+        .faq-card:nth-child(5) { animation-delay: 0.5s; }
+        .faq-card:nth-child(6) { animation-delay: 0.6s; }
+
+        .faq-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-ultralight);
+        }
+
+        .faq-card h3 {
+            font-size: 1.25rem;
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .faq-card p {
+            color: var(--text-light);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
+            color: var(--white);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section h2 {
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
+
+        .cta-section p {
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Fix for Contact Sales button */
+        .cta-section .btn-outline {
+            background-color: transparent;
+            color: var(--white);
+            border-color: var(--white);
+        }
+
+        .cta-section .btn-outline:hover {
+            background-color: var(--white);
+            color: var(--primary-color);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--bg-dark);
+            color: var(--white);
+            padding: 6rem 0 0;
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-column h4 {
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .footer-column ul {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.7);
+            transition: all 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--white);
+            transform: translateX(5px);
+        }
+
+        .footer-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.125rem;
+            line-height: 1.6;
+            margin-top: 1.5rem;
+            max-width: 400px;
+        }
+
+        .contact-info li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.5);
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(-30px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-color);
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h3 {
+            margin-bottom: 0;
+            color: var(--white);
+            font-size: 1.75rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--primary-color);
+        }
+
+        .modal-body {
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        .modal-content {
+            line-height: 1.7;
+        }
+
+        .modal-content h4 {
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            color: var(--white);
+            font-size: 1.375rem;
+        }
+
+        .modal-content p {
+            margin-bottom: 1.25rem;
+            font-size: 1.125rem;
+            color: var(--text-light);
+        }
+
+        .modal-content ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-content li {
+            list-style-type: disc;
+            margin-bottom: 0.75rem;
+            font-size: 1.125rem;
+            color: var(--text-light);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .pricing-header h1 {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .pricing-cards {
+                grid-template-columns: 1fr;
+                max-width: 600px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+            }
+            
+            .pricing-card.featured:hover {
+                transform: translateY(-8px);
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+            
+            .footer-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .auth-buttons {
+                display: none;
+            }
+            
+            h1 { font-size: 2.75rem; }
+            h2 { font-size: 2.25rem; }
+            
+            .pricing-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.125rem;
+            }
+            
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            
+            .pricing-header h1 {
+                font-size: 2.25rem;
+            }
+            
+            .pricing-card {
+                padding: 1.5rem;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 1rem;
+            }
+            
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .footer-bottom {
+                text-align: center;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <span>The Sierra Suites</span>
+            </a>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#features">Features</a></li>
+                    <li><a href="pricing.html" class="active">Pricing</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li class="auth-buttons">
+                        <a href="login.html" class="btn btn-outline">Login</a>
+                        <a href="register.html" class="btn btn-primary">Get Started</a>
+                    </li>
+                </ul>
+            </nav>
+            <button class="mobile-menu-toggle" type="button">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="mobile-nav">
+                <a href="index.html">Home</a>
+                <a href="index.html#features">Features</a>
+                <a href="pricing.html" class="active">Pricing</a>
+                <a href="#contact">Contact</a>
+                <div class="auth-buttons">
+                    <a href="login.html" class="btn btn-outline">Login</a>
+                    <a href="register.html" class="btn btn-primary">Get Started</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="pricing-hero">
+        <div class="container">
+            <div class="pricing-header">
+                <h1>Simple, Transparent Pricing</h1>
+                <p class="subtitle">Choose the plan that fits your business needs. Get started today with our flexible plans.</p>
+                <div class="billing-toggle">
+                    <span>Monthly</span>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Annual <span class="discount-badge">Save 20%</span></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Choose Your Plan</h2>
+                <p class="section-subtitle">Select the package that best fits your construction business needs</p>
+            </div>
+            <div class="pricing-cards">
+                <div class="pricing-card">
+                    <div class="limited-badge">Limited Time Deal</div>
+                    <h3>Starter</h3>
+                    <div class="price">
+                        <span class="currency">$</span>
+                        <span class="amount">44</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <p class="billed-annually">$422 billed annually</p>
+                    <a href="register.html" class="btn btn-outline btn-block">Get Started</a>
+                    <div class="features-list">
+                        <h4>Core Project Management</h4>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Basic project dashboard</li>
+                            <li><i class="fas fa-check"></i> FieldSnap photo upload</li>
+                            <li><i class="fas fa-check"></i> TaskFlow calendar</li>
+                            <li><i class="fas fa-check"></i> Basic estimate templates</li>
+                            <li><i class="fas fa-check"></i> Time tracking</li>
+                            <li><i class="fas fa-check"></i> Basic reports</li>
+                        </ul>
+                        <h4>Limitations</h4>
+                        <ul class="limitations">
+                            <li><i class="fas fa-times"></i> No CRM features</li>
+                            <li><i class="fas fa-times"></i> No team collaboration</li>
+                            <li><i class="fas fa-times"></i> No AI features</li>
+                            <li><i class="fas fa-times"></i> 1 user only</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="popular-badge">Most Popular</div>
+                    <h3>Professional</h3>
+                    <div class="price">
+                        <span class="currency">$</span>
+                        <span class="amount">80</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <p class="billed-annually">$768 billed annually</p>
+                    <a href="register.html" class="btn btn-primary btn-block">Get Started</a>
+                    <div class="features-list">
+                        <h4>All Starter Features PLUS</h4>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Up to 5 users</li>
+                            <li><i class="fas fa-check"></i> $15/month per additional user</li>
+                        </ul>
+                        <h4>Essential CRM Suite</h4>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Centralized contact management</li>
+                            <li><i class="fas fa-check"></i> Lead & opportunity pipeline</li>
+                            <li><i class="fas fa-check"></i> Activity log</li>
+                            <li><i class="fas fa-check"></i> Quote & proposal tracking</li>
+                            <li><i class="fas fa-check"></i> Jobsite visit scheduling</li>
+                        </ul>
+                        <h4>AI Features</h4>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Smart email responses</li>
+                            <li><i class="fas fa-check"></i> Lead scoring & follow-ups</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="package-badge">All-In-One Package</div>
+                    <h3>Enterprise</h3>
+                    <div class="price">
+                        <span class="currency">$</span>
+                        <span class="amount">228</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <p class="billed-annually">$2189 billed annually</p>
+                    <a href="register.html" class="btn btn-outline btn-block">Get Started</a>
+                    <div class="features-list">
+                        <h4>All Pro Features PLUS</h4>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Unlimited users</li>
+                            <li><i class="fas fa-check"></i> Role permissions</li>
+                        </ul>
+                        <h4>Advanced CRM Suite</h4>
+                        <ul>
+                            <li><i class="fas fa-check"></i> AI proposal generator</li>
+                            <li><i class="fas fa-check"></i> Project-centric CRM view</li>
+                            <li><i class="fas fa-check"></i> Subcontractor database</li>
+                            <li><i class="fas fa-check"></i> Document & permit tracking</li>
+                            <li><i class="fas fa-check"></i> Material supplier tracker</li>
+                        </ul>
+                        <h4>Advanced AI Features</h4>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Predictive sales analytics</li>
+                            <li><i class="fas fa-check"></i> Market intelligence</li>
+                            <li><i class="fas fa-check"></i> Email marketing automation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="feature-comparison">
+        <div class="container">
+            <div class="section-header">
+                <h2>Detailed Feature Comparison</h2>
+                <p class="section-subtitle">See how our plans stack up against each other</p>
+            </div>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Starter</th>
+                            <th>Professional</th>
+                            <th>Enterprise</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Users Included</td>
+                            <td>1</td>
+                            <td>5</td>
+                            <td>Unlimited</td>
+                        </tr>
+                        <tr>
+                            <td>Additional Users</td>
+                            <td>Not available</td>
+                            <td>$15/month each</td>
+                            <td>Included</td>
+                        </tr>
+                        <tr>
+                            <td>Project Management</td>
+                            <td><i class="fas fa-check"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td>FieldSnap Photo Docs</td>
+                            <td>Basic</td>
+                            <td>Advanced</td>
+                            <td>Advanced</td>
+                        </tr>
+                        <tr>
+                            <td>TaskFlow Scheduling</td>
+                            <td>Basic</td>
+                            <td>Advanced</td>
+                            <td>Advanced</td>
+                        </tr>
+                        <tr>
+                            <td>QuoteHub Estimates</td>
+                            <td>Templates only</td>
+                            <td>Professional templates</td>
+                            <td>AI-generated</td>
+                        </tr>
+                        <tr>
+                            <td>CRM Features</td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td>Essential</td>
+                            <td>Advanced</td>
+                        </tr>
+                        <tr>
+                            <td>AI Features</td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td>Basic</td>
+                            <td>Advanced</td>
+                        </tr>
+                        <tr>
+                            <td>Team Collaboration</td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td>Up to 5 users</td>
+                            <td>Unlimited</td>
+                        </tr>
+                        <tr>
+                            <td>Subcontractor Database</td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Document & Permit Tracking</td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td><i class="fas fa-check"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Priority Support</td>
+                            <td><i class="fas fa-times"></i></td>
+                            <td>Standard</td>
+                            <td>Priority</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+                <p class="section-subtitle">Everything you need to know about our plans</p>
+            </div>
+            <div class="faq-grid">
+                <div class="faq-card">
+                    <h3>Can I change plans later?</h3>
+                    <p>Absolutely! You can upgrade or downgrade your plan at any time. Your subscription will be prorated based on the remaining days in your billing cycle.</p>
+                </div>
+                <div class="faq-card">
+                    <h3>What payment methods do you accept?</h3>
+                    <p>We accept all major credit cards (Visa, Mastercard, American Express, Discover) as well as ACH bank transfers for annual plans.</p>
+                </div>
+                <div class="faq-card">
+                    <h3>How does the Professional plan handle additional users?</h3>
+                    <p>The Professional plan includes 5 users. You can add additional users for $15/month each. There's no limit to how many users you can add beyond the included 5.</p>
+                </div>
+                <div class="faq-card">
+                    <h3>Is my data secure?</h3>
+                    <p>Security is our top priority. All data is encrypted in transit and at rest. We perform regular backups and maintain SOC 2 compliance.</p>
+                </div>
+                <div class="faq-card">
+                    <h3>What if I need help getting started?</h3>
+                    <p>We offer onboarding assistance for all new customers. Professional and Enterprise plans include dedicated setup sessions with our customer success team.</p>
+                </div>
+                <div class="faq-card">
+                    <h3>Do you offer custom plans?</h3>
+                    <p>Yes, we can create custom plans for businesses with unique requirements. Contact our sales team to discuss your specific needs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Transform Your Construction Business?</h2>
+                <p>Join thousands of contractors who are saving time and growing their business with The Sierra Suites.</p>
+                <div class="cta-buttons">
+                    <a href="register.html" class="btn btn-primary btn-large">Get Started</a>
+                    <a href="#contact" class="btn btn-outline btn-large">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <a href="index.html" class="logo">
+                        <span>The Sierra Suites</span>
+                    </a>
+                    <p class="footer-description">The complete construction management platform built for contractors who want to grow their business.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="index.html#features">Features</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#careers" class="careers-link">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Support and Contact</h4>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-envelope"></i> info@thesierrasuites.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 The Sierra Suites. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#" class="privacy-link">Privacy Policy</a>
+                    <a href="#" class="terms-link">Terms of Service</a>
+                    <a href="#" class="cookie-link">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Terms of Service Modal -->
+    <div class="modal-overlay" id="termsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Terms of Service</h3>
+                <button class="modal-close" id="closeTerms">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-content">
+                    <p><strong>Last Updated: January 1, 2025</strong></p>
+                    
+                    <h4>1. Agreement to Terms</h4>
+                    <p>By accessing or using The Sierra Suites ("Service"), you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing our Service.</p>
+                    
+                    <h4>2. Use License</h4>
+                    <p>Permission is granted to temporarily use The Sierra Suites for your business operations. This is the grant of a license, not a transfer of title, and under this license you may not:</p>
+                    <ul>
+                        <li>Modify or copy the materials;</li>
+                        <li>Use the materials for any commercial purpose or for any public display;</li>
+                        <li>Attempt to reverse engineer any software contained on The Sierra Suites;</li>
+                        <li>Remove any copyright or other proprietary notations from the materials; or</li>
+                        <li>Transfer the materials to another person or "mirror" the materials on any other server.</li>
+                    </ul>
+                    
+                    <h4>3. Account Registration</h4>
+                    <p>To access certain features of our Service, you must register for an account. You agree to provide accurate, current, and complete information during the registration process and to update such information to keep it accurate, current, and complete.</p>
+                    
+                    <h4>4. Subscription and Payment</h4>
+                    <p>Certain aspects of the Service may be provided for a fee. You agree to pay all applicable fees in accordance with these Terms and the pricing terms provided to you. All fees are non-refundable except as required by law or as otherwise stated in our refund policy.</p>
+                    
+                    <h4>5. User Content</h4>
+                    <p>You retain all rights to any content you submit, post or display on or through the Service. By submitting, posting or displaying content on or through the Service, you grant us a worldwide, non-exclusive, royalty-free license to use, copy, reproduce, process, adapt, modify, publish, transmit, display and distribute such content.</p>
+                    
+                    <h4>6. Intellectual Property</h4>
+                    <p>The Service and its original content, features, and functionality are and will remain the exclusive property of The Sierra Suites and its licensors. The Service is protected by copyright, trademark, and other laws of both the United States and foreign countries.</p>
+                    
+                    <h4>7. Termination</h4>
+                    <p>We may terminate or suspend your account and bar access to the Service immediately, without prior notice or liability, under our sole discretion, for any reason whatsoever and without limitation, including but not limited to a breach of the Terms.</p>
+                    
+                    <h4>8. Limitation of Liability</h4>
+                    <p>In no event shall The Sierra Suites, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.</p>
+                    
+                    <h4>9. Governing Law</h4>
+                    <p>These Terms shall be governed and construed in accordance with the laws of the State of Nevada, United States, without regard to its conflict of law provisions.</p>
+                    
+                    <h4>10. Changes to Terms</h4>
+                    <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms.</p>
+                    
+                    <h4>11. Contact Information</h4>
+                    <p>If you have any questions about these Terms, please contact us at legal@thesierrasuites.com.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Policy Modal -->
+    <div class="modal-overlay" id="privacyModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Privacy Policy</h3>
+                <button class="modal-close" id="closePrivacy">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-content">
+                    <p><strong>Last Updated: January 1, 2025</strong></p>
+                    
+                    <h4>1. Introduction</h4>
+                    <p>The Sierra Suites ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how your personal information is collected, used, and disclosed by The Sierra Suites.</p>
+                    
+                    <h4>2. Information We Collect</h4>
+                    <p>We collect information you provide directly to us, including when you create an account, update your profile, use our services, or communicate with us. This information may include:</p>
+                    <ul>
+                        <li>Name, email address, and contact information</li>
+                        <li>Company information and business details</li>
+                        <li>Payment information and billing details</li>
+                        <li>Project data, construction documentation, and team information</li>
+                        <li>Communications with our support team</li>
+                    </ul>
+                    
+                    <h4>3. How We Use Your Information</h4>
+                    <p>We may use the information we collect for various purposes, including to:</p>
+                    <ul>
+                        <li>Provide, maintain, and improve our services</li>
+                        <li>Process transactions and send related information</li>
+                        <li>Send you technical notices, updates, and support messages</li>
+                        <li>Respond to your comments, questions, and requests</li>
+                        <li>Monitor and analyze trends, usage, and activities</li>
+                        <li>Detect, investigate, and prevent fraudulent transactions</li>
+                    </ul>
+                    
+                    <h4>4. Information Sharing</h4>
+                    <p>We may share your personal information with:</p>
+                    <ul>
+                        <li>Service providers who perform services on our behalf</li>
+                        <li>Professional advisors such as lawyers and accountants</li>
+                        <li>Law enforcement or other third parties when required by law</li>
+                        <li>Other users in your company as part of the service functionality</li>
+                    </ul>
+                    <p>We do not sell your personal information to third parties.</p>
+                    
+                    <h4>5. Data Security</h4>
+                    <p>We implement appropriate technical and organizational measures to protect the security of your personal information. However, no method of transmission over the Internet or electronic storage is 100% secure, and we cannot guarantee absolute security.</p>
+                    
+                    <h4>6. Data Retention</h4>
+                    <p>We will retain your personal information only for as long as is necessary for the purposes set out in this Privacy Policy, or as required to comply with our legal obligations, resolve disputes, and enforce our agreements.</p>
+                    
+                    <h4>7. Your Rights</h4>
+                    <p>Depending on your location, you may have the right to:</p>
+                    <ul>
+                        <li>Access and receive a copy of your personal information</li>
+                        <li>Rectify or update inaccurate personal information</li>
+                        <li>Request deletion of your personal information</li>
+                        <li>Restrict or object to our processing of your personal information</li>
+                        <li>Data portability</li>
+                    </ul>
+                    
+                    <h4>8. Cookies and Tracking Technologies</h4>
+                    <p>We use cookies and similar tracking technologies to track activity on our Service and hold certain information. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent.</p>
+                    
+                    <h4>9. Children's Privacy</h4>
+                    <p>Our Service does not address anyone under the age of 18. We do not knowingly collect personally identifiable information from anyone under the age of 18.</p>
+                    
+                    <h4>10. Changes to This Privacy Policy</h4>
+                    <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date.</p>
+                    
+                    <h4>11. Contact Us</h4>
+                    <p>If you have any questions about this Privacy Policy, please contact us at privacy@thesierrasuites.com.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cookie Policy Modal -->
+    <div class="modal-overlay" id="cookieModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Cookie Policy</h3>
+                <button class="modal-close" id="closeCookie">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-content">
+                    <p><strong>Last Updated: January 1, 2025</strong></p>
+                    
+                    <h4>1. Introduction</h4>
+                    <p>This Cookie Policy explains how The Sierra Suites ("we", "us", and "our") uses cookies and similar technologies to recognize you when you visit our website. It explains what these technologies are and why we use them, as well as your rights to control our use of them.</p>
+                    
+                    <h4>2. What are cookies?</h4>
+                    <p>Cookies are small data files that are placed on your computer or mobile device when you visit a website. Cookies are widely used by website owners to make their websites work, or to work more efficiently, as well as to provide reporting information.</p>
+                    
+                    <h4>3. Why do we use cookies?</h4>
+                    <p>We use first and third-party cookies for several reasons. Some cookies are required for technical reasons for our Website to operate, and we refer to these as "essential" or "strictly necessary" cookies. Other cookies enable us to track and target the interests of our users to enhance the experience on our Website.</p>
+                    
+                    <h4>4. Types of cookies we use</h4>
+                    <p>We use the following types of cookies:</p>
+                    <ul>
+                        <li><strong>Essential cookies:</strong> These cookies are necessary for the website to function and cannot be switched off in our systems.</li>
+                        <li><strong>Performance cookies:</strong> These cookies allow us to count visits and traffic sources so we can measure and improve the performance of our site.</li>
+                        <li><strong>Functionality cookies:</strong> These cookies enable the website to provide enhanced functionality and personalization.</li>
+                        <li><strong>Targeting cookies:</strong> These cookies may be set through our site by our advertising partners to build a profile of your interests.</li>
+                    </ul>
+                    
+                    <h4>5. How can I control cookies?</h4>
+                    <p>You can set your browser not to accept cookies, and you can remove cookies from your browser. However, in a few cases, some of our website features may not function as a result.</p>
+                    
+                    <h4>6. Changes to this Cookie Policy</h4>
+                    <p>We may update this Cookie Policy from time to time to reflect changes to the cookies we use or for other operational, legal, or regulatory reasons. Please revisit this Cookie Policy regularly to stay informed about our use of cookies.</p>
+                    
+                    <h4>7. Contact Us</h4>
+                    <p>If you have any questions about our use of cookies, please contact us at privacy@thesierrasuites.com.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Careers Modal -->
+    <div class="modal-overlay" id="careersModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Careers</h3>
+                <button class="modal-close" id="closeCareers">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-content">
+                    <p>We at The Sierra Suites are always looking to expand our team with like-minded individuals eager to solve our client's problems. If you would like to join the team and believe you could make a great addition please email us at info@thesierrasuites.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle functionality
+        document.querySelector('.mobile-menu-toggle').addEventListener('click', function() {
+            const mobileNav = document.querySelector('.mobile-nav');
+            mobileNav.classList.toggle('active');
+            
+            // Toggle hamburger icon
+            const icon = this.querySelector('i');
+            if (mobileNav.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+                document.body.style.overflow = 'hidden';
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.mobile-nav a').forEach(link => {
+            link.addEventListener('click', function() {
+                const mobileNav = document.querySelector('.mobile-nav');
+                const toggleBtn = document.querySelector('.mobile-menu-toggle i');
+                
+                mobileNav.classList.remove('active');
+                toggleBtn.classList.remove('fa-times');
+                toggleBtn.classList.add('fa-bars');
+                document.body.style.overflow = 'auto';
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Active navigation highlighting
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav a[href^="#"], .mobile-nav a[href^="#"]');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.offsetHeight;
+                if (window.pageYOffset >= sectionTop && window.pageYOffset < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Header scroll effect
+            const header = document.querySelector('.header');
+            if (window.pageYOffset > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Animation on scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.pricing-card, .faq-card');
+            
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('animate');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', animateOnScroll);
+        // Initial call to check elements in view on page load
+        animateOnScroll();
+
+        // Modal functionality
+        const termsModal = document.getElementById('termsModal');
+        const privacyModal = document.getElementById('privacyModal');
+        const cookieModal = document.getElementById('cookieModal');
+        const careersModal = document.getElementById('careersModal');
+        
+        const termsLinks = document.querySelectorAll('.terms-link');
+        const privacyLinks = document.querySelectorAll('.privacy-link');
+        const cookieLinks = document.querySelectorAll('.cookie-link');
+        const careersLinks = document.querySelectorAll('.careers-link');
+        
+        const closeTerms = document.getElementById('closeTerms');
+        const closePrivacy = document.getElementById('closePrivacy');
+        const closeCookie = document.getElementById('closeCookie');
+        const closeCareers = document.getElementById('closeCareers');
+
+        // Open Terms modal
+        termsLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                termsModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        // Open Privacy modal
+        privacyLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                privacyModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        // Open Cookie modal
+        cookieLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                cookieModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        // Open Careers modal
+        careersLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                careersModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        // Close Terms modal
+        closeTerms.addEventListener('click', function() {
+            termsModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close Privacy modal
+        closePrivacy.addEventListener('click', function() {
+            privacyModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close Cookie modal
+        closeCookie.addEventListener('click', function() {
+            cookieModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close Careers modal
+        closeCareers.addEventListener('click', function() {
+            careersModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close modal when clicking outside
+        [termsModal, privacyModal, cookieModal, careersModal].forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                termsModal.classList.remove('active');
+                privacyModal.classList.remove('active');
+                cookieModal.classList.remove('active');
+                careersModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Billing toggle functionality
+        const billingToggle = document.querySelector('.billing-toggle input');
+        const monthlyPrices = document.querySelectorAll('.price .amount');
+        const annualPrices = document.querySelectorAll('.billed-annually');
+        const originalPrices = [44, 80, 228];
+        const annualDiscount = 0.8; // 20% discount
+
+        billingToggle.addEventListener('change', function() {
+            if (this.checked) {
+                // Switch to annual pricing
+                monthlyPrices.forEach((element, index) => {
+                    const annualPrice = Math.round(originalPrices[index] * 12 * annualDiscount);
+                    element.textContent = Math.round(originalPrices[index] * annualDiscount);
+                    annualPrices[index].textContent = `$${annualPrice} billed annually`;
+                });
+            } else {
+                // Switch to monthly pricing
+                monthlyPrices.forEach((element, index) => {
+                    element.textContent = originalPrices[index];
+                    const annualPrice = Math.round(originalPrices[index] * 12 * annualDiscount);
+                    annualPrices[index].textContent = `$${annualPrice} billed annually`;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
