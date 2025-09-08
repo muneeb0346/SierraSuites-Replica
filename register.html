@@ -6,6 +6,7 @@
     <title>Register | The Sierra Suites</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://js.stripe.com/v3/"></script>
     <style>
         :root {
             --primary-color: #2563eb;
@@ -538,6 +539,59 @@
             text-decoration: underline;
         }
 
+        /* Plan Selection Styles */
+        .plan-selection {
+            margin-bottom: 1.5rem;
+        }
+
+        .plan-selection-title {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--white);
+        }
+
+        .plan-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+
+        .plan-option-form {
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .plan-option-form:hover {
+            border-color: var(--primary-light);
+        }
+
+        .plan-option-form.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(37, 99, 235, 0.1);
+        }
+
+        .plan-name-form {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--white);
+        }
+
+        .plan-price-form {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .plan-interval-form {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
         /* Footer */
         .footer {
             background-color: var(--bg-dark);
@@ -623,6 +677,108 @@
 
         .footer-links a:hover {
             color: var(--white);
+        }
+
+        /* Payment Modal Styles */
+        .payment-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+        
+        .payment-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .payment-container {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+        }
+        
+        .payment-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .payment-header h3 {
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+        
+        .selected-plan-info {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: var(--bg-dark);
+            border-radius: var(--radius);
+        }
+        
+        .selected-plan-name {
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+        
+        .selected-plan-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        #card-element {
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 12px;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+        
+        .payment-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .payment-loading {
+            display: none;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .payment-loading.active {
+            display: block;
+        }
+        
+        .payment-success {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .payment-success.active {
+            display: block;
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            color: var(--success-color);
+            margin-bottom: 1rem;
         }
 
         /* Modal Styles */
@@ -791,6 +947,10 @@
             .mobile-nav.active {
                 display: flex;
             }
+            
+            .plan-options {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 480px) {
@@ -817,6 +977,10 @@
             .footer-links {
                 flex-direction: column;
                 gap: 1rem;
+            }
+            
+            .payment-actions {
+                flex-direction: column;
             }
         }
     </style>
@@ -884,6 +1048,29 @@
                             <label for="confirmPassword" class="form-label">Confirm Password</label>
                             <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required>
                         </div>
+                        
+                        <!-- Plan Selection -->
+                        <div class="plan-selection">
+                            <div class="plan-selection-title">Choose Your Plan</div>
+                            <div class="plan-options">
+                                <div class="plan-option-form" data-plan="starter" data-price="44">
+                                    <div class="plan-name-form">Starter</div>
+                                    <div class="plan-price-form">$44</div>
+                                    <div class="plan-interval-form">per month</div>
+                                </div>
+                                <div class="plan-option-form" data-plan="pro" data-price="80">
+                                    <div class="plan-name-form">Pro</div>
+                                    <div class="plan-price-form">$80</div>
+                                    <div class="plan-interval-form">per month</div>
+                                </div>
+                                <div class="plan-option-form" data-plan="enterprise" data-price="228">
+                                    <div class="plan-name-form">Enterprise</div>
+                                    <div class="plan-price-form">$228</div>
+                                    <div class="plan-interval-form">per month</div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="form-check">
                             <input type="checkbox" id="terms" class="form-check-input" required>
                             <label for="terms" class="form-check-label">I agree to the <a href="#" class="terms-link">Terms of Service</a> and <a href="#" class="privacy-link">Privacy Policy</a></label>
@@ -910,6 +1097,45 @@
             </div>
         </div>
     </section>
+
+    <!-- Payment Modal -->
+    <div class="payment-modal" id="paymentModal">
+        <div class="payment-container">
+            <div class="payment-header">
+                <h3>Complete Your Subscription</h3>
+                <p>Enter your payment details to activate your account</p>
+            </div>
+            
+            <div class="selected-plan-info" id="selectedPlanInfo">
+                <div class="selected-plan-name" id="selectedPlanName">Starter Plan</div>
+                <div class="selected-plan-price" id="selectedPlanPrice">$44/month</div>
+            </div>
+            
+            <form id="payment-form">
+                <div id="card-element"><!-- Stripe Card Element will be inserted here --></div>
+                
+                <div id="card-errors" role="alert" style="color: var(--danger-color); margin-bottom: 1rem;"></div>
+                
+                <div class="payment-actions">
+                    <button type="button" class="btn btn-outline" id="cancel-payment">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="submit-payment">Pay Now</button>
+                </div>
+            </form>
+            
+            <div class="payment-loading" id="paymentLoading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Processing your payment...</p>
+            </div>
+            
+            <div class="payment-success" id="paymentSuccess">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Payment Successful!</h3>
+                <p>Your account has been created successfully. Redirecting to dashboard...</p>
+            </div>
+        </div>
+    </div>
 
     <footer class="footer" id="contact">
         <div class="container">
@@ -1019,6 +1245,30 @@
     </div>
 
     <script>
+        // Initialize Stripe with your publishable key
+        // Replace 'pk_test_your_publishable_key_here' with your actual Stripe publishable key
+        const stripe = Stripe('pk_test_your_publishable_key_here');
+        const elements = stripe.elements();
+        
+        // Create card element
+        const cardElement = elements.create('card', {
+            style: {
+                base: {
+                    color: '#f8fafc',
+                    fontFamily: '"Inter", sans-serif',
+                    fontSmoothing: 'antialiased',
+                    fontSize: '16px',
+                    '::placeholder': {
+                        color: '#94a3b8'
+                    }
+                },
+                invalid: {
+                    color: '#ef4444',
+                    iconColor: '#ef4444'
+                }
+            }
+        });
+        
         // Mobile menu toggle functionality
         document.querySelector('.mobile-menu-toggle').addEventListener('click', function() {
             const mobileNav = document.querySelector('.mobile-nav');
@@ -1176,6 +1426,22 @@
             }
         });
 
+        // Plan selection in registration form
+        let selectedPlan = null;
+        document.querySelectorAll('.plan-option-form').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.plan-option-form').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                selectedPlan = {
+                    name: this.querySelector('.plan-name-form').textContent,
+                    price: this.dataset.price,
+                    id: this.dataset.plan
+                };
+            });
+        });
+
         // Form validation
         document.getElementById('registerForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -1188,9 +1454,92 @@
                 return;
             }
             
-            // Form is valid, you would normally submit to a server here
-            alert('Account created successfully! Redirecting to login...');
-            // window.location.href = 'login.html';
+            if (!selectedPlan) {
+                alert('Please select a subscription plan');
+                return;
+            }
+            
+            // Show payment modal
+            document.getElementById('selectedPlanName').textContent = selectedPlan.name + ' Plan';
+            document.getElementById('selectedPlanPrice').textContent = '$' + selectedPlan.price + '/month';
+            
+            // Mount card element if not already mounted
+            try {
+                cardElement.mount('#card-element');
+            } catch (e) {
+                // Already mounted, continue
+            }
+            
+            // Show payment modal
+            document.getElementById('paymentModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        // Cancel payment
+        document.getElementById('cancel-payment').addEventListener('click', function() {
+            document.getElementById('paymentModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Handle payment form submission
+        const paymentForm = document.getElementById('payment-form');
+        paymentForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            // Show loading state
+            document.getElementById('paymentLoading').classList.add('active');
+            document.getElementById('submit-payment').disabled = true;
+            
+            try {
+                // Create payment method
+                const { paymentMethod, error } = await stripe.createPaymentMethod({
+                    type: 'card',
+                    card: cardElement,
+                });
+                
+                if (error) {
+                    // Show error to customer
+                    const errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = error.message;
+                    document.getElementById('paymentLoading').classList.remove('active');
+                    document.getElementById('submit-payment').disabled = false;
+                } else {
+                    // In a real application, you would send the paymentMethod.id to your server
+                    // For demonstration, we'll simulate a successful payment after 2 seconds
+                    setTimeout(() => {
+                        document.getElementById('paymentLoading').classList.remove('active');
+                        document.getElementById('payment-form').style.display = 'none';
+                        document.getElementById('paymentSuccess').classList.add('active');
+                        
+                        // Redirect after a delay
+                        setTimeout(() => {
+                            alert('Registration and payment successful! In a real application, you would be redirected to the dashboard.');
+                            window.location.href = 'index.html'; // Redirect to home page
+                        }, 3000);
+                    }, 2000);
+                }
+            } catch (err) {
+                console.error('Error:', err);
+                alert('An error occurred. Please try again.');
+                document.getElementById('paymentLoading').classList.remove('active');
+                document.getElementById('submit-payment').disabled = false;
+            }
+        });
+
+        // Close payment modal when clicking outside
+        document.getElementById('paymentModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Close payment modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('paymentModal').classList.contains('active')) {
+                document.getElementById('paymentModal').classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
         });
     </script>
 </body>
