@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sierra Suites - Pro CRM Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        :root {
+            --primary: #1E3A8A;
+            --primary-light: #3B82F6;
+            --secondary: #F97316;
+            --secondary-light: #FDBA74;
+            --dark: #1E293B;
+            --light: #F8FAFC;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --enterprise: #8B5CF6;
+            --residential: #3B82F6;
+            --commercial: #10B981;
+            --government: #8B5CF6;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        .sidebar {
+            background-color: var(--primary);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding-top: 60px;
+            width: 250px;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            padding-top: 80px;
+        }
+        
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: calc(100% - 250px);
+            z-index: 999;
+            margin-left: 250px;
+        }
+        
+        .crm-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+            background: white;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            overflow: hidden;
+        }
+        
+        .crm-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.85);
+            padding: 12px 20px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+        
+        .badge-residential {
+            background-color: var(--residential);
+            color: white;
+        }
+        
+        .badge-commercial {
+            background-color: var(--commercial);
+            color: white;
+        }
+        
+        .badge-government {
+            background-color: var(--government);
+            color: white;
+        }
+        
+        .pipeline-stage {
+            min-height: 600px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px dashed #dee2e6;
+        }
+        
+        .pipeline-header {
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .lead-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            cursor: grab;
+            border-left: 4px solid var(--primary);
+            transition: all 0.2s;
+        }
+        
+        .lead-card:hover {
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .lead-card.qualified {
+            border-left-color: var(--info);
+        }
+        
+        .lead-card.estimate {
+            border-left-color: var(--warning);
+        }
+        
+        .lead-card.contract {
+            border-left-color: var(--success);
+        }
+        
+        .lead-card.progress {
+            border-left-color: var(--primary);
+        }
+        
+        .lead-card.complete {
+            border-left-color: var(--secondary);
+        }
+        
+        .upgrade-prompt {
+            background: linear-gradient(45deg, var(--enterprise), #7C3AED);
+            color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .drag-over {
+            background-color: rgba(59, 130, 246, 0.1);
+            border: 2px dashed var(--primary);
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .activity-item {
+            padding: 15px;
+            border-left: 3px solid var(--primary);
+            margin-bottom: 15px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .activity-item.call {
+            border-left-color: var(--info);
+        }
+        
+        .activity-item.email {
+            border-left-color: var(--warning);
+        }
+        
+        .activity-item.meeting {
+            border-left-color: var(--success);
+        }
+        
+        .activity-item.site_visit {
+            border-left-color: var(--secondary);
+        }
+        
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        }
+        
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+        
+        .tier-verification {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .tier-verification-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .pro-badge {
+            background: var(--primary);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+        
+        .contact-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 80px;
+            }
+            
+            .sidebar .nav-text {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 80px;
+            }
+            
+            .navbar {
+                width: calc(100% - 80px);
+                margin-left: 80px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                padding-top: 70px;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .navbar {
+                width: 100%;
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Tier Verification Modal (shown if user doesn't have Pro access) -->
+    <div class="tier-verification" id="tierVerification">
+        <div class="tier-verification-content">
+            <div class="mb-4">
+                <i class="fas fa-crown fa-3x text-warning"></i>
+                <h3 class="mt-3">Upgrade Required</h3>
+                <p class="text-muted">You need a Pro or Enterprise plan to access the CRM features.</p>
+            </div>
+            <div class="d-flex justify-content-center gap-3">
+                <button class="btn btn-secondary" onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+                <button class="btn btn-primary" onclick="window.location.href='pricing.html'">Upgrade Plan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Screen (initially visible) -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-card">
+            <div class="text-center mb-4">
+                <img src="https://via.placeholder.com/150x50/1E3A8A/ffffff?text=Sierra+Suites" alt="Sierra Suites" class="mb-3">
+                <h3>CRM Dashboard</h3>
+                <p class="text-muted">Sign in to access your account</p>
+            </div>
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label for="loginEmail" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="loginEmail" required>
+                </div>
+                <div class="mb-3">
+                    <label for="loginPassword" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Sign In</button>
+            </form>
+            <div class="text-center mt-3">
+                <p class="mb-0">Don't have an account? <a href="#" id="showSignUp">Sign up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign Up Screen (initially hidden) -->
+    <div id="signupScreen" class="login-container" style="display: none;">
+        <div class="login-card">
+            <div class="text-center mb-4">
+                <img src="https://via.placeholder.com/150x50/1E3A8A/ffffff?text=Sierra+Suites" alt="Sierra Suites" class="mb-3">
+                <h3>Create Account</h3>
+                <p class="text-muted">Sign up for a new account</p>
+            </div>
+            <form id="signupForm">
+                <div class="mb-3">
+                    <label for="signupName" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="signupName" required>
+                </div>
+                <div class="mb-3">
+                    <label for="signupEmail" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="signupEmail" required>
+                </div>
+                <div class="mb-3">
+                    <label for="signupPassword" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="signupPassword" required>
+                </div>
+                <div class="mb-3">
+                    <label for="signupConfirmPassword" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="signupConfirmPassword" required>
+                </div>
+                <div class="mb-3">
+                    <label for="signupCompany" class="form-label">Company Name</label>
+                    <input type="text" class="form-control" id="signupCompany" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+            </form>
+            <div class="text-center mt-3">
+                <p class="mb-0">Already have an account? <a href="#" id="showLogin">Sign in</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application (initially hidden) -->
+    <div id="appContainer" style="display: none;">
+        <!-- Navigation Sidebar -->
+        <div class="sidebar">
+            <div class="position-sticky">
+                <div class="text-center mb-4">
+                    <h4>Sierra Suites</h4>
+                    <div class="badge bg-success">PRO TIER</div>
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#contacts" data-bs-toggle="tab">
+                            <i class="fas fa-users me-2"></i> <span class="nav-text">Contacts</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#pipeline" data-bs-toggle="tab">
+                            <i class="fas fa-project-diagram me-2"></i> <span class="nav-text">Pipeline</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#quotes" data-bs-toggle="tab">
+                            <i class="fas fa-file-invoice-dollar me-2"></i> <span class="nav-text">Quotes</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#activities" data-bs-toggle="tab">
+                            <i class="fas fa-history me-2"></i> <span class="nav-text">Activities</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#scheduling" data-bs-toggle="tab">
+                            <i class="fas fa-calendar-alt me-2"></i> <span class="nav-text">Scheduling</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#emails" data-bs-toggle="tab">
+                            <i class="fas fa-envelope me-2"></i> <span class="nav-text">Smart Emails</span>
+                        </a>
+                    </li>
+                    <li class="nav-item mt-4">
+                        <div class="upgrade-prompt">
+                            <h6>Ready for more?</h6>
+                            <p>Upgrade to Enterprise for advanced features</p>
+                            <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#enterpriseModal">Explore Enterprise</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid">
+                <button class="navbar-toggler menu-toggle" type="button" id="sidebarToggle" style="display: none;">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <form class="d-flex ms-auto">
+                    <input class="form-control me-2" type="search" placeholder="Search contacts, projects..." aria-label="Search">
+                    <button class="btn btn-outline-secondary" type="submit">Search</button>
+                </form>
+                <div class="dropdown ms-3">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-plus me-1"></i> New
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" href="#" id="newContact">New Contact</a></li>
+                        <li><a class="dropdown-item" href="#" id="newLead">New Lead</a></li>
+                        <li><a class="dropdown-item" href="#" id="newQuote">New Quote</a></li>
+                        <li><a class="dropdown-item" href="#" id="newActivity">New Activity</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown ms-3">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://ui-avatars.com/api/?name=User+Name&background=3498db&color=fff" class="rounded-circle me-1" width="30" height="30" alt="User">
+                        <span id="userName">User</span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="dashboard.html"><i class="fas fa-home me-2"></i> Dashboard</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profile</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Contacts Tab -->
+                <div class="tab-pane fade show active" id="contacts">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Contact Management</h2>
+                        <div>
+                            <button class="btn btn-outline-secondary me-2"><i class="fas fa-filter"></i> Filter</button>
+                            <button class="btn btn-outline-secondary"><i class="fas fa-download"></i> Export</button>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h3 class="stat-number" id="totalContacts">42</h3>
+                                <p class="text-muted">Total Contacts</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <h3 class="stat-number" id="totalClients">18</h3>
+                                <p class="text-muted">Clients</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-bullseye"></i>
+                                </div>
+                                <h3 class="stat-number" id="totalLeads">12</h3>
+                                <p class="text-muted">Leads</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <h3 class="stat-number" id="totalSuppliers">8</h3>
+                                <p class="text-muted">Suppliers</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="crm-card p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4>All Contacts</h4>
+                            <div class="btn-group">
+                                <button class="btn btn-outline-primary active filter-btn" data-filter="all">All</button>
+                                <button class="btn btn-outline-primary filter-btn" data-filter="residential">Residential</button>
+                                <button class="btn btn-outline-primary filter-btn" data-filter="commercial">Commercial</button>
+                                <button class="btn btn-outline-primary filter-btn" data-filter="government">Government</button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="contactsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Role</th>
+                                        <th>Projects</th>
+                                        <th>Last Contact</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contactsBody">
+                                    <!-- Contacts will be loaded here dynamically -->
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="contact-avatar me-2">JD</div>
+                                                <div>John Davidson</div>
+                                            </div>
+                                        </td>
+                                        <td><span class="badge badge-residential">Residential</span></td>
+                                        <td><span class="badge bg-secondary">Client</span></td>
+                                        <td>3 Projects</td>
+                                        <td>2 days ago</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="contact-avatar me-2">SM</div>
+                                                <div>Sarah Mitchell</div>
+                                            </div>
+                                        </td>
+                                        <td><span class="badge badge-commercial">Commercial</span></td>
+                                        <td><span class="badge bg-secondary">Lead</span></td>
+                                        <td>1 Project</td>
+                                        <td>Today</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="contact-avatar me-2">MC</div>
+                                                <div>Mike Construction Co.</div>
+                                            </div>
+                                        </td>
+                                        <td><span class="badge badge-commercial">Commercial</span></td>
+                                        <td><span class="badge bg-secondary">Supplier</span></td>
+                                        <td>8 Projects</td>
+                                        <td>1 week ago</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pipeline Tab -->
+                <div class="tab-pane fade" id="pipeline">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Lead Pipeline</h2>
+                        <div>
+                            <select class="form-select me-2 d-inline-block" id="pipelineFilter" style="width: auto;">
+                                <option value="all">All Sales Reps</option>
+                                <option value="user1">John Smith</option>
+                                <option value="user2">Emily Johnson</option>
+                            </select>
+                            <button class="btn btn-outline-secondary" id="pipelineAnalyticsBtn"><i class="fas fa-chart-bar"></i> Analytics</button>
+                        </div>
+                    </div>
+
+                    <div class="row" id="pipelineStages">
+                        <div class="col-md-2">
+                            <div class="pipeline-stage">
+                                <div class="pipeline-header">
+                                    <span>Lead</span>
+                                    <span class="badge bg-secondary">3</span>
+                                </div>
+                                <div class="lead-card" data-id="1" draggable="true">
+                                    <h6>Kitchen Renovation</h6>
+                                    <p class="mb-1">Sarah Mitchell</p>
+                                    <small class="text-muted">Residential project, $25k budget</small>
+                                    <div class="mt-2">
+                                        <span class="badge bg-primary">New Lead</span>
+                                    </div>
+                                </div>
+                                <div class="lead-card" data-id="2" draggable="true">
+                                    <h6>Office Building</h6>
+                                    <p class="mb-1">TechStart Inc.</p>
+                                    <small class="text-muted">Commercial, $120k budget</small>
+                                    <div class="mt-2">
+                                        <span class="badge bg-warning">High Priority</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="pipeline-stage">
+                                <div class="pipeline-header">
+                                    <span>Qualified</span>
+                                    <span class="badge bg-secondary">2</span>
+                                </div>
+                                <div class="lead-card qualified" data-id="3" draggable="true">
+                                    <h6>Bathroom Remodel</h6>
+                                    <p class="mb-1">Robert Johnson</p>
+                                    <small class="text-muted">Residential, $18k budget</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="pipeline-stage">
+                                <div class="pipeline-header">
+                                    <span>Estimate</span>
+                                    <span class="badge bg-secondary">4</span>
+                                </div>
+                                <div class="lead-card estimate" data-id="4" draggable="true">
+                                    <h6>Deck Construction</h6>
+                                    <p class="mb-1">Lisa Williams</p>
+                                    <small class="text-muted">Residential, $15k estimate sent</small>
+                                </div>
+                                <div class="lead-card estimate" data-id="5" draggable="true">
+                                    <h6>Retail Store</h6>
+                                    <p class="mb-1">Fashion Retail Co.</p>
+                                    <small class="text-muted">Commercial, $85k estimate sent</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="pipeline-stage">
+                                <div class="pipeline-header">
+                                    <span>Contract</span>
+                                    <span class="badge bg-secondary">2</span>
+                                </div>
+                                <div class="lead-card contract" data-id="6" draggable="true">
+                                    <h6>Garage Addition</h6>
+                                    <p class="mb-1">Michael Brown</p>
+                                    <small class="text-muted">Residential, contract review</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="pipeline-stage">
+                                <div class="pipeline-header">
+                                    <span>Progress</span>
+                                    <span class="badge bg-secondary">5</span>
+                                </div>
+                                <div class="lead-card progress" data-id="7" draggable="true">
+                                    <h6>Home Addition</h6>
+                                    <p class="mb-1">David Wilson</p>
+                                    <small class="text-muted">Residential, 30% complete</small>
+                                </div>
+                                <div class="lead-card progress" data-id="8" draggable="true">
+                                    <h6>Restaurant Renovation</h6>
+                                    <p class="mb-1">Italian Bistro</p>
+                                    <small class="text-muted">Commercial, 60% complete</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="pipeline-stage">
+                                <div class="pipeline-header">
+                                    <span>Complete</span>
+                                    <span class="badge bg-secondary">3</span>
+                                </div>
+                                <div class="lead-card complete" data-id="9" draggable="true">
+                                    <h6>Kitchen Remodel</h6>
+                                    <p class="mb-1">Jennifer Lee</p>
+                                    <small class="text-muted">Residential, completed 2 weeks ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="crm-card p-4 mt-4 d-none" id="pipelineAnalytics">
+                        <h4 class="mb-4">Pipeline Analytics</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Conversion Rate</h6>
+                                <div class="progress mb-3">
+                                    <div class="progress-bar" role="progressbar" style="width: 35%;" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100">35%</div>
+                                </div>
+                                
+                                <h6>Average Deal Size</h6>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span>$25,000</span>
+                                    <span class="text-success">+12% <i class="fas fa-arrow-up"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Sales by Type</h6>
+                                <div class="mb-2 d-flex justify-content-between">
+                                    <span>Residential</span>
+                                    <span>52%</span>
+                                </div>
+                                <div class="mb-2 d-flex justify-content-between">
+                                    <span>Commercial</span>
+                                    <span>36%</span>
+                                </div>
+                                <div class="mb-2 d-flex justify-content-between">
+                                    <span>Government</span>
+                                    <span>12%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quotes Tab -->
+                <div class="tab-pane fade" id="quotes">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Quote & Proposal Tracking</h2>
+                        <button class="btn btn-primary" id="newQuoteBtn"><i class="fas fa-plus me-1"></i> New Quote</button>
+                    </div>
+
+                    <div class="crm-card p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4>All Quotes</h4>
+                            <div class="btn-group">
+                                <button class="btn btn-outline-primary active">All</button>
+                                <button class="btn btn-outline-primary">Draft</button>
+                                <button class="btn btn-outline-primary">Sent</button>
+                                <button class="btn btn-outline-primary">Approved</button>
+                                <button class="btn btn-outline-primary">Rejected</button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Quote #</th>
+                                        <th>Client</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="quotesBody">
+                                    <tr>
+                                        <td>QT-1025</td>
+                                        <td>Sarah Mitchell</td>
+                                        <td>$25,000</td>
+                                        <td><span class="badge bg-warning">Sent</span></td>
+                                        <td>3 days ago</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-success"><i class="fas fa-check"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>QT-1026</td>
+                                        <td>TechStart Inc.</td>
+                                        <td>$120,000</td>
+                                        <td><span class="badge bg-info">Draft</span></td>
+                                        <td>Yesterday</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-success"><i class="fas fa-check"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>QT-1024</td>
+                                        <td>Robert Johnson</td>
+                                        <td>$18,500</td>
+                                        <td><span class="badge bg-success">Approved</span></td>
+                                        <td>1 week ago</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class
+                                                <tr>
+                                                    <td>QT-1023</td>
+                                                    <td>Jennifer Lee</td>
+                                                    <td>$32,000</td>
+                                                    <td><span class="badge bg-success">Approved</span></td>
+                                                    <td>2 weeks ago</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                                        <button class="btn btn-sm btn-outline-success"><i class="fas fa-check"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- Activities Tab -->
+                            <div class="tab-pane fade" id="activities">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h2>Activity Log</h2>
+                                    <button class="btn btn-primary" id="logActivityBtn"><i class="fas fa-plus me-1"></i> Log Activity</button>
+                                </div>
+            
+                                <div class="crm-card p-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <h4>Recent Activities</h4>
+                                        <select class="form-select" style="width: auto;" id="activityFilter">
+                                            <option value="all">All Activities</option>
+                                            <option value="call">Calls</option>
+                                            <option value="email">Emails</option>
+                                            <option value="meeting">Meetings</option>
+                                            <option value="site_visit">Site Visits</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div id="activitiesList">
+                                        <div class="activity-item call">
+                                            <div class="d-flex justify-content-between">
+                                                <h5>Call with Sarah Mitchell</h5>
+                                                <span class="text-muted">Today, 10:30 AM</span>
+                                            </div>
+                                            <p>Discussed kitchen renovation project details and timeline. She's interested in quartz countertops.</p>
+                                            <div class="d-flex align-items-center">
+                                                <span class="badge bg-primary me-2">Follow-up</span>
+                                                <small>Next action: Send estimate by Friday</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="activity-item email">
+                                            <div class="d-flex justify-content-between">
+                                                <h5>Email to TechStart Inc.</h5>
+                                                <span class="text-muted">Yesterday, 3:45 PM</span>
+                                            </div>
+                                            <p>Sent preliminary estimate for office building construction. Included portfolio of similar projects.</p>
+                                            <div class="d-flex align-items-center">
+                                                <span class="badge bg-warning me-2">Waiting</span>
+                                                <small>Next action: Follow up next week</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="activity-item site_visit">
+                                            <div class="d-flex justify-content-between">
+                                                <h5>Site Visit - Robert Johnson</h5>
+                                                <span class="text-muted">2 days ago</span>
+                                            </div>
+                                            <p>Assessed bathroom for remodel. Took measurements and photos. Noted plumbing may need updating.</p>
+                                            <div class="d-flex align-items-center">
+                                                <span class="badge bg-success me-2">Completed</span>
+                                                <small>Next action: Send revised estimate</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="activity-item meeting">
+                                            <div class="d-flex justify-content-between">
+                                                <h5>Meeting with Jennifer Lee</h5>
+                                                <span class="text-muted">3 days ago</span>
+                                            </div>
+                                            <p>Final walkthrough of completed kitchen remodel. Client satisfied with results. Collected final payment.</p>
+                                            <div class="d-flex align-items-center">
+                                                <span class="badge bg-secondary me-2">Closed</span>
+                                                <small>Next action: Request review</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- Scheduling Tab -->
+                            <div class="tab-pane fade" id="scheduling">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h2>Jobsite Visit Scheduling</h2>
+                                    <button class="btn btn-primary" id="scheduleVisitBtn"><i class="fas fa-plus me-1"></i> Schedule Visit</button>
+                                </div>
+            
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="crm-card p-4">
+                                            <div id="calendar"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="crm-card p-4">
+                                            <h4>Upcoming Visits</h4>
+                                            <div id="upcomingVisits">
+                                                <div class="activity-item">
+                                                    <div class="d-flex justify-content-between">
+                                                        <h5>TechStart Inc. Site Assessment</h5>
+                                                        <span class="badge bg-primary">Tomorrow</span>
+                                                    </div>
+                                                    <p>10:00 AM - 12:00 PM</p>
+                                                    <small>123 Business Blvd, Tech Park</small>
+                                                </div>
+                                                
+                                                <div class="activity-item">
+                                                    <div class="d-flex justify-content-between">
+                                                        <h5>Sarah Mitchell - Initial Consultation</h5>
+                                                        <span class="badge bg-info">Feb 15</span>
+                                                    </div>
+                                                    <p>2:00 PM - 3:30 PM</p>
+                                                    <small>456 Residential Rd, Suburbia</small>
+                                                </div>
+                                                
+                                                <div class="activity-item">
+                                                    <div class="d-flex justify-content-between">
+                                                        <h5>Robert Johnson - Project Review</h5>
+                                                        <span class="badge bg-info">Feb 18</span>
+                                                    </div>
+                                                    <p>9:00 AM - 10:00 AM</p>
+                                                    <small>789 Main St, Townsville</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- Emails Tab -->
+                            <div class="tab-pane fade" id="emails">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h2>Smart Email Responses</h2>
+                                    <button class="btn btn-primary" id="newEmailBtn"><i class="fas fa-plus me-1"></i> Compose</button>
+                                </div>
+            
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="crm-card p-3">
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" placeholder="Search emails...">
+                                                <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
+                                            </div>
+                                            <div id="emailList">
+                                                <div class="email-list-item active">
+                                                    <h6>Sarah Mitchell</h6>
+                                                    <p class="mb-0">Kitchen renovation questions</p>
+                                                    <small class="text-muted">Today, 10:15 AM</small>
+                                                </div>
+                                                <div class="email-list-item">
+                                                    <h6>TechStart Inc.</h6>
+                                                    <p class="mb-0">Office building proposal</p>
+                                                    <small class="text-muted">Yesterday, 3:30 PM</small>
+                                                </div>
+                                                <div class="email-list-item">
+                                                    <h6>Robert Johnson</h6>
+                                                    <p class="mb-0">Bathroom remodel timeline</p>
+                                                    <small class="text-muted">2 days ago</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="crm-card p-4">
+                                            <div class="mb-3">
+                                                <label class="form-label">Email Context</label>
+                                                <textarea class="form-control" id="emailContext" rows="3" placeholder="Paste the email you received or describe the situation...">Hi, I'm interested in getting a quote for a kitchen renovation. What's your availability for a consultation? Also, do you work with quartz countertops? Thanks, Sarah</textarea>
+                                            </div>
+                                            <button class="btn btn-primary mb-3" id="generateResponseBtn"><i class="fas fa-magic me-1"></i> Generate Response</button>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">AI-Suggested Response</label>
+                                                <div class="form-control" id="emailResponse" contenteditable="true">
+                                                    <!-- AI response will appear here -->
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="d-flex justify-content-end">
+                                                <button class="btn btn-outline-secondary me-2" id="copyEmailBtn"><i class="fas fa-copy"></i> Copy</button>
+                                                <button class="btn btn-primary" id="sendEmailBtn"><i class="fas fa-paper-plane"></i> Send</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <!-- Enterprise Upgrade Modal -->
+                        <div class="modal fade" id="enterpriseModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary text-white">
+                                        <h5 class="modal-title">Upgrade to Enterprise</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h5>Enterprise Features</h5>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i> AI Proposal Generator</li>
+                                                    <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i> Project-Centric CRM</li>
+                                                    <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i> Subcontractor Database</li>
+                                                    <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i> Document & Permit Tracking</li>
+                                                    <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i> Material Supplier Tracker</li>
+                                                    <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i> Advanced Analytics</li>
+                                                    <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i> Priority Support</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="crm-card p-3 text-center">
+                                                    <h5>Enterprise Plan</h5>
+                                                    <h3>$199/month</h3>
+                                                    <p>All Pro features plus:</p>
+                                                    <ul class="text-start">
+                                                        <li>Unlimited users</li>
+                                                        <li>Advanced CRM features</li>
+                                                        <li>AI-powered proposals</li>
+                                                        <li>Priority support</li>
+                                                        <li>Custom integrations</li>
+                                                    </ul>
+                                                    <button class="btn btn-primary">Upgrade Now</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <!-- Database Setup Notification -->
+                        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                            <div id="dbToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                                <div class="toast-header">
+                                    <i class="fas fa-database me-2"></i>
+                                    <strong class="me-auto">Database Setup</strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                </div>
+                                <div class="toast-body" id="dbToastMessage">
+                                    Checking database tables...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                <script>
+                    // Initialize Supabase with your credentials
+                    const supabaseUrl = 'https://qjswuwcqyzeuqqqltykz.supabase.co';
+                    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3d1d2NxeXpldXFxcWx0eWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMjk0MDUsImV4cCI6MjA3MDgwNTQwNX0.qgH8DMJEoJVuYOXSyr0RAj01Yt7bBR8EYL6qw3YXyAs';
+                    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+                    
+                    // DOM elements
+                    const loginScreen = document.getElementById('loginScreen');
+                    const signupScreen = document.getElementById('signupScreen');
+                    const appContainer = document.getElementById('appContainer');
+                    const loginForm = document.getElementById('loginForm');
+                    const signupForm = document.getElementById('signupForm');
+                    const showSignUp = document.getElementById('showSignUp');
+                    const showLogin = document.getElementById('showLogin');
+                    const logoutBtn = document.getElementById('logoutBtn');
+                    const userName = document.getElementById('userName');
+                    const contactsBody = document.getElementById('contactsBody');
+                    const pipelineStages = document.getElementById('pipelineStages');
+                    const dbToast = new bootstrap.Toast(document.getElementById('dbToast'));
+                    const dbToastMessage = document.getElementById('dbToastMessage');
+                    const generateResponseBtn = document.getElementById('generateResponseBtn');
+                    const emailResponse = document.getElementById('emailResponse');
+                    const emailContext = document.getElementById('emailContext');
+                    const copyEmailBtn = document.getElementById('copyEmailBtn');
+                    const sendEmailBtn = document.getElementById('sendEmailBtn');
+                    const tierVerification = document.getElementById('tierVerification');
+                    const sidebarToggle = document.getElementById('sidebarToggle');
+                    
+                    // Show database notification
+                    function showDbNotification(message, isError = false) {
+                        dbToastMessage.innerHTML = message;
+                        dbToastMessage.style.color = isError ? '#e74c3c' : '#2c3e50';
+                        dbToast.show();
+                    }
+            
+                    // Check authentication state
+                    supabase.auth.onAuthStateChange(async (event, session) => {
+                        if (event === 'SIGNED_IN' && session) {
+                            // User is signed in
+                            loginScreen.style.display = 'none';
+                            signupScreen.style.display = 'none';
+                            appContainer.style.display = 'block';
+                            
+                            // Set user name
+                            userName.textContent = session.user.email;
+                            
+                            // Check if user has Pro or Enterprise access
+                            const { data: company, error } = await supabase
+                                .from('companies')
+                                .select('subscription_tier')
+                                .eq('id', session.user.user_metadata.company_id)
+                                .single();
+                                
+                            if (error) {
+                                console.error('Error fetching company data:', error);
+                                showDbNotification('Error verifying subscription: ' + error.message, true);
+                                return;
+                            }
+                            
+                            if (company.subscription_tier !== 'pro' && company.subscription_tier !== 'enterprise') {
+                                // User doesn't have access to CRM features
+                                tierVerification.style.display = 'flex';
+                                appContainer.style.display = 'none';
+                                return;
+                            }
+                            
+                            // Setup database and load data
+                            setupDatabase();
+                        } else if (event === 'SIGNED_OUT') {
+                            // User is signed out
+                            loginScreen.style.display = 'flex';
+                            signupScreen.style.display = 'none';
+                            appContainer.style.display = 'none';
+                            tierVerification.style.display = 'none';
+                        }
+                    });
+            
+                    // Login form submission
+                    loginForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const email = document.getElementById('loginEmail').value;
+                        const password = document.getElementById('loginPassword').value;
+                        
+                        const { user, error } = await supabase.auth.signIn({
+                            email: email,
+                            password: password,
+                        });
+                        
+                        if (error) {
+                            showDbNotification('Login error: ' + error.message, true);
+                        } else {
+                            showDbNotification('Login successful! Loading your data...');
+                        }
+                    });
+            
+                    // Signup form submission
+                    signupForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const name = document.getElementById('signupName').value;
+                        const email = document.getElementById('signupEmail').value;
+                        const password = document.getElementById('signupPassword').value;
+                        const confirmPassword = document.getElementById('signupConfirmPassword').value;
+                        const companyName = document.getElementById('signupCompany').value;
+                        
+                        if (password !== confirmPassword) {
+                            showDbNotification('Passwords do not match', true);
+                            return;
+                        }
+                        
+                        // First create the company
+                        const { data: company, error: companyError } = await supabase
+                            .from('companies')
+                            .insert([{ 
+                                name: companyName,
+                                subscription_tier: 'starter' // Default to starter tier
+                            }])
+                            .select()
+                            .single();
+                            
+                        if (companyError) {
+                            showDbNotification('Error creating company: ' + companyError.message, true);
+                            return;
+                        }
+                        
+                        // Then create the user with company_id
+                        const { user, error } = await supabase.auth.signUp({
+                            email: email,
+                            password: password,
+                            options: {
+                                data: {
+                                    full_name: name,
+                                    company_id: company.id
+                                }
+                            }
+                        });
+                        
+                        if (error) {
+                            showDbNotification('Signup error: ' + error.message, true);
+                        } else {
+                            showDbNotification('Signup successful! Please check your email for verification.');
+                            // Switch to login screen
+                            showLogin.click();
+                        }
+                    });
+            
+                    // Show signup form
+                    showSignUp.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        loginScreen.style.display = 'none';
+                        signupScreen.style.display = 'flex';
+                    });
+            
+                    // Show login form
+                    showLogin.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        signupScreen.style.display = 'none';
+                        loginScreen.style.display = 'flex';
+                    });
+            
+                    // Logout button
+                    logoutBtn.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        const { error } = await supabase.auth.signOut();
+                        if (error) {
+                            showDbNotification('Logout error: ' + error.message, true);
+                        }
+                    });
+            
+                    // Toggle sidebar on mobile
+                    sidebarToggle.addEventListener('click', () => {
+                        document.querySelector('.sidebar').classList.toggle('active');
+                    });
+            
+                    // Check and create tables if they don't exist
+                    async function setupDatabase() {
+                        showDbNotification('Checking database tables...');
+                        
+                        try {
+                            // Enable RLS on all tables and set up policies
+                            await setupRLS();
+                            
+                            // Load initial data
+                            fetchContacts();
+                            fetchPipeline();
+                            
+                        } catch (error) {
+                            console.error('Database setup error:', error);
+                            showDbNotification('Error setting up database: ' + error.message, true);
+                        }
+                    }
+            
+                    // Set up RLS policies
+                    async function setupRLS() {
+                        try {
+                            // Enable RLS on all tables
+                            const tables = ['quotes', 'email_templates', 'site_visits', 'contacts', 'leads', 'activities'];
+                            
+                            for (const table of tables) {
+                                // Check if table exists
+                                const { error: checkError } = await supabase
+                                    .from(table)
+                                    .select('id')
+                                    .limit(1);
+                                
+                                if (checkError && checkError.code === '42P01') {
+                                    showDbNotification(`Table ${table} doesn't exist yet. It will be created when needed.`);
+                                    continue;
+                                }
+                                
+                                // Enable RLS
+                                const { error: rlsError } = await supabase.rpc('enable_rls', { table_name: table });
+                                if (rlsError && !rlsError.message.includes('already')) {
+                                    console.error(`Error enabling RLS on ${table}:`, rlsError);
+                                }
+                            }
+                            
+                            showDbNotification('Security policies configured successfully');
+                        } catch (error) {
+                            console.error('RLS setup error:', error);
+                            throw error;
+                        }
+                    }
+            
+                    // Fetch contacts from Supabase
+                    async function fetchContacts() {
+                        try {
+                            showDbNotification('Loading contacts...');
+                            
+                            let { data: contacts, error } = await supabase
+                                .from('contacts')
+                                .select('*')
+                                .order('name', { ascending: true });
+                            
+                            if (error) throw error;
+                            
+                            // Update counters
+                            document.getElementById('totalContacts').textContent = contacts.length;
+                            document.getElementById('totalClients').textContent = contacts.filter(c => c.type === 'client').length;
+                            document.getElementById('totalLeads').textContent = contacts.filter(c => c.type === 'lead').length;
+                            document.getElementById('totalSuppliers').textContent = contacts.filter(c => c.type === 'supplier').length;
+                            
+                            // Render contacts table
+                            contactsBody.innerHTML = '';
+                            contacts.forEach(contact => {
+                                const row = document.createElement('tr');
+                                
+                                // Determine badge class based on client type
+                                let badgeClass = 'badge-residential';
+                                if (contact.client_type === 'commercial') badgeClass = 'badge-commercial';
+                                if (contact.client_type === 'government') badgeClass = 'badge-government';
+                                
+                                // Get initials for avatar
+                                const names = contact.name.split(' ');
+                                const initials = names[0].charAt(0) + (names[1] ? names[1].charAt(0) : '');
+                                
+                                row.innerHTML = `
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="contact-avatar me-2">${initials}</div>
+                                            <div>${contact.name}</div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge ${badgeClass}">${contact.client_type || 'N/A'}</span></td>
+                                    <td><span class="badge bg-secondary">${contact.role || 'N/A'}</span></td>
+                                    <td>${contact.project_count || 0} Projects</td>
+                                    <td>${formatDate(contact.last_contact) || 'N/A'}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                        <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                `;
+                                
+                                contactsBody.appendChild(row);
+                            });
+                            
+                            showDbNotification('Contacts loaded successfully');
+                        } catch (error) {
+                            console.error('Error fetching contacts:', error.message);
+                            contactsBody.innerHTML = `<tr><td colspan="6" class="text-center">Error loading contacts: ${error.message}</td></tr>`;
+                            showDbNotification('Error loading contacts: ' + error.message, true);
+                        }
+                    }
+                    
+                    // Fetch pipeline data from Supabase
+                    async function fetchPipeline() {
+                        try {
+                            showDbNotification('Loading pipeline data...');
+                            
+                            let { data: leads, error } = await supabase
+                                .from('leads')
+                                .select('*')
+                                .order('created_at', { ascending: true });
+                            
+                            if (error) throw error;
+                            
+                            // Define pipeline stages
+                            const stages = [
+                                { id: 'lead', title: 'Lead' },
+                                { id: 'qualified', title: 'Qualified' },
+                                { id: 'estimate', title: 'Estimate' },
+                                { id: 'contract', title: 'Contract' },
+                                { id: 'progress', title: 'Progress' },
+                                { id: 'complete', title: 'Complete' }
+                            ];
+                            
+                            // Render pipeline stages
+                            pipelineStages.innerHTML = '';
+                            stages.forEach(stage => {
+                                const stageLeads = leads ? leads.filter(lead => lead.status === stage.id) : [];
+                                
+                                const stageCol = document.createElement('div');
+                                stageCol.className = 'col-md-2';
+                                stageCol.innerHTML = `
+                                    <div class="pipeline-stage" data-stage="${stage.id}">
+                                        <div class="pipeline-header">
+                                            <span>${stage.title}</span>
+                                            <span class="badge bg-secondary">${stageLeads.length}</span>
+                                        </div>
+                                        ${stageLeads.length > 0 ? stageLeads.map(lead => `
+                                            <div class="lead-card ${stage.id}" data-id="${lead.id}" draggable="true">
+                                                <h6>${lead.project_name}</h6>
+                                                <p class="mb-1">${lead.contact_name}</p>
+                                                <small class="text-muted">${lead.notes || 'No notes'}</small>
+                                            </div>
+                                        `).join('') : '<p class="text-center text-muted mt-4">No leads</p>'}
+                                    </div>
+                                `;
+                                
+                                pipelineStages.appendChild(stageCol);
+                            });
+                            
+                            // Add drag and drop functionality
+                            setupDragAndDrop();
+                            showDbNotification('Pipeline data loaded successfully');
+                        } catch (error) {
+                            console.error('Error fetching pipeline:', error.message);
+                            pipelineStages.innerHTML = `<div class="col-12"><div class="alert alert-info">No pipeline data yet. Add some leads to get started.</div></div>`;
+                        }
+                    }
+                    
+                    // Set up drag and drop for pipeline
+                    function setupDragAndDrop() {
+                        const stages = document.querySelectorAll('.pipeline-stage');
+                        const leadCards = document.querySelectorAll('.lead-card');
+                        
+                        leadCards.forEach(card => {
+                            card.addEventListener('dragstart', (e) => {
+                                e.dataTransfer.setData('text/plain', card.dataset.id);
+                                setTimeout(() => card.classList.add('opacity-50'), 0);
+                            });
+                            
+                            card.addEventListener('dragend', () => {
+                                card.classList.remove('opacity-50');
+                            });
+                        });
+                        
+                        stages.forEach(stage => {
+                            stage.addEventListener('dragover', (e) => {
+                                e.preventDefault();
+                                stage.classList.add('drag-over');
+                            });
+                            
+                            stage.addEventListener('dragleave', () => {
+                                stage.classList.remove('drag-over');
+                            });
+                            
+                            stage.addEventListener('drop', async (e) => {
+                                e.preventDefault();
+                                stage.classList.remove('drag-over');
+                                
+                                const leadId = e.dataTransfer.getData('text/plain');
+                                const newStatus = stage.dataset.stage;
+                                
+                                try {
+                                    showDbNotification('Updating lead status...');
+                                    
+                                    // Update lead status in Supabase
+                                    const { error } = await supabase
+                                        .from('leads')
+                                        .update({ status: newStatus })
+                                        .eq('id', leadId);
+                                        
+                                    if (error) throw error;
+                                    
+                                    // Refresh the pipeline view
+                                    fetchPipeline();
+                                    showDbNotification('Lead status updated successfully');
+                                } catch (error) {
+                                    console.error('Error updating lead status:', error.message);
+                                    showDbNotification('Error updating lead status: ' + error.message, true);
+                                }
+                            });
+                        });
+                    }
+                    
+                    // Generate AI email response
+                    generateResponseBtn.addEventListener('click', () => {
+                        const context = emailContext.value.trim();
+                        if (!context) {
+                            showDbNotification('Please provide some context for the email response', true);
+                            return;
+                        }
+                        
+                        // Simple rule-based response generation
+                        let response = "";
+                        
+                        if (context.toLowerCase().includes('quote') || context.toLowerCase().includes('price')) {
+                            response = "Thank you for your inquiry about our services. Based on your project requirements, I've prepared a detailed quote for your review. The quote includes all materials and labor costs, with a breakdown of each phase of the project. We would be happy to discuss any aspects of this quote and make adjustments based on your feedback.";
+                        } else if (context.toLowerCase().includes('schedule') || context.toLowerCase().includes('timeline')) {
+                            response = "Thank you for asking about our schedule availability. We typically require 2-3 weeks of lead time for new projects, depending on the scope of work. I can check our current schedule and provide you with specific available start dates. Would you prefer a morning or afternoon site visit for our initial consultation?";
+                        } else if (context.toLowerCase().includes('problem') || context.toLowerCase().includes('issue')) {
+                            response = "I'm sorry to hear you're experiencing this issue. Our team takes all concerns seriously and we want to resolve this promptly. Could you please provide more details about the problem, including when it started and any specific areas affected? I will immediately dispatch our project manager to assess the situation and develop a solution.";
+                        } else {
+                            response = "Thank you for reaching out to Sierra Suites. We appreciate your interest in our construction services. Our team specializes in high-quality residential and commercial projects, and we would be delighted to discuss how we can assist with your needs. Would you be available for a brief call this week to discuss your project in more detail?";
+                        }
+                        
+                        response += "\n\nBest regards,\n[Your Name]\nSierra Suites Construction";
+                        
+                        emailResponse.innerHTML = response;
+                    });
+                    
+                    // Copy email response
+                    copyEmailBtn.addEventListener('click', () => {
+                        const range = document.createRange();
+                        range.selectNode(emailResponse);
+                        window.getSelection().removeAllRanges();
+                        window.getSelection().addRange(range);
+                        document.execCommand('copy');
+                        window.getSelection().removeAllRanges();
+                        
+                        showDbNotification('Response copied to clipboard!');
+                    });
+                    
+                    // Format date for display
+                    function formatDate(dateString) {
+                        if (!dateString) return '';
+                        
+                        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                        return new Date(dateString).toLocaleDateString(undefined, options);
+                    }
+                    
+                    // Initialize the application
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Check if user is already logged in
+                        supabase.auth.getSession().then(({ data: { session } }) => {
+                            if (session) {
+                                loginScreen.style.display = 'none';
+                                signupScreen.style.display = 'none';
+                                appContainer.style.display = 'block';
+                                userName.textContent = session.user.email;
+                                
+                                // Check if user has Pro or Enterprise access
+                                supabase
+                                    .from('companies')
+                                    .select('subscription_tier')
+                                    .eq('id', session.user.user_metadata.company_id)
+                                    .single()
+                                    .then(({ data: company, error }) => {
+                                        if (error) {
+                                            console.error('Error fetching company data:', error);
+                                            showDbNotification('Error verifying subscription: ' + error.message, true);
+                                            return;
+                                        }
+                                        
+                                        if (company.subscription_tier !== 'pro' && company.subscription_tier !== 'enterprise') {
+                                            // User doesn't have access to CRM features
+                                            tierVerification.style.display = 'flex';
+                                            appContainer.style.display = 'none';
+                                            return;
+                                        }
+                                        
+                                        // Setup database and load data
+                                        setupDatabase();
+                                    });
+                            }
+                        });
+                        
+                        // Set up filter buttons
+                        document.querySelectorAll('.filter-btn').forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                                this.classList.add('active');
+                                
+                                const filter = this.dataset.filter;
+                                console.log('Filtering by:', filter);
+                            });
+                        });
+            
+                        // Set up pipeline analytics toggle
+                        document.getElementById('pipelineAnalyticsBtn').addEventListener('click', function() {
+                            document.getElementById('pipelineAnalytics').classList.toggle('d-none');
+                        });
+                    });
+                </script>
+            </body>
+            </html>
