@@ -1,1401 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Sierra Suites - Construction Management Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1e40af;
-            --primary-light: #3b82f6;
-            --primary-ultralight: #eff6ff;
-            --secondary-color: #f97316;
-            --secondary-dark: #ea580c;
-            --secondary-light: #fb923c;
-            --text-color: #f8fafc;
-            --text-light: #cbd5e1;
-            --text-lighter: #94a3b8;
-            --bg-dark: #0f172a;
-            --bg-darker: #0a0f1c;
-            --bg-card: #1e293b;
-            --white: #ffffff;
-            --black: #000000;
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --danger-color: #ef4444;
-            --info-color: #3b82f6;
-            --border-color: #334155;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --radius-sm: 0.25rem;
-            --radius: 0.5rem;
-            --radius-md: 0.75rem;
-            --radius-lg: 1rem;
-            --radius-xl: 1.5rem;
-            --radius-full: 9999px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            font-size: 16px;
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            color: var(--text-color);
-            background-color: var(--bg-darker);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-weight: 700;
-            line-height: 1.25;
-            margin-bottom: 1rem;
-            letter-spacing: -0.025em;
-        }
-
-        h1 { font-size: 3.5rem; }
-        h2 { font-size: 2.5rem; }
-        h3 { font-size: 2rem; }
-        h4 { font-size: 1.5rem; }
-        h5 { font-size: 1.25rem; }
-        h6 { font-size: 1.125rem; }
-
-        p {
-            margin-bottom: 1.25rem;
-            color: var(--text-light);
-        }
-
-        a {
-            color: var(--primary-light);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        a:hover {
-            color: var(--primary-color);
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        ul, ol {
-            list-style: none;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-
-        /* Header */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background-color: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: var(--shadow-sm);
-            z-index: 100;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-
-        .header.scrolled {
-            height: 70px;
-            box-shadow: var(--shadow-md);
-        }
-
-        .header .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-weight: 800;
-            font-size: 1.5rem;
-            color: var(--white);
-        }
-
-        .nav ul {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .nav a {
-            color: var(--text-color);
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .nav a:after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary-color);
-            transition: width 0.3s ease;
-        }
-
-        .nav a:hover:after {
-            width: 100%;
-        }
-
-        .nav a.active {
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-
-        .auth-buttons {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.75rem 1.75rem;
-            border-radius: var(--radius);
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 2px solid transparent;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: all 0.6s ease;
-        }
-
-        .btn:hover:before {
-            left: 100%;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: var(--white) !important;
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-primary * {
-            color: var(--white) !important;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-            color: var(--white) !important;
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-        .btn-outline:hover {
-            background-color: var(--primary-color);
-            color: var(--white);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        /* Fix for Login button in header */
-        .auth-buttons .btn-outline:hover {
-            color: var(--white) !important;
-        }
-
-        .btn-link {
-            background-color: transparent;
-            color: var(--primary-color);
-            padding: 0;
-            font-weight: 500;
-        }
-
-        .btn-link:hover {
-            text-decoration: underline;
-        }
-
-        .btn-icon {
-            width: 2.5rem;
-            height: 2.5rem;
-            padding: 0;
-            border-radius: 50%;
-            background-color: transparent;
-            color: var(--text-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-icon:hover {
-            background-color: var(--bg-card);
-            color: var(--primary-color);
-        }
-
-        .btn-small {
-            padding: 0.5rem 1.25rem;
-            font-size: 0.875rem;
-        }
-
-        .btn-large {
-            padding: 1rem 2.5rem;
-            font-size: 1.125rem;
-        }
-
-        .btn-block {
-            display: block;
-            width: 100%;
-        }
-
-        .mobile-menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--text-color);
-            cursor: pointer;
-            z-index: 101;
-        }
-
-        /* Mobile Navigation */
-        .mobile-nav {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--bg-dark);
-            padding: 5rem 2rem 2rem;
-            flex-direction: column;
-            gap: 1.5rem;
-            z-index: 99;
-            transform: translateX(-100%);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .mobile-nav.active {
-            transform: translateX(0);
-            display: flex;
-        }
-
-        .mobile-nav a {
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 1.25rem;
-            font-weight: 500;
-            color: var(--text-color);
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
-            position: relative;
-            overflow: hidden;
-            text-align: center;
-            padding: 2rem 0;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: 4.5rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            line-height: 1.1;
-            color: var(--white);
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.03em;
-        }
-
-        .hero .subtitle {
-            font-size: 1.5rem;
-            color: var(--text-light);
-            margin-bottom: 3rem;
-            font-weight: 400;
-            line-height: 1.6;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        /* Metrics Section */
-        .metrics-section {
-            padding: 6rem 0;
-            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .metrics-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
-            animation: rotate 25s linear infinite;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 5rem;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.8s ease forwards;
-            position: relative;
-            z-index: 1;
-        }
-
-        .section-header h2 {
-            font-size: 2.75rem;
-            color: var(--white);
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .section-subtitle {
-            color: var(--text-light);
-            max-width: 700px;
-            margin: 0 auto;
-            font-size: 1.25rem;
-            line-height: 1.6;
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .metric-card {
-            background-color: var(--bg-card);
-            border-radius: var(--radius-xl);
-            padding: 2rem;
-            text-align: center;
-            box-shadow: var(--shadow);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid transparent;
-            position: relative;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        .metric-card.animate {
-            animation: fadeInUp 0.8s ease forwards;
-        }
-
-        .metric-card:nth-child(1) { animation-delay: 0.2s; }
-        .metric-card:nth-child(2) { animation-delay: 0.4s; }
-        .metric-card:nth-child(3) { animation-delay: 0.6s; }
-
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .metric-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-xl);
-            border-color: var(--primary-ultralight);
-        }
-
-        .metric-card:hover::before {
-            opacity: 1;
-        }
-
-        .metric-card h3 {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 0.75rem;
-            font-weight: 800;
-        }
-
-        .ai-text {
-            color: var(--primary-color);
-            font-size: 2.5rem;
-            font-weight: 800;
-        }
-
-        .metric-card p {
-            color: var(--text-light);
-            font-size: 1.125rem;
-            margin-bottom: 0;
-            font-weight: 500;
-        }
-
-        /* Features Section */
-        .features-section {
-            padding: 6rem 0;
-            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
-            position: relative;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .feature-card {
-            background-color: var(--bg-card);
-            border-radius: var(--radius-xl);
-            padding: 2rem;
-            box-shadow: var(--shadow);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            text-align: center;
-            border: 1px solid transparent;
-            opacity: 0;
-            transform: translateY(20px);
-            color: var(--text-color);
-        }
-
-        .feature-card.animate {
-            animation: fadeInUp 0.8s ease forwards;
-        }
-
-        .feature-card:nth-child(1) { animation-delay: 0.1s; }
-        .feature-card:nth-child(2) { animation-delay: 0.2s; }
-        .feature-card:nth-child(3) { animation-delay: 0.3s; }
-        .feature-card:nth-child(4) { animation-delay: 0.4s; }
-        .feature-card:nth-child(5) { animation-delay: 0.5s; }
-        .feature-card:nth-child(6) { animation-delay: 0.6s; }
-
-        .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-xl);
-            border-color: var(--primary-ultralight);
-        }
-
-        .feature-icon {
-            width: 5rem;
-            height: 5rem;
-            border-radius: var(--radius-lg);
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            color: var(--white);
-            font-size: 1.75rem;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-icon::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transform: rotate(45deg);
-            transition: all 0.6s ease;
-        }
-
-        .feature-card:hover .feature-icon {
-            transform: scale(1.05) rotate(5deg);
-        }
-
-        .feature-card:hover .feature-icon::after {
-            left: 100%;
-        }
-
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--white);
-        }
-
-        .feature-card p {
-            color: var(--text-light);
-            line-height: 1.7;
-            font-size: 1rem;
-        }
-
-        /* Pricing Section */
-        .pricing-section {
-            padding: 6rem 0;
-            background-color: var(--bg-darker);
-            position: relative;
-        }
-
-        .pricing-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 4rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .pricing-card {
-            background-color: var(--bg-card);
-            border-radius: var(--radius-xl);
-            padding: 2.5rem;
-            box-shadow: var(--shadow);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            text-align: center;
-            border: 1px solid transparent;
-            opacity: 0;
-            transform: translateY(20px);
-            color: var(--text-color);
-        }
-
-        .pricing-card.animate {
-            animation: fadeInUp 0.8s ease forwards;
-        }
-
-        .pricing-card:nth-child(1) { animation-delay: 0.2s; }
-        .pricing-card:nth-child(2) { animation-delay: 0.4s; }
-        .pricing-card:nth-child(3) { animation-delay: 0.6s; }
-
-        .pricing-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-xl);
-            border-color: var(--primary-ultralight);
-        }
-
-        .pricing-card.featured {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: var(--white);
-            transform: scale(1.03);
-            border: none;
-        }
-
-        .pricing-card.featured:hover {
-            transform: scale(1.03) translateY(-8px);
-            box-shadow: var(--shadow-xl), 0 25px 50px -12px rgba(37, 99, 235, 0.25);
-        }
-
-        .pricing-card.featured * {
-            color: var(--white);
-        }
-
-        .popular-badge {
-            position: absolute;
-            top: -0.75rem;
-            right: 2rem;
-            background-color: var(--secondary-color);
-            color: var(--white);
-            padding: 0.5rem 1.5rem;
-            border-radius: var(--radius-full);
-            font-size: 0.875rem;
-            font-weight: 600;
-            box-shadow: var(--shadow-md);
-        }
-
-        .limited-badge {
-            position: absolute;
-            top: -0.75rem;
-            right: 2rem;
-            background-color: var(--warning-color);
-            color: var(--white);
-            padding: 0.5rem 1.5rem;
-            border-radius: var(--radius-full);
-            font-size: 0.875rem;
-            font-weight: 600;
-            box-shadow: var(--shadow-md);
-        }
-
-        .package-badge {
-            position: absolute;
-            top: -0.75rem;
-            right: 2rem;
-            background-color: var(--success-color);
-            color: var(--white);
-            padding: 0.5rem 1.5rem;
-            border-radius: var(--radius-full);
-            font-size: 0.875rem;
-            font-weight: 600;
-            box-shadow: var(--shadow-md);
-        }
-
-        .pricing-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--text-color);
-            font-weight: 700;
-        }
-
-        .pricing-card.featured h3 {
-            color: var(--white);
-        }
-
-        .price {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-            line-height: 1;
-        }
-
-        .pricing-card.featured .price {
-            color: var(--white);
-        }
-
-        .price span {
-            font-size: 1.125rem;
-            font-weight: 500;
-        }
-
-        .price-description {
-            margin-bottom: 2rem;
-            color: var(--text-light);
-            font-size: 1rem;
-        }
-
-        .pricing-card.featured .price-description {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .features-list {
-            margin-bottom: 2.5rem;
-            text-align: left;
-        }
-
-        .features-list ul {
-            margin-bottom: 1.5rem;
-        }
-
-        .features-list li {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
-            font-size: 1rem;
-            color: var(--text-light);
-        }
-
-        .pricing-card.featured .features-list li {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .features-list i {
-            color: var(--success-color);
-            font-size: 1.125rem;
-        }
-
-        /* Billing Toggle */
-        .billing-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 4rem;
-            font-weight: 500;
-            font-size: 1.125rem;
-            color: var(--text-light);
-            position: relative;
-            z-index: 1;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 32px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--border-color);
-            transition: .4s;
-            border-radius: 34px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 24px;
-            width: 24px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-            box-shadow: var(--shadow-sm);
-        }
-
-        input:checked + .slider {
-            background-color: var(--primary-color);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-
-        .discount-badge {
-            background-color: var(--success-color);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: var(--radius-full);
-            font-size: 0.875rem;
-            margin-left: 0.5rem;
-            font-weight: 600;
-        }
-
-        .billed-annually {
-            text-align: center;
-            color: var(--text-light);
-            font-size: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        /* Benefits Section */
-        .benefits-section {
-            padding: 6rem 0;
-            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .benefits-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
-            animation: rotate 25s linear infinite;
-        }
-
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 4rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .benefit-card {
-            background-color: var(--bg-card);
-            border-radius: var(--radius-xl);
-            padding: 2rem;
-            box-shadow: var(--shadow);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            text-align: center;
-            height: 100%;
-            border: 1px solid transparent;
-            opacity: 0;
-            transform: translateY(20px);
-            color: var(--text-color);
-        }
-
-        .benefit-card.animate {
-            animation: fadeInUp 0.8s ease forwards;
-        }
-
-        .benefit-card:nth-child(1) { animation-delay: 0.1s; }
-        .benefit-card:nth-child(2) { animation-delay: 0.2s; }
-        .benefit-card:nth-child(3) { animation-delay: 0.3s; }
-        .benefit-card:nth-child(4) { animation-delay: 0.4s; }
-        .benefit-card:nth-child(5) { animation-delay: 0.5s; }
-        .benefit-card:nth-child(6) { animation-delay: 0.6s; }
-        .benefit-card:nth-child(7) { animation-delay: 0.7s; }
-        .benefit-card:nth-child(8) { animation-delay: 0.8s; }
-
-        .benefit-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-xl);
-            border-color: var(--primary-ultralight);
-        }
-
-        .benefit-icon {
-            width: 5rem;
-            height: 5rem;
-            border-radius: var(--radius-lg);
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            color: var(--white);
-            font-size: 1.75rem;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .benefit-icon::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transform: rotate(45deg);
-            transition: all 0.6s ease;
-        }
-
-        .benefit-card:hover .benefit-icon {
-            transform: scale(1.05) rotate(5deg);
-        }
-
-        .benefit-card:hover .benefit-icon::after {
-            left: 100%;
-        }
-
-        .benefit-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--white);
-        }
-
-        .benefit-card p {
-            color: var(--text-light);
-            line-height: 1.7;
-            font-size: 1rem;
-        }
-
-        .benefits-cta {
-            text-align: center;
-            margin-top: 5rem;
-            padding: 3rem;
-            background-color: var(--bg-card);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            opacity: 0;
-            transform: translateY(20px);
-            color: var(--text-color);
-            position: relative;
-            z-index: 1;
-        }
-
-        .benefits-cta.animate {
-            animation: fadeInUp 0.8s ease forwards;
-            animation-delay: 0.4s;
-        }
-
-        .benefits-cta h3 {
-            margin-bottom: 2rem;
-            color: var(--white);
-            font-size: 2rem;
-            font-weight: 700;
-        }
-
-        /* Login Prompt Section */
-        .login-prompt {
-            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
-            color: white;
-            padding: 6rem 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .login-prompt::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-
-        .login-prompt h2 {
-            margin-bottom: 1.5rem;
-            color: white;
-            font-size: 2.75rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .login-prompt p {
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 2.5rem;
-            font-size: 1.375rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* CTA Section */
-        .cta-section {
-            padding: 6rem 0;
-            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
-            color: var(--white);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
-            opacity: 0.5;
-        }
-
-        .cta-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta-section h2 {
-            margin-bottom: 1.5rem;
-            font-size: 2.5rem;
-            font-weight: 800;
-        }
-
-        .cta-section p {
-            max-width: 700px;
-            margin: 0 auto 3rem;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.25rem;
-            line-height: 1.6;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        /* Fix for Contact Sales button */
-        .cta-section .btn-outline {
-            background-color: transparent;
-            color: var(--white);
-            border-color: var(--white);
-        }
-
-        .cta-section .btn-outline:hover {
-            background-color: var(--white);
-            color: var(--primary-color);
-        }
-
-        /* Footer */
-        .footer {
-            background-color: var(--bg-dark);
-            color: var(--white);
-            padding: 6rem 0 0;
-            position: relative;
-        }
-
-        .footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 4rem;
-            margin-bottom: 4rem;
-        }
-
-        .footer-column h4 {
-            color: var(--white);
-            margin-bottom: 1.5rem;
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-
-        .footer-column ul {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .footer-column a {
-            color: rgba(255, 255, 255, 0.7);
-            transition: all 0.3s ease;
-        }
-
-        .footer-column a:hover {
-            color: var(--white);
-            transform: translateX(5px);
-        }
-
-        .footer-description {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1.125rem;
-            line-height: 1.6;
-            margin-top: 1.5rem;
-            max-width: 400px;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 2.5rem 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 1rem;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.5);
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: var(--white);
-        }
-
-        /* Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(5px);
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal {
-            background-color: var(--bg-card);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-xl);
-            width: 90%;
-            max-width: 700px;
-            max-height: 80vh;
-            display: flex;
-            flex-direction: column;
-            transform: translateY(-30px) scale(0.95);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            color: var(--text-color);
-        }
-
-        .modal-overlay.active .modal {
-            transform: translateY(0) scale(1);
-        }
-
-        .modal-header {
-            padding: 2rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .modal-header h3 {
-            margin-bottom: 0;
-            color: var(--white);
-            font-size: 1.75rem;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-light);
-            transition: color 0.3s ease;
-        }
-
-        .modal-close:hover {
-            color: var(--primary-color);
-        }
-
-        .modal-body {
-            padding: 2rem;
-            overflow-y: auto;
-            max-height: 60vh;
-        }
-
-        .modal-content {
-            line-height: 1.7;
-        }
-
-        .modal-content h4 {
-            margin-top: 2rem;
-            margin-bottom: 0.75rem;
-            color: var(--white);
-            font-size: 1.375rem;
-        }
-
-        .modal-content p {
-            margin-bottom: 1.25rem;
-            font-size: 1.125rem;
-            color: var(--text-light);
-        }
-
-        .modal-content ul {
-            margin-left: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-content li {
-            list-style-type: disc;
-            margin-bottom: 0.75rem;
-            font-size: 1.125rem;
-            color: var(--text-light);
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.1; }
-            50% { transform: scale(1.05); opacity: 0.15; }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .hero h1 {
-                font-size: 4rem;
-            }
-        }
-
-        @media (max-width: 1024px) {
-            .hero h1 {
-                font-size: 3.5rem;
-            }
-            
-            .pricing-cards {
-                grid-template-columns: 1fr;
-                max-width: 600px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            
-            .pricing-card.featured {
-                transform: none;
-            }
-            
-            .pricing-card.featured:hover {
-                transform: translateY(-8px);
-            }
-
-            .footer-bottom {
-                flex-direction: column;
-                gap: 1.5rem;
-                text-align: center;
-            }
-            
-            .footer-links {
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .nav {
-                display: none;
-            }
-            
-            .mobile-menu-toggle {
-                display: block;
-            }
-            
-            .auth-buttons {
-                display: none;
-            }
-            
-            h1 { font-size: 2.75rem; }
-            h2 { font-size: 2.25rem; }
-            
-            .hero h1 {
-                font-size: 3rem;
-            }
-            
-            .hero .subtitle {
-                font-size: 1.25rem;
-            }
-            
-            .metrics-grid,
-            .features-grid,
-            .benefits-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .benefits-cta {
-                padding: 2.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 { font-size: 2.5rem; }
-            h2 { font-size: 2rem; }
-            
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .hero-buttons {
-                flex-direction: column;
-            }
-            
-            .section-header h2 {
-                font-size: 2rem;
-            }
-            
-            .metric-card,
-            .feature-card,
-            .pricing-card,
-            .benefit-card {
-                padding: 1.5rem;
-            }
-            
-            .benefits-cta {
-                padding: 2rem;
-            }
-            
-            .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 3rem;
-            }
-            
-            .footer-bottom {
-                text-align: center;
-            }
-            
-            .footer-links {
-                flex-direction: column;
-                gap: 1rem;
-            }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/index.css">
 </head>
+
 <body>
     <header class="header">
         <div class="container">
@@ -1432,7 +48,8 @@
         <div class="container">
             <div class="hero-content">
                 <h1>The Sierra Suites</h1>
-                <p class="subtitle">The single platform to evaluate, deploy, and monitor all your construction projects</p>
+                <p class="subtitle">The single platform to evaluate, deploy, and monitor all your construction projects
+                </p>
                 <div class="hero-buttons">
                     <a href="register.html" class="btn btn-primary btn-large">Get Started Free</a>
                     <a href="#pricing" class="btn btn-outline btn-large">View Pricing</a>
@@ -1446,7 +63,8 @@
         <div class="container">
             <div class="section-header">
                 <h2>Built for Growing Contractors</h2>
-                <p class="section-subtitle">Join thousands of construction professionals who have streamlined their operations and accelerated growth</p>
+                <p class="section-subtitle">Join thousands of construction professionals who have streamlined their
+                    operations and accelerated growth</p>
             </div>
             <div class="metrics-grid">
                 <div class="metric-card">
@@ -1469,7 +87,8 @@
         <div class="container">
             <div class="section-header">
                 <h2>Powerful Features Built for Contractors</h2>
-                <p class="section-subtitle">Streamline your operations with our comprehensive construction management platform</p>
+                <p class="section-subtitle">Streamline your operations with our comprehensive construction management
+                    platform</p>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
@@ -1477,14 +96,16 @@
                         <i class="fas fa-project-diagram"></i>
                     </div>
                     <h3>Project Management</h3>
-                    <p>Complete oversight of all your projects with timelines, budgets, and team collaboration in one place.</p>
+                    <p>Complete oversight of all your projects with timelines, budgets, and team collaboration in one
+                        place.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-users"></i>
                     </div>
                     <h3>Integrated CRM</h3>
-                    <p>Manage clients, leads, and subcontractors with our construction-specific customer relationship tools.</p>
+                    <p>Manage clients, leads, and subcontractors with our construction-specific customer relationship
+                        tools.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
@@ -1524,7 +145,7 @@
                 <h2>Simple, Transparent Pricing</h2>
                 <p class="section-subtitle">Choose the plan that fits your business needs</p>
             </div>
-            
+
             <!-- Billing Toggle -->
             <div class="billing-toggle">
                 <span>Monthly</span>
@@ -1534,7 +155,7 @@
                 </label>
                 <span>Annual <span class="discount-badge">Save 20%</span></span>
             </div>
-            
+
             <div class="pricing-cards">
                 <div class="pricing-card">
                     <div class="limited-badge">Limited Time Deal</div>
@@ -1608,7 +229,8 @@
         <div class="container">
             <div class="section-header">
                 <h2>Transform Your Construction Business Operations</h2>
-                <p class="section-subtitle">Experience unprecedented efficiency and growth with our comprehensive construction management platform</p>
+                <p class="section-subtitle">Experience unprecedented efficiency and growth with our comprehensive
+                    construction management platform</p>
             </div>
             <div class="benefits-grid">
                 <div class="benefit-card">
@@ -1616,56 +238,65 @@
                         <i class="fas fa-tachometer-alt"></i>
                     </div>
                     <h3>Accelerate Project Timelines</h3>
-                    <p>Reduce project completion times by up to 35% through streamlined workflows, automated task assignments, and real-time collaboration tools that keep everyone aligned and moving forward.</p>
+                    <p>Reduce project completion times by up to 35% through streamlined workflows, automated task
+                        assignments, and real-time collaboration tools that keep everyone aligned and moving forward.
+                    </p>
                 </div>
                 <div class="benefit-card">
                     <div class="benefit-icon">
                         <i class="fas fa-dollar-sign"></i>
                     </div>
                     <h3>Maximize Profit Margins</h3>
-                    <p>Eliminate cost overruns with precise budget tracking, accurate estimating tools, and real-time financial insights that help you maintain healthy profit margins on every project.</p>
+                    <p>Eliminate cost overruns with precise budget tracking, accurate estimating tools, and real-time
+                        financial insights that help you maintain healthy profit margins on every project.</p>
                 </div>
                 <div class="benefit-card">
                     <div class="benefit-icon">
                         <i class="fas fa-clipboard-check"></i>
                     </div>
                     <h3>Eliminate Costly Errors</h3>
-                    <p>Minimize rework and change orders with integrated quality control checks, automated compliance tracking, and centralized documentation that ensures nothing gets missed.</p>
+                    <p>Minimize rework and change orders with integrated quality control checks, automated compliance
+                        tracking, and centralized documentation that ensures nothing gets missed.</p>
                 </div>
                 <div class="benefit-card">
                     <div class="benefit-icon">
                         <i class="fas fa-sync-alt"></i>
                     </div>
                     <h3>Streamline Operations</h3>
-                    <p>Replace chaotic manual processes with seamless digital workflows that connect your office, field teams, suppliers, and clients in one unified ecosystem.</p>
+                    <p>Replace chaotic manual processes with seamless digital workflows that connect your office, field
+                        teams, suppliers, and clients in one unified ecosystem.</p>
                 </div>
                 <div class="benefit-card">
                     <div class="benefit-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
                     <h3>Data-Driven Decision Making</h3>
-                    <p>Transform raw project data into actionable business intelligence with advanced analytics and custom reporting that reveals opportunities for improvement and growth.</p>
+                    <p>Transform raw project data into actionable business intelligence with advanced analytics and
+                        custom reporting that reveals opportunities for improvement and growth.</p>
                 </div>
                 <div class="benefit-card">
                     <div class="benefit-icon">
                         <i class="fas fa-handshake"></i>
                     </div>
                     <h3>Enhance Client Relationships</h3>
-                    <p>Impress clients with professional proposals, transparent communication portals, and on-time project delivery that builds trust and leads to repeat business.</p>
+                    <p>Impress clients with professional proposals, transparent communication portals, and on-time
+                        project delivery that builds trust and leads to repeat business.</p>
                 </div>
                 <div class="benefit-card">
                     <div class="benefit-icon">
                         <i class="fas fa-bolt"></i>
                     </div>
                     <h3>Reduce Operational Downtime</h3>
-                    <p>Keep projects moving with optimized resource allocation, predictive scheduling, and mobile access to critical information that prevents costly delays.</p>
+                    <p>Keep projects moving with optimized resource allocation, predictive scheduling, and mobile access
+                        to critical information that prevents costly delays.</p>
                 </div>
                 <div class="benefit-card">
                     <div class="benefit-icon">
                         <i class="fas fa-expand-arrows-alt"></i>
                     </div>
                     <h3>Scale Your Business Efficiently</h3>
-                    <p>Grow your operation without adding administrative overhead through scalable processes, automated workflows, and integrated systems that expand with your business.</p>
+                    <p>Grow your operation without adding administrative overhead through scalable processes, automated
+                        workflows, and integrated systems that expand with your business.</p>
                 </div>
             </div>
             <div class="benefits-cta">
@@ -1687,7 +318,8 @@
         <div class="container">
             <div class="cta-content">
                 <h2>Ready to Transform Your Construction Business?</h2>
-                <p>Join thousands of contractors who are saving time and growing their business with The Sierra Suites.</p>
+                <p>Join thousands of contractors who are saving time and growing their business with The Sierra Suites.
+                </p>
                 <div class="cta-buttons">
                     <a href="register.html" class="btn btn-primary btn-large">Get Started Today</a>
                     <a href="#contact" class="btn btn-outline btn-large">Contact Sales</a>
@@ -1703,7 +335,8 @@
                     <a href="index.html" class="logo">
                         <span>The Sierra Suites</span>
                     </a>
-                    <p class="footer-description">The complete construction management platform built for contractors who want to grow their business.</p>
+                    <p class="footer-description">The complete construction management platform built for contractors
+                        who want to grow their business.</p>
                 </div>
                 <div class="footer-column">
                     <h4>Product</h4>
@@ -1740,104 +373,8 @@
         </div>
     </footer>
 
-    <!-- JavaScript for animations and interactions -->
-    <script>
-        // Mobile menu toggle functionality
-        document.querySelector('.mobile-menu-toggle').addEventListener('click', function() {
-            const mobileNav = document.querySelector('.mobile-nav');
-            mobileNav.classList.toggle('active');
-            
-            // Toggle hamburger icon
-            const icon = this.querySelector('i');
-            if (mobileNav.classList.contains('active')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times');
-                document.body.style.overflow = 'hidden';
-            } else {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
-                document.body.style.overflow = 'auto';
-            }
-        });
-
-        // Close mobile menu when clicking on a link
-        document.querySelectorAll('.mobile-nav a').forEach(link => {
-            link.addEventListener('click', function() {
-                const mobileNav = document.querySelector('.mobile-nav');
-                const toggleBtn = document.querySelector('.mobile-menu-toggle i');
-                
-                mobileNav.classList.remove('active');
-                toggleBtn.classList.remove('fa-times');
-                toggleBtn.classList.add('fa-bars');
-                document.body.style.overflow = 'auto';
-            });
-        });
-
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-        // Active navigation highlighting
-        window.addEventListener('scroll', function() {
-            const sections = document.querySelectorAll('section[id]');
-            const navLinks = document.querySelectorAll('.nav a[href^="#"], .mobile-nav a[href^="#"]');
-            
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop - 100;
-                const sectionHeight = section.offsetHeight;
-                if (window.pageYOffset >= sectionTop && window.pageYOffset < sectionTop + sectionHeight) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === '#' + current) {
-                    link.classList.add('active');
-                }
-            });
-
-            // Header scroll effect
-            const header = document.querySelector('.header');
-            if (window.pageYOffset > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-
-        // Animation on scroll
-        function animateOnScroll() {
-            const elements = document.querySelectorAll('.metric-card, .feature-card, .pricing-card, .benefit-card, .benefits-cta');
-            
-            elements.forEach(element => {
-                const elementTop = element.getBoundingClientRect().top;
-                const elementVisible = 150;
-                
-                if (elementTop < window.innerHeight - elementVisible) {
-                    element.classList.add('animate');
-                }
-            });
-        }
-
-        window.addEventListener('scroll', animateOnScroll);
-        // Initial call to check elements in view on page load
-        animateOnScroll();
-    </script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/index.js"></script>
 </body>
+
 </html>
