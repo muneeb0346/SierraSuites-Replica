@@ -10,6 +10,7 @@
     --text-light: #cbd5e1;
     --text-lighter: #94a3b8;
     --bg-dark: #0f172a;
+    --bg-dark-95: rgba(15, 23, 42, 0.95);
     --bg-darker: #0a0f1c;
     --bg-card: #1e293b;
     --white: #ffffff;
@@ -60,7 +61,7 @@ h6 {
     font-weight: 700;
     line-height: 1.25;
     margin-bottom: 1rem;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.025rem;
 }
 
 h1 {
@@ -125,7 +126,7 @@ ol {
     top: 0;
     left: 0;
     right: 0;
-    background-color: rgba(15, 23, 42, 0.95);
+    background-color: var(--bg-dark-95);
     backdrop-filter: blur(10px);
     box-shadow: var(--shadow-sm);
     z-index: 100;
@@ -233,19 +234,19 @@ ol {
 
 .btn-primary {
     background-color: var(--primary-color);
-    color: var(--white) !important;
+    color: var(--white);
     box-shadow: var(--shadow-md);
 }
 
 .btn-primary * {
-    color: var(--white) !important;
+    color: var(--white);
 }
 
 .btn-primary:hover {
     background-color: var(--primary-dark);
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
-    color: var(--white) !important;
+    color: var(--white);
 }
 
 .btn-outline {
@@ -261,9 +262,8 @@ ol {
     box-shadow: var(--shadow-md);
 }
 
-/* Fix for Login button in header */
 .auth-buttons .btn-outline:hover {
-    color: var(--white) !important;
+    color: var(--white)
 }
 
 .btn-link {
@@ -327,6 +327,9 @@ ol {
     left: 0;
     right: 0;
     bottom: 0;
+    width: 100%;
+    height: 100vh;
+    overflow-y: auto;
     background-color: var(--bg-dark);
     padding: 5rem 2rem 2rem;
     flex-direction: column;
@@ -360,7 +363,6 @@ ol {
 }
 
 .section-header h2 {
-    font-size: 2.75rem;
     color: var(--white);
     margin-bottom: 1.5rem;
     background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
@@ -405,7 +407,6 @@ ol {
 .footer-column h4 {
     color: var(--white);
     margin-bottom: 1.5rem;
-    font-size: 1.25rem;
     font-weight: 600;
 }
 
@@ -431,6 +432,13 @@ ol {
     line-height: 1.6;
     margin-top: 1.5rem;
     max-width: 400px;
+}
+
+.contact-info li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
 }
 
 .footer-bottom {
@@ -504,12 +512,18 @@ ol {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background-color: var(--bg-dark);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.modal-header {
+    margin-bottom: 0;
+    color: var(--white);
+    font-size: 1.75rem;
 }
 
 .modal-header h3 {
     margin-bottom: 0;
-    color: var(--white);
-    font-size: 1.75rem;
 }
 
 .modal-close {
@@ -519,10 +533,17 @@ ol {
     cursor: pointer;
     color: var(--text-light);
     transition: color 0.3s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
 }
 
 .modal-close:hover {
     color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .modal-body {
@@ -539,12 +560,10 @@ ol {
     margin-top: 2rem;
     margin-bottom: 0.75rem;
     color: var(--white);
-    font-size: 1.375rem;
 }
 
 .modal-content p {
     margin-bottom: 1.25rem;
-    font-size: 1.125rem;
     color: var(--text-light);
 }
 
@@ -600,7 +619,7 @@ ol {
 /* Responsive Design */
 @media (max-width: 1024px) {
     h1 {
-        font-size: 3.5rem;
+        font-size: 3.15rem;
     }
 
     .footer-bottom {
@@ -614,7 +633,7 @@ ol {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .nav {
         display: none;
     }
@@ -624,9 +643,20 @@ ol {
     }
 
     .auth-buttons {
-        display: none;
+        margin-top: auto;
+        display: flex;
+        gap: 1rem;
+        flex-direction: column;
+        width: 100%;
+        align-items: stretch;
     }
 
+    .auth-buttons a {
+        border: 2px solid var(--primary-color);
+    }
+}
+
+@media (max-width: 768px) {
     h1 {
         font-size: 2.75rem;
     }
@@ -642,10 +672,6 @@ ol {
     }
 
     h2 {
-        font-size: 2rem;
-    }
-
-    .section-header h2 {
         font-size: 2rem;
     }
 
