@@ -41,6 +41,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    scrollbar-color: var(--primary-color) transparent;
 }
 
 html {
@@ -124,18 +125,19 @@ ol {
     padding: 0 1.5rem;
 }
 
+/* Scrollbar */
 ::-webkit-scrollbar-track {
-  background: transparent;
-  border-radius: 6px;
+    background: transparent;
+    border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary-color);
-  border-radius: 6px;
+    background: var(--primary-color);
+    border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-dark);
+    background: var(--primary-dark);
 }
 
 /* Firefox support */
@@ -181,7 +183,6 @@ ol {
 
 .logo img {
     height: 2.5rem;
-    width: auto;
     object-fit: contain;
     border-radius: var(--radius);
 }
@@ -239,6 +240,7 @@ ol {
     box-shadow: var(--shadow-md);
     position: relative;
     overflow: hidden;
+    will-change: transform, box-shadow;
 }
 
 .btn:before {
@@ -282,7 +284,7 @@ ol {
 }
 
 .auth-buttons .btn-outline:hover {
-    color: var(--white)
+    color: var(--white);
 }
 
 .btn-link {
@@ -299,7 +301,6 @@ ol {
 .btn-icon {
     width: 2.5rem;
     height: 2.5rem;
-    padding: 0;
     border-radius: 50%;
     background-color: transparent;
     color: var(--text-light);
@@ -371,6 +372,7 @@ ol {
     color: var(--text-color);
 }
 
+/* Section header */
 .section-header {
     text-align: center;
     margin-bottom: 5rem;
@@ -552,9 +554,6 @@ ol {
     justify-content: space-between;
     background-color: var(--bg-dark);
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-}
-
-.modal-header {
     margin-bottom: 0;
     color: var(--white);
     font-size: 1.75rem;
@@ -656,6 +655,14 @@ ol {
     }
 }
 
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 900px) {
     .nav {
@@ -678,7 +685,7 @@ ol {
     .auth-buttons a {
         border: 2px solid var(--primary-color);
     }
-    
+
     h1 {
         font-size: 2.75rem;
     }
@@ -711,6 +718,11 @@ ol {
 
     .footer-links {
         justify-content: center;
+    }
+
+    .btn {
+        padding: 0.65rem 1.5rem;
+        font-size: 0.95rem;
     }
 }
 
@@ -774,5 +786,10 @@ ol {
 
     .modal-body {
         padding: 1.5rem;
+    }
+
+    .btn {
+        padding: 0.55rem 1.25rem;
+        font-size: 0.9rem;
     }
 }
