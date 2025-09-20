@@ -32,7 +32,6 @@
     font-size: 4.5rem;
     font-weight: 800;
     margin-bottom: 1.5rem;
-    line-height: 1.1;
     color: var(--white);
     background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
     -webkit-background-clip: text;
@@ -46,7 +45,6 @@
     color: var(--text-light);
     margin-bottom: 3rem;
     font-weight: 400;
-    line-height: 1.6;
 }
 
 .hero-buttons {
@@ -261,7 +259,6 @@
 
 .feature-card p {
     color: var(--text-light);
-    line-height: 1.7;
     font-size: 1rem;
 }
 
@@ -388,7 +385,6 @@
     font-weight: 800;
     margin-bottom: 0.5rem;
     color: var(--primary-color);
-    line-height: 1;
 }
 
 .pricing-card.featured .price {
@@ -642,7 +638,6 @@ input:checked+.slider:before {
 
 .benefit-card p {
     color: var(--text-light);
-    line-height: 1.7;
     font-size: 1rem;
 }
 
@@ -760,7 +755,6 @@ input:checked+.slider:before {
     margin: 0 auto 3rem;
     color: rgba(255, 255, 255, 0.9);
     font-size: 1.25rem;
-    line-height: 1.6;
 }
 
 .cta-buttons {

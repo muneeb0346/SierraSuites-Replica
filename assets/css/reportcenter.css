@@ -45,7 +45,6 @@ body {
     font-family: 'Montserrat', sans-serif;
     color: var(--text-color);
     background-color: var(--bg-color);
-    line-height: 1.6;
     font-weight: 400;
 }
 
@@ -56,7 +55,6 @@ h4,
 h5,
 h6 {
     font-weight: 600;
-    line-height: 1.25;
     margin-bottom: 1rem;
     color: var(--text-color);
 }
@@ -97,7 +95,7 @@ a:hover {
     display: flex;
     flex-direction: column;
     z-index: 10;
-    transition: all 0.3s ease;
+    transition: var(--transition);
 }
 
 .sidebar-header {
@@ -658,7 +656,7 @@ a:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--black-50);
     z-index: 1000;
     align-items: center;
     justify-content: center;

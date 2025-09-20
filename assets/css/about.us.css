@@ -27,7 +27,6 @@
     font-size: 3.75rem;
     font-weight: 800;
     margin-bottom: 1.5rem;
-    line-height: 1.1;
     background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -85,7 +84,6 @@
 
 .mission-text p {
     font-size: 1.125rem;
-    line-height: 1.7;
     margin-bottom: 1.5rem;
     color: var(--text-light);
 }
@@ -169,7 +167,6 @@
 
 .value-card p {
     color: var(--text-light);
-    line-height: 1.6;
 }
 
 /* Experience Section */
@@ -204,7 +201,6 @@
 
 .experience-text p {
     font-size: 1.125rem;
-    line-height: 1.7;
     margin-bottom: 1.5rem;
     color: var(--text-light);
 }
@@ -221,7 +217,7 @@
     padding: 1.5rem;
     background-color: var(--bg-card);
     border-radius: var(--radius-lg);
-    transition: all 0.3s ease;
+    transition: var(--transition);
 }
 
 .stat-item:hover {
@@ -319,7 +315,6 @@
 
 .feature-highlight p {
     color: var(--text-light);
-    line-height: 1.6;
     margin-bottom: 1.5rem;
 }
 
@@ -328,7 +323,7 @@
     align-items: center;
     color: var(--primary-color);
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: var(--transition);
 }
 
 .feature-link i {
@@ -383,7 +378,6 @@
     margin: 0 auto 3rem;
     color: rgba(255, 255, 255, 0.9);
     font-size: 1.25rem;
-    line-height: 1.6;
 }
 
 .cta-buttons {
