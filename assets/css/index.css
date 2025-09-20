@@ -17,7 +17,7 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--white-10) 0%, transparent 70%);
     animation: rotate 20s linear infinite;
 }
 
@@ -69,7 +69,7 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--white-05) 0%, transparent 70%);
     animation: rotate 25s linear infinite;
 }
 
@@ -238,7 +238,7 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    background: linear-gradient(45deg, transparent, var(--white-20), transparent);
     transform: rotate(45deg);
     transition: all 0.6s ease;
 }
@@ -323,7 +323,7 @@
 
 .pricing-card.featured:hover {
     transform: scale(1.03) translateY(-8px);
-    box-shadow: var(--shadow-xl), 0 25px 50px -12px rgba(37, 99, 235, 0.25);
+    box-shadow: var(--shadow-xl), 0 25px 50px -12px var(--primary-25);
 }
 
 .pricing-card.featured * {
@@ -403,7 +403,7 @@
 }
 
 .pricing-card.featured .price-description {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--white-90);
 }
 
 .features-list {
@@ -425,7 +425,7 @@
 }
 
 .pricing-card.featured .features-list li {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--white-90);
 }
 
 .features-list i {
@@ -525,7 +525,7 @@ input:checked+.slider:before {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--white-05) 0%, transparent 70%);
     animation: rotate 25s linear infinite;
 }
 
@@ -617,7 +617,7 @@ input:checked+.slider:before {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    background: linear-gradient(45deg, transparent, var(--white-20), transparent);
     transform: rotate(45deg);
     transition: all 0.6s ease;
 }
@@ -685,7 +685,7 @@ input:checked+.slider:before {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--white-10) 0%, transparent 70%);
     animation: rotate 20s linear infinite;
 }
 
@@ -698,7 +698,7 @@ input:checked+.slider:before {
 }
 
 .login-prompt p {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--white-90);
     margin-bottom: 2.5rem;
     font-size: 1.375rem;
     max-width: 600px;
@@ -753,7 +753,7 @@ input:checked+.slider:before {
 .cta-section p {
     max-width: 700px;
     margin: 0 auto 3rem;
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--white-90);
     font-size: 1.25rem;
 }
 

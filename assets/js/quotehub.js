@@ -1392,7 +1392,7 @@ if (!document.getElementById('notification-styles')) {
                     align-items: center;
                     justify-content: space-between;
                     min-width: 300px;
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    box-shadow: 0 4px 6px var(--black-10);
                     animation: slideIn 0.3s ease;
                 }
                 

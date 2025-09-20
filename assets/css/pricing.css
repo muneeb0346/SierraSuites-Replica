@@ -17,7 +17,7 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--white-10) 0%, transparent 70%);
     animation: rotate 20s linear infinite;
 }
 
@@ -133,7 +133,7 @@ input:checked+.slider:before {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--white-05) 0%, transparent 70%);
     animation: rotate 25s linear infinite;
 }
 
@@ -197,7 +197,7 @@ input:checked+.slider:before {
 
 .pricing-card.featured:hover {
     transform: scale(1.03) translateY(-8px);
-    box-shadow: var(--shadow-xl), 0 25px 50px -12px rgba(37, 99, 235, 0.25);
+    box-shadow: var(--shadow-xl), 0 25px 50px -12px var(--primary-25);
 }
 
 .pricing-card.featured * {
@@ -278,7 +278,7 @@ input:checked+.slider:before {
 }
 
 .pricing-card.featured .billed-annually {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--white-90);
 }
 
 .features-list {
@@ -306,7 +306,7 @@ input:checked+.slider:before {
 }
 
 .pricing-card.featured .features-list li {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--white-90);
 }
 
 .features-list i {
@@ -333,7 +333,7 @@ input:checked+.slider:before {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--white-05) 0%, transparent 70%);
     animation: rotate 25s linear infinite;
 }
 
@@ -379,7 +379,7 @@ input:checked+.slider:before {
 }
 
 .comparison-table tr:nth-child(even) {
-    background-color: rgba(30, 41, 59, 0.5);
+    background-color: var(--bg-dark-50);
 }
 
 .comparison-table i.fa-check {
@@ -405,7 +405,7 @@ input:checked+.slider:before {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--white-05) 0%, transparent 70%);
     animation: rotate 25s linear infinite;
 }
 
@@ -508,7 +508,7 @@ input:checked+.slider:before {
 .cta-section p {
     max-width: 700px;
     margin: 0 auto 3rem;
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--white-90);
     font-size: 1.25rem;
 }
 

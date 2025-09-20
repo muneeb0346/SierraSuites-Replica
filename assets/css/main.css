@@ -1,11 +1,17 @@
 :root {
     --primary-color: #2563eb;
+    --primary-25: rgba(37, 99, 235, 0.25);
+    --primary-20: rgba(37, 99, 235, 0.2);
+    --primary-10: rgba(37, 99, 235, 0.1);
     --primary-color-2: #1a56db;
     --primary-dark: #1e40af;
     --primary-dark-2: #1e429f;
     --primary-light: #3b82f6;
+    --primary-light-20: rgba(59, 130, 246, 0.2);
+    --primary-light-10: rgba(59, 130, 246, 0.1);
     --primary-ultralight: #eff6ff;
     --secondary-color: #f97316;
+    --secondary-05: rgba(249, 115, 22, 0.05);
     --secondary-dark: #ea580c;
     --secondary-light: #fb923c;
     --dark: #1f2a37;
@@ -14,40 +20,65 @@
     --text-color-3: #1e293b;
     --text-light: #cbd5e1;
     --text-light-2: #6b7280;
+    --text-light-2-20: rgba(107, 114, 128, 0.2);
+    --text-light-2-10: rgba(107, 114, 128, 0.1);
     --text-light-3: #64748b;
     --text-lighter: #94a3b8;
     --bg-light: #f9fafb;
     --bg-dark: #0f172a;
     --bg-dark-95: rgba(15, 23, 42, 0.95);
+    --bg-dark-50: rgba(15, 23, 42, 0.5);
     --bg-darker: #0a0f1c;
     --bg-card: #1e293b;
     --bg-card-2: #ffffff;
     --white: #ffffff;
+    --white-90: rgba(255, 255, 255, 0.9);
+    --white-85: rgba(255, 255, 255, 0.85);
+    --white-80: rgba(255, 255, 255, 0.8);
     --white-70: rgba(255, 255, 255, 0.7);
+    --white-60: rgba(255, 255, 255, 0.6);
     --white-50: rgba(255, 255, 255, 0.5);
+    --white-30: rgba(255, 255, 255, 0.3);
+    --white-20: rgba(255, 255, 255, 0.2);
+    --white-15: rgba(255, 255, 255, 0.15);
     --white-10: rgba(255, 255, 255, 0.1);
+    --white-05: rgba(255, 255, 255, 0.05);
     --black: #000000;
+    --black-80: rgba(0, 0, 0, 0.8);
     --black-70: rgba(0, 0, 0, 0.7);
     --black-50: rgba(0, 0, 0, 0.5);
+    --black-10: rgba(0, 0, 0, 0.1);
+    --black-08: rgba(0, 0, 0, 0.08);
+    --black-07: rgba(0, 0, 0, 0.07);
+    --black-06: rgba(0, 0, 0, 0.06);
+    --black-05: rgba(0, 0, 0, 0.05);
+    --black-04: rgba(0, 0, 0, 0.04);
     --navy-dark: #0f172a;
     --navy-darker: #0a0f1c;
     --success-color: #10b981;
+    --green-20: rgba(16, 185, 129, 0.2);
+    --green-10: rgba(16, 185, 129, 0.1);
     --warning-color: #f59e0b;
+    --orange-20: rgba(245, 158, 11, 0.2);
+    --orange-10: rgba(245, 158, 11, 0.1);
     --danger-color: #ef4444;
+    --red-80: rgba(239, 68, 68, 0.8);
+    --red-20: rgba(239, 68, 68, 0.2);
     --info-color: #3b82f6;
+    --purple-20: rgba(139, 92, 246, 0.2);
     --border-color: #334155;
     --gray-light: #e5e7eb;
     --border-light: #e2e8f0;
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-sm-2: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
-    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-    --shadow-2: 0 4px 6px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-md-2: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --shadow-lg-2: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    --shadow-xl-2: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+    --shadow-sm: 0 1px 2px 0 var(--black-05);
+    --shadow-sm-2: 0 1px 3px var(--black-05), 0 1px 2px var(--black-10);
+    --shadow: 0 1px 3px 0 var(--black-10), 0 1px 2px 0 var(--black-06);
+    --shadow-2: 0 4px 6px var(--black-04), 0 1px 3px var(--black-05);
+    --shadow-md: 0 4px 6px -1px var(--black-10), 0 2px 4px -1px var(--black-06);
+    --shadow-md-2: 0 10px 15px -3px var(--black-07), 0 4px 6px -2px var(--black-05);
+    --shadow-lg: 0 10px 15px -3px var(--black-10), 0 4px 6px -2px var(--black-05);
+    --shadow-lg-2: 0 20px 25px -5px var(--black-08), 0 10px 10px -5px var(--black-04);
+    --shadow-xl: 0 20px 25px -5px var(--black-10), 0 10px 10px -5px var(--black-04);
+    --shadow-xl-2: 0 25px 50px -12px var(--black-10);
     --radius-sm: 0.25rem;
     --radius: 0.5rem;
     --radius-md: 0.75rem;
@@ -275,7 +306,7 @@ ol {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, var(--white-20), transparent);
     transition: all 0.6s ease;
 }
 
@@ -438,7 +469,7 @@ ol {
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    background: linear-gradient(90deg, transparent, var(--white-10), transparent);
 }
 
 .footer-grid {
@@ -500,7 +531,7 @@ ol {
 }
 
 .footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--white-10);
     padding: 2.5rem 0;
     display: flex;
     justify-content: space-between;

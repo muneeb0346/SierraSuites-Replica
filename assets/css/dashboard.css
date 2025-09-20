@@ -1,5 +1,5 @@
 body {
-    color: var(--text-color-3);
+    color: var(--bg-card);
     background-color: var(--text-color);
 }
 
@@ -32,8 +32,8 @@ p {
 }
 
 .banner-content .btn-small {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: var(--white-20);
+    border: 1px solid var(--white-30);
     color: white;
     padding: 0.5rem 1rem;
     border-radius: var(--radius);
@@ -44,7 +44,7 @@ p {
 }
 
 .banner-content .btn-small:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: var(--white-30);
 }
 
 .banner-content .btn-icon {
@@ -101,7 +101,7 @@ p {
 
 .sidebar-header {
     padding: 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--white-10);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -117,7 +117,7 @@ p {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--white-10);
 }
 
 .avatar {
@@ -178,7 +178,7 @@ p {
 .profile-dropdown a {
     display: block;
     padding: 0.75rem 1rem;
-    color: var(--text-color-3);
+    color: var(--bg-card);
     transition: all 0.2s ease;
 }
 
@@ -209,12 +209,12 @@ p {
 }
 
 .sidebar-nav a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--white-10);
     color: var(--white);
 }
 
 .sidebar-nav a.active {
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--white-15);
     color: var(--white);
 }
 
@@ -236,7 +236,7 @@ p {
 
 .nav-divider {
     height: 1px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--white-10);
     margin: 0.5rem 0;
 }
 
@@ -251,7 +251,7 @@ p {
 
 .sidebar-footer {
     padding: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--white-10);
 }
 
 .upgrade-card {
@@ -269,7 +269,7 @@ p {
 
 .upgrade-card p {
     margin-bottom: 1rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--white-80);
 }
 
 .btn-primary {
@@ -319,7 +319,7 @@ p {
     position: sticky;
     top: 0;
     z-index: 50;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--white-10);
 }
 
 .topbar-left {
@@ -352,7 +352,7 @@ p {
 .page-title p {
     margin-bottom: 0;
     font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--white-80);
 }
 
 .topbar-right {
@@ -376,23 +376,23 @@ p {
 
 .search-bar input {
     padding: 0.75rem 1rem 0.75rem 2.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--white-10);
     border-radius: var(--radius);
     width: 250px;
     font-family: inherit;
     transition: all 0.2s ease;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--white-10);
     color: var(--white);
 }
 
 .search-bar input:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 0 0 3px var(--primary-10);
 }
 
 .search-bar input::placeholder {
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--white-60);
 }
 
 .topbar-actions {
@@ -404,7 +404,7 @@ p {
 .help-btn {
     background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--white-80);
     cursor: pointer;
     font-size: 1.25rem;
     position: relative;
@@ -444,7 +444,7 @@ p {
     right: -50%;
     width: 100%;
     height: 200%;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--white-10);
     transform: rotate(-15deg);
 }
 
@@ -455,7 +455,7 @@ p {
 }
 
 .welcome-content p {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--white-90);
     margin-bottom: 1.5rem;
     font-size: 1rem;
     max-width: 600px;
@@ -468,7 +468,7 @@ p {
 
 .welcome-image img {
     height: 140px;
-    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+    filter: drop-shadow(0 5px 15px var(--black-10));
 }
 
 .stats-grid {
@@ -580,7 +580,7 @@ p {
 .card-header h3 {
     margin-bottom: 0;
     font-size: 1.25rem;
-    color: var(--text-color-3);
+    color: var(--bg-card);
 }
 
 .card-body {
@@ -627,7 +627,7 @@ p {
 .timeline-content h4 {
     margin-bottom: 0.25rem;
     font-size: 1rem;
-    color: var(--text-color-3);
+    color: var(--bg-card);
 }
 
 .project-info p,
@@ -805,7 +805,7 @@ p {
     border: 1px solid var(--border-light);
     border-radius: var(--radius);
     background-color: var(--bg-card-2);
-    color: var(--text-color-3);
+    color: var(--bg-card);
     font-family: inherit;
 }
 
@@ -845,7 +845,7 @@ p {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.8);
+    background: var(--white-80);
     border-radius: var(--radius);
     display: flex;
     align-items: center;
@@ -886,7 +886,7 @@ p {
 .upgrade-prompt p {
     margin-bottom: 1rem;
     font-size: 0.875rem;
-    color: var(--text-color-3);
+    color: var(--bg-card);
 }
 
 /* Empty states */

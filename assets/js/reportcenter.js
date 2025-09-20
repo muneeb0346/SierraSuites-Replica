@@ -801,7 +801,7 @@ function initCharts() {
             }, {
                 label: 'XYZ Plumbing',
                 data: [75, 85, 90, 70, 80],
-                backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                backgroundColor: 'var(--green-20)',
                 borderColor: '#10b981',
                 pointBackgroundColor: '#10b981'
             }]

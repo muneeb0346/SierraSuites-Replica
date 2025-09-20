@@ -12,7 +12,7 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--white-10) 0%, transparent 70%);
     animation: rotate 20s linear infinite;
 }
 
@@ -356,7 +356,7 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--black-10) 0%, transparent 70%);
     animation: rotate 20s linear infinite;
 }
 
@@ -376,7 +376,7 @@
 .about-cta p {
     max-width: 700px;
     margin: 0 auto 3rem;
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--white-90);
     font-size: 1.25rem;
 }
 
@@ -389,9 +389,9 @@
 
 /* Make the View Pricing button more visible */
 .about-cta .btn-outline {
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--white-15);
     color: var(--white);
-    border-color: rgba(255, 255, 255, 0.3);
+    border-color: var(--white-30);
 }
 
 .about-cta .btn-outline:hover {

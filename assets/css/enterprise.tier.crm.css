@@ -55,12 +55,12 @@ header {
 }
 
 .header-title p {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--white-80);
     font-size: 18px;
 }
 
 .plan-badge {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: var(--white-20);
     padding: 5px 15px;
     border-radius: 20px;
     font-size: 14px;
@@ -291,7 +291,7 @@ header {
     font-style: italic;
     margin: 20px 0;
     padding: 20px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--white-10);
     border-radius: var(--radius-md);
 }
 

@@ -16,7 +16,7 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--white-10) 0%, transparent 70%);
     animation: rotate 20s linear infinite;
 }
 
@@ -94,7 +94,7 @@
 .form-input:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    box-shadow: 0 0 0 3px var(--primary-20);
 }
 
 .form-input::placeholder {
@@ -237,7 +237,7 @@
 
 .plan-option-form.selected {
     border-color: var(--primary-color);
-    background-color: rgba(37, 99, 235, 0.1);
+    background-color: var(--primary-10);
 }
 
 .plan-name-form {
@@ -265,7 +265,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: var(--black-80);
     display: flex;
     align-items: center;
     justify-content: center;
