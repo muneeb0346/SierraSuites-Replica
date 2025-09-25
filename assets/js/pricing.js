@@ -36,3 +36,6 @@ billingToggle.addEventListener('change', function () {
         });
     }
 });
+
+window.addEventListener('scroll', animateOnScroll);
+window.addEventListener('DOMContentLoaded', animateOnScroll);
