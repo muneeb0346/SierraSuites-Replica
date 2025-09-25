@@ -1,51 +1,36 @@
-:root {
-    --primary-color: #1E3A8A;
-    --secondary-color: #3B82F6;
-    --accent-color: #F97316;
-    --success-color: #10B981;
-    --warning-color: #F59E0B;
-    --danger-color: #EF4444;
-    --light-color: #F3F4F6;
-    --dark-color: #1F2937;
-    --text-color: #374151;
-    --text-light: #6B7280;
-    --border-color: #E5E7EB;
-    --radius: 8px;
-    --shadow: 0 1px 3px var(--black-10);
-    --shadow-lg: 0 10px 15px -3px var(--black-10);
-}
+/* TaskFlow (javascript.html) page-specific styles
+   Note: Common variables and base components come from assets/css/main.css
+   This file only contains overrides and layout unique to the TaskFlow page. */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-}
-
-body {
-    background-color: #F9FAFB;
-    color: var(--text-color);
-}
-
-.container {
+/* Page scope to avoid bleeding into other pages */
+.page-taskflow {
     display: flex;
     min-height: 100vh;
 }
 
+/* Ensure the page wrapper (.container) behaves as full-width layout for TaskFlow */
+.page-taskflow .container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    max-width: none;
+    padding: 0;
+}
+
 /* Sidebar Styles */
-.sidebar {
+.page-taskflow .sidebar {
     width: 260px;
     background: var(--primary-color);
-    color: white;
+    color: var(--white);
     transition: var(--transition);
     overflow-y: auto;
 }
 
-.sidebar.collapsed {
+.page-taskflow .sidebar.collapsed {
     width: 80px;
 }
 
-.sidebar-header {
+.page-taskflow .sidebar-header {
     padding: 1.5rem 1rem;
     display: flex;
     align-items: center;
@@ -53,54 +38,54 @@ body {
     border-bottom: 1px solid var(--white-10);
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-weight: 700;
+/* Reuse .logo base from main.css where available */
+.page-taskflow .sidebar .logo {
     font-size: 1.25rem;
 }
 
-.sidebar-toggle {
+.page-taskflow .sidebar-toggle {
     background: none;
     border: none;
-    color: white;
+    color: var(--white);
     cursor: pointer;
 }
 
-.sidebar-menu {
+.page-taskflow .sidebar-menu {
     padding: 1rem 0;
 }
 
-.menu-item {
+.page-taskflow .menu-item {
     display: flex;
     align-items: center;
     padding: 0.75rem 1.5rem;
     color: var(--white-80);
     text-decoration: none;
-    transition: all 0.2s;
+    transition: var(--transition);
     gap: 0.75rem;
 }
 
-.menu-item:hover,
-.menu-item.active {
+.page-taskflow .menu-item:hover,
+.page-taskflow .menu-item.active {
     background: var(--white-10);
-    color: white;
+    color: var(--white);
 }
 
-.menu-item i {
+.page-taskflow .menu-item i {
     width: 20px;
     text-align: center;
 }
 
 /* Main Content */
-.main-content {
+.page-taskflow .main-content {
     flex: 1;
     overflow-y: auto;
+    background: var(--bg-light);
+    color: var(--text-color-4);
 }
 
-.header {
-    background: white;
+/* Header reuses .header from main.css but tweaks for light surface */
+.page-taskflow .header {
+    background: var(--white);
     padding: 1rem 2rem;
     display: flex;
     align-items: center;
@@ -109,9 +94,11 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
+    height: auto;
+    /* override fixed height */
 }
 
-.search-bar {
+.page-taskflow .search-bar {
     display: flex;
     align-items: center;
     background: var(--light-color);
@@ -120,21 +107,22 @@ body {
     width: 300px;
 }
 
-.search-bar input {
+.page-taskflow .search-bar input {
     background: none;
     border: none;
     outline: none;
     width: 100%;
     margin-left: 0.5rem;
+    color: inherit;
 }
 
-.user-menu {
+.page-taskflow .user-menu {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-.user-avatar {
+.page-taskflow .user-avatar {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -142,48 +130,49 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: var(--white);
     font-weight: 600;
 }
 
-/* Dashboard Styles */
-.dashboard {
+/* Dashboard */
+.page-taskflow .dashboard {
     padding: 2rem;
 }
 
-.page-title {
+.page-taskflow .page-title {
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
+    color: var(--text-color-3);
 }
 
-.stats-grid {
+.page-taskflow .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
 }
 
-.stat-card {
-    background: white;
+.page-taskflow .stat-card {
+    background: var(--white);
     border-radius: var(--radius);
     padding: 1.5rem;
     box-shadow: var(--shadow);
 }
 
-.card-header {
+.page-taskflow .card-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 1rem;
 }
 
-.card-title {
-    color: var(--text-light);
+.page-taskflow .card-title {
+    color: var(--text-light-2);
     font-size: 0.875rem;
 }
 
-.card-icon {
+.page-taskflow .card-icon {
     width: 40px;
     height: 40px;
     border-radius: var(--radius);
@@ -194,12 +183,13 @@ body {
     color: var(--primary-color);
 }
 
-.card-value {
+.page-taskflow .card-value {
     font-size: 1.5rem;
     font-weight: 700;
+    color: var(--text-color-3);
 }
 
-.card-change {
+.page-taskflow .card-change {
     font-size: 0.875rem;
     color: var(--success-color);
     display: flex;
@@ -207,174 +197,112 @@ body {
     gap: 0.25rem;
 }
 
-.charts-grid {
+.page-taskflow .charts-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 1.5rem;
     margin-bottom: 2rem;
 }
 
-.chart-card {
-    background: white;
+.page-taskflow .chart-card {
+    background: var(--white);
     border-radius: var(--radius);
     padding: 1.5rem;
     box-shadow: var(--shadow);
 }
 
-.chart-header {
+.page-taskflow .chart-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 1rem;
 }
 
-.chart-title {
+.page-taskflow .chart-title {
     font-weight: 600;
+    color: var(--text-color-3);
 }
 
-.chart-container {
+.page-taskflow .chart-container {
     height: 300px;
 }
 
-/* Task List */
-.task-list {
+/* Tasks */
+.page-taskflow .task-list {
     list-style: none;
 }
 
-.task-item {
+.page-taskflow .task-item {
     display: flex;
     align-items: center;
     padding: 1rem;
-    background: white;
+    background: var(--white);
     border-radius: var(--radius);
     margin-bottom: 0.75rem;
     box-shadow: var(--shadow);
     gap: 1rem;
 }
 
-.task-checkbox {
+.page-taskflow .task-checkbox {
     display: flex;
     align-items: center;
 }
 
-.task-content {
+.page-taskflow .task-content {
     flex: 1;
 }
 
-.task-title {
+.page-taskflow .task-title {
     font-weight: 600;
     margin-bottom: 0.25rem;
+    color: var(--text-color-3);
 }
 
-.task-desc {
-    color: var(--text-light);
+.page-taskflow .task-desc {
+    color: var(--text-light-2);
     font-size: 0.875rem;
     margin-bottom: 0.5rem;
 }
 
-.task-meta {
+.page-taskflow .task-meta {
     display: flex;
     gap: 1rem;
     font-size: 0.75rem;
-    color: var(--text-light);
+    color: var(--text-light-2);
 }
 
-.task-priority {
+.page-taskflow .task-priority {
     padding: 0.25rem 0.5rem;
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 600;
 }
 
-.priority-high {
+.page-taskflow .priority-high {
     background: #FEE2E2;
     color: #B91C1C;
 }
 
-.priority-medium {
+.page-taskflow .priority-medium {
     background: #FEF3C7;
     color: #92400E;
 }
 
-.priority-low {
+.page-taskflow .priority-low {
     background: #D1FAE5;
     color: #065F46;
 }
 
-.task-actions {
+.page-taskflow .task-actions {
     display: flex;
     gap: 0.5rem;
 }
 
-/* Buttons */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius);
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s;
-    gap: 0.5rem;
-}
+/* Use existing .btn, .btn-primary, .btn-outline, .btn-icon from main.css */
 
-.btn-primary {
-    background: var(--primary-color);
-    color: white;
-}
-
-.btn-primary:hover {
-    background: #15296d;
-}
-
-.btn-outline {
-    background: transparent;
-    color: var(--primary-color);
-    border: 1px solid var(--primary-color);
-}
-
-.btn-outline:hover {
-    background: var(--primary-color);
-    color: white;
-}
-
-.btn-icon {
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    border-radius: 6px;
-    background: transparent;
-    color: var(--text-light);
-}
-
-.btn-icon:hover {
-    background: var(--light-color);
-    color: var(--text-color);
-}
-
-/* Modal */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--black-50);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 1rem;
-}
-
-.modal.active {
-    display: flex;
-}
-
-.modal-content {
-    background: white;
+/* Modal - reuse main.css modal tokens but light variant for this page */
+.page-taskflow .modal .modal-content {
+    background: var(--white);
     border-radius: var(--radius);
     width: 100%;
     max-width: 500px;
@@ -383,135 +311,54 @@ body {
     box-shadow: var(--shadow-lg);
 }
 
-.modal-header {
+.page-taskflow .modal .modal-header {
     padding: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-light);
+    background: var(--white);
 }
 
-.modal-title {
+.page-taskflow .modal .modal-title {
     font-weight: 600;
     font-size: 1.25rem;
+    color: var(--text-color-3);
 }
 
-.modal-body {
+.page-taskflow .modal .modal-body {
     padding: 1.5rem;
 }
 
-.modal-footer {
+.page-taskflow .modal .modal-footer {
     padding: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: 1rem;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-light);
 }
 
-/* Form Elements */
-.form-group {
-    margin-bottom: 1.25rem;
-}
-
-.form-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-}
-
-.form-control {
-    width: 100%;
-    padding: 0.5rem 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    background: white;
-    transition: all 0.2s;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: var(--secondary-color);
-    box-shadow: 0 0 0 3px var(--primary-light-20);
-}
-
-textarea.form-control {
-    min-height: 100px;
-    resize: vertical;
-}
-
-/* Filter Bar */
-.filter-bar {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    background: white;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-}
-
-.filter-group {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.filter-label {
-    font-size: 0.875rem;
-    color: var(--text-light);
-}
-
-.filter-select {
-    padding: 0.5rem;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    background: white;
-}
-
-/* Notification Styles */
-.notification {
+/* Modal overlay for this page (distinct from .modal-overlay in main.css) */
+.page-taskflow .modal {
     position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 15px 20px;
-    border-radius: 5px;
-    color: white;
-    z-index: 10000;
-    display: flex;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
     align-items: center;
-    justify-content: space-between;
-    min-width: 300px;
-    box-shadow: 0 4px 6px var(--black-10);
-    animation: slideIn 0.3s ease;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
 }
 
-.notification-success {
-    background-color: #10B981;
+.page-taskflow .modal.active {
+    display: flex;
 }
 
-.notification-error {
-    background-color: #EF4444;
-}
-
-.notification-info {
-    background-color: #3B82F6;
-}
-
-.notification-warning {
-    background-color: #F59E0B;
-}
-
-.notification-close {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 20px;
-    cursor: pointer;
-    margin-left: 15px;
-}
-
+/* Animation used by notifications */
 @keyframes slideIn {
     from {
         transform: translateX(100%);
@@ -524,12 +371,116 @@ textarea.form-control {
     }
 }
 
-/* Toast Notification Styles */
-.notification-toast {
+/* Form Elements */
+.page-taskflow .form-group {
+    margin-bottom: 1.25rem;
+}
+
+.page-taskflow .form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-color-3);
+}
+
+.page-taskflow .form-control {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    background: var(--white);
+    transition: var(--transition);
+}
+
+.page-taskflow .form-control:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px var(--primary-light-20);
+}
+
+.page-taskflow textarea.form-control {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Filter Bar */
+.page-taskflow .filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.page-taskflow .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.page-taskflow .filter-label {
+    font-size: 0.875rem;
+    color: var(--text-light-2);
+}
+
+.page-taskflow .filter-select {
+    padding: 0.5rem;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    background: var(--white);
+}
+
+/* Toast/Notifications (light variant) */
+.page-taskflow .notification {
     position: fixed;
     top: 20px;
     right: 20px;
-    background: white;
+    padding: 15px 20px;
+    border-radius: 5px;
+    color: var(--white);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 300px;
+    box-shadow: var(--shadow-md);
+    animation: slideIn 0.3s ease;
+}
+
+.page-taskflow .notification-success {
+    background-color: var(--success-color);
+}
+
+.page-taskflow .notification-error {
+    background-color: var(--danger-color);
+}
+
+.page-taskflow .notification-info {
+    background-color: var(--info-color);
+}
+
+.page-taskflow .notification-warning {
+    background-color: var(--warning-color);
+}
+
+.page-taskflow .notification-close {
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 15px;
+}
+
+/* Toast (white card) */
+.page-taskflow .notification-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--white);
     border-radius: var(--radius);
     box-shadow: var(--shadow-lg);
     padding: 1rem;
@@ -543,151 +494,152 @@ textarea.form-control {
     max-width: 350px;
 }
 
-.notification-toast.show {
+.page-taskflow .notification-toast.show {
     transform: translateX(0);
     opacity: 1;
 }
 
-.notification-content {
+.page-taskflow .notification-content {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     flex: 1;
 }
 
-.notification-success .notification-content i {
+.page-taskflow .notification-success .notification-content i {
     color: var(--success-color);
 }
 
-.notification-error .notification-content i {
+.page-taskflow .notification-error .notification-content i {
     color: var(--danger-color);
 }
 
-.notification-info .notification-content i {
+.page-taskflow .notification-info .notification-content i {
     color: var(--info-color);
 }
 
-.notification-close {
+.page-taskflow .notification-close {
     background: none;
     border: none;
-    color: var(--text-light);
+    color: var(--text-light-2);
     cursor: pointer;
     padding: 0.25rem;
 }
 
-.notification-close:hover {
-    color: var(--text-color);
+.page-taskflow .notification-close:hover {
+    color: var(--text-color-3);
 }
 
-/* Project Card Styles */
-.project-card {
-    background: white;
+/* Project Cards */
+.page-taskflow .project-card {
+    background: var(--white);
     border-radius: var(--radius);
     padding: 1.5rem;
     box-shadow: var(--shadow);
     margin-bottom: 1.5rem;
-    transition: transform 0.2s;
+    transition: transform 0.2s ease;
 }
 
-.project-card:hover {
+.page-taskflow .project-card:hover {
     transform: translateY(-2px);
 }
 
-.project-card-header {
+.page-taskflow .project-card-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 1rem;
 }
 
-.project-status {
+.page-taskflow .project-status {
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 600;
 }
 
-.status-planning {
+.page-taskflow .status-planning {
     background: #FEF3C7;
     color: #92400E;
 }
 
-.status-active {
+.page-taskflow .status-active {
     background: #D1FAE5;
     color: #065F46;
 }
 
-.status-on-hold {
+.page-taskflow .status-on-hold {
     background: #FEE2E2;
     color: #B91C1C;
 }
 
-.status-completed {
+.page-taskflow .status-completed {
     background: #DBEAFE;
     color: #1E40AF;
 }
 
-.project-card-body {
+.page-taskflow .project-card-body {
     margin-bottom: 1.5rem;
 }
 
-.project-meta {
+.page-taskflow .project-meta {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     margin-bottom: 1.5rem;
 }
 
-.project-meta-item {
+.page-taskflow .project-meta-item {
     text-align: center;
 }
 
-.project-meta-item .value {
+.page-taskflow .project-meta-item .value {
     font-weight: 700;
     font-size: 1.25rem;
+    color: var(--text-color-3);
 }
 
-.project-meta-item .label {
+.page-taskflow .project-meta-item .label {
     font-size: 0.75rem;
-    color: var(--text-light);
+    color: var(--text-light-2);
 }
 
-.project-progress {
+.page-taskflow .project-progress {
     margin-bottom: 1rem;
 }
 
-.progress-header {
+.page-taskflow .progress-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 0.5rem;
 }
 
-.progress-bar {
+.page-taskflow .progress-bar {
     height: 8px;
     background: var(--light-color);
     border-radius: 4px;
     overflow: hidden;
 }
 
-.progress-fill {
+.page-taskflow .progress-fill {
     height: 100%;
     background: var(--success-color);
     border-radius: 4px;
     transition: width 0.3s ease;
 }
 
-.project-card-footer {
+.page-taskflow .project-card-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.project-team {
+.page-taskflow .project-team {
     display: flex;
 }
 
-.team-member {
+.page-taskflow .team-member {
     width: 32px;
     height: 32px;
     border-radius: 50%;
@@ -695,45 +647,45 @@ textarea.form-control {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: var(--white);
     font-weight: 600;
     font-size: 0.75rem;
     margin-right: -8px;
-    border: 2px solid white;
+    border: 2px solid var(--white);
 }
 
-.project-actions {
+.page-taskflow .project-actions {
     display: flex;
     gap: 0.5rem;
 }
 
-/* Mobile Responsive */
+/* Mobile */
 @media (max-width: 768px) {
-    .sidebar {
+    .page-taskflow .sidebar {
         width: 100%;
         position: fixed;
         z-index: 1000;
         transform: translateX(-100%);
     }
 
-    .sidebar.active {
+    .page-taskflow .sidebar.active {
         transform: translateX(0);
     }
 
-    .sidebar.collapsed {
+    .page-taskflow .sidebar.collapsed {
         width: 100%;
     }
 
-    .charts-grid {
+    .page-taskflow .charts-grid {
         grid-template-columns: 1fr;
     }
 
-    .filter-bar {
+    .page-taskflow .filter-bar {
         flex-direction: column;
         align-items: stretch;
     }
 
-    .filter-group {
+    .page-taskflow .filter-group {
         justify-content: space-between;
     }
 }

@@ -112,3 +112,38 @@ document.addEventListener("keydown", e => {
         document.body.style.overflow = "auto";
     }
 });
+
+// Generic [data-modal] triggers and modal close handlers (shared across pages)
+// Opens a modal when any element with [data-modal] is clicked
+document.addEventListener("click", (e) => {
+    const trigger = e.target.closest("[data-modal]");
+    if (trigger) {
+        e.preventDefault();
+        const modalId = trigger.getAttribute("data-modal");
+        const modal = modalId ? document.getElementById(modalId) : null;
+        if (modal) {
+            modal.classList.add("active");
+            document.body.style.overflow = "hidden";
+        }
+        return; // don't fall through on same click
+    }
+
+    // Close when clicking a .modal-close inside a modal
+    const closeBtn = e.target.closest(".modal-close");
+    if (closeBtn) {
+        const modal = closeBtn.closest(".modal");
+        if (modal) {
+            modal.classList.remove("active");
+            document.body.style.overflow = "auto";
+        }
+        return;
+    }
+});
+
+// Close modal when clicking on the overlay/background
+document.addEventListener("click", (e) => {
+    if (e.target.classList && e.target.classList.contains("modal")) {
+        e.target.classList.remove("active");
+        document.body.style.overflow = "auto";
+    }
+});

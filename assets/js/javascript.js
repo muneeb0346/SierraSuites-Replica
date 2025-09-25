@@ -14,7 +14,10 @@ supabase.auth.onAuthStateChange(async (event, session) => {
     if (session?.user) {
         currentUser = session.user;
         await loadUserCompanyData();
-        initializeTaskFlow();
+        // Only initialize TaskFlow on pages that declare the scope class
+        if (document.body && document.body.classList.contains('page-taskflow')) {
+            initializeTaskFlow();
+        }
     } else {
         // Redirect to login or show login UI
         console.log('User not authenticated');
@@ -260,15 +263,16 @@ function renderEvents(events) {
 }
 
 function getEventColor(eventType) {
-    const colors = {
-        'meeting': '#3B82F6',
-        'deadline': '#EF4444',
-        'inspection': '#10B981',
-        'milestone': '#F59E0B',
-        'general': '#1E3A8A'
+    // Map to CSS variable-based theme colors
+    const styles = getComputedStyle(document.documentElement);
+    const map = {
+        meeting: styles.getPropertyValue('--primary-light')?.trim() || '#3B82F6',
+        deadline: styles.getPropertyValue('--danger-color')?.trim() || '#EF4444',
+        inspection: styles.getPropertyValue('--success-color')?.trim() || '#10B981',
+        milestone: styles.getPropertyValue('--warning-color')?.trim() || '#F59E0B',
+        general: styles.getPropertyValue('--primary-dark')?.trim() || '#1E3A8A'
     };
-
-    return colors[eventType] || '#1E3A8A';
+    return map[eventType] || map.general;
 }
 
 function setupEventListeners() {
@@ -347,16 +351,7 @@ function setupEventListeners() {
         statusFilter.addEventListener('change', filterTasks);
     }
 
-    // Add keyboard event for Escape key to close modal
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            const modals = document.querySelectorAll('.modal.active');
-            modals.forEach(modal => {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            });
-        }
-    });
+    // Global Escape and modal-close handling is centralized in main.js
 }
 
 async function handleEventSave() {
@@ -384,7 +379,11 @@ async function handleEventSave() {
             color: getEventColor(event.event_type)
         });
 
-        document.getElementById('event-modal').style.display = 'none';
+        const modal = document.getElementById('event-modal');
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
         form.reset();
     }
 }
@@ -408,7 +407,11 @@ async function handleTaskSave() {
         const tasks = await getTasks();
         renderTasks(tasks);
 
-        document.getElementById('task-modal').style.display = 'none';
+        const modal = document.getElementById('task-modal');
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
         form.reset();
     }
 }
@@ -482,49 +485,6 @@ function showNotification(message, type = 'info') {
                 <span>${message}</span>
                 <button class="notification-close">&times;</button>
             `;
-
-    // Add styles if not already added
-    if (!document.getElementById('notification-styles')) {
-        const styles = document.createElement('style');
-        styles.id = 'notification-styles';
-        styles.textContent = `
-                    .notification {
-                        position: fixed;
-                        top: 20px;
-                        right: 20px;
-                        padding: 15px 20px;
-                        border-radius: 5px;
-                        color: white;
-                        z-index: 10000;
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        min-width: 300px;
-                        box-shadow: 0 4px 6px var(--black-10);
-                        animation: slideIn 0.3s ease;
-                    }
-                    
-                    .notification-success { background-color: #10B981; }
-                    .notification-error { background-color: #EF4444; }
-                    .notification-info { background-color: #3B82F6; }
-                    .notification-warning { background-color: #F59E0B; }
-                    
-                    .notification-close {
-                        background: none;
-                        border: none;
-                        color: white;
-                        font-size: 20px;
-                        cursor: pointer;
-                        margin-left: 15px;
-                    }
-                    
-                    @keyframes slideIn {
-                        from { transform: translateX(100%); opacity: 0; }
-                        to { transform: translateX(0); opacity: 1; }
-                    }
-                `;
-        document.head.appendChild(styles);
-    }
 
     // Add to page
     document.body.appendChild(notification);
@@ -707,6 +667,18 @@ function getInitials(name) {
 
 // Your existing DOMContentLoaded code
 document.addEventListener('DOMContentLoaded', function () {
+    // Only run TaskFlow-specific DOM wiring on TaskFlow pages
+    if (!document.body.classList.contains('page-taskflow')) {
+        return;
+    }
+
+    // Theme colors from CSS variables (used by charts and UI)
+    const styles = getComputedStyle(document.documentElement);
+    const primaryDark = styles.getPropertyValue('--primary-dark')?.trim() || '#1E3A8A';
+    const secondary = styles.getPropertyValue('--secondary-color')?.trim() || '#F97316';
+    const success = styles.getPropertyValue('--success-color')?.trim() || '#10B981';
+    const primaryLight = styles.getPropertyValue('--primary-light')?.trim() || '#3B82F6';
+    const grayLight = styles.getPropertyValue('--gray-light')?.trim() || '#E5E7EB';
     // Mobile menu toggle
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
     const sidebar = document.querySelector('.sidebar');
@@ -735,39 +707,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Modal functionality
-    const modalTriggers = document.querySelectorAll('[data-modal]');
-    const modals = document.querySelectorAll('.modal');
-
-    modalTriggers.forEach(trigger => {
-        trigger.addEventListener('click', function () {
-            const modalId = this.getAttribute('data-modal');
-            const modal = document.getElementById(modalId);
-
-            if (modal) {
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
-        });
-    });
-
-    modals.forEach(modal => {
-        const closeButton = modal.querySelector('.modal-close');
-
-        if (closeButton) {
-            closeButton.addEventListener('click', function () {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            });
-        }
-
-        modal.addEventListener('click', function (e) {
-            if (e.target === modal) {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-    });
+    // Modal functionality is handled globally in main.js via [data-modal] and .modal-close
 
     // Calendar initialization
     const calendarEl = document.getElementById('calendar');
@@ -784,18 +724,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 {
                     title: 'Submit Building Permit',
                     start: new Date(),
-                    color: '#EF4444'
+                    color: getEventColor('deadline')
                 },
                 {
                     title: 'Client Meeting',
                     start: '2023-06-15T10:00:00',
                     end: '2023-06-15T11:30:00',
-                    color: '#3B82F6'
+                    color: getEventColor('meeting')
                 },
                 {
                     title: 'Electrical Inspection',
                     start: '2023-06-18T13:00:00',
-                    color: '#10B981'
+                    color: getEventColor('inspection')
                 }
             ],
             dateClick: function (info) {
@@ -812,6 +752,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         startInput.value = info.dateStr + 'T09:00:00';
                     }
                     eventModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
                 }
             }
         });
@@ -830,7 +771,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 datasets: [{
                     label: 'Hours Tracked',
                     data: [6.5, 8, 7.5, 9, 6, 0, 0],
-                    backgroundColor: '#1E3A8A',
+                    backgroundColor: primaryDark,
                     borderRadius: 4
                 }]
             },
@@ -864,11 +805,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 labels: ['Completed', 'In Progress', 'Not Started'],
                 datasets: [{
                     data: [35, 45, 20],
-                    backgroundColor: [
-                        '#10B981',
-                        '#3B82F6',
-                        '#E5E7EB'
-                    ],
+                    backgroundColor: [success, primaryLight, grayLight],
                     borderWidth: 0
                 }]
             },
@@ -895,7 +832,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 datasets: [{
                     label: 'Tasks Completed',
                     data: [12, 19, 15, 24],
-                    borderColor: '#F97316',
+                    borderColor: secondary,
                     backgroundColor: 'rgba(249, 115, 22, 0.1)',
                     fill: true,
                     tension: 0.3
@@ -929,13 +866,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     {
                         label: 'Revenue',
                         data: [12000, 19000, 15000, 18000, 22000, 24500],
-                        backgroundColor: '#1E3A8A',
+                        backgroundColor: primaryDark,
                         borderRadius: 4
                     },
                     {
                         label: 'Expenses',
                         data: [8000, 12000, 10000, 11000, 15000, 13000],
-                        backgroundColor: '#F97316',
+                        backgroundColor: secondary,
                         borderRadius: 4
                     }
                 ]

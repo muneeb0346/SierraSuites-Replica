@@ -15,9 +15,11 @@
     --secondary-dark: #ea580c;
     --secondary-light: #fb923c;
     --dark: #1f2a37;
+    --light-color: #F3F4F6;
     --text-color: #f8fafc;
     --text-color-2: #1f2937;
     --text-color-3: #1e293b;
+    --text-color-4: #374151;
     --text-light: #cbd5e1;
     --text-light-2: #6b7280;
     --text-light-2-20: rgba(107, 114, 128, 0.2);
@@ -94,6 +96,7 @@
     padding: 0;
     box-sizing: border-box;
     scrollbar-color: var(--primary-color) transparent;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
 html {
@@ -102,7 +105,6 @@ html {
 }
 
 body {
-    font-family: 'Inter', sans-serif;
     color: var(--text-color);
     background-color: var(--bg-darker);
     font-weight: 400;
@@ -287,7 +289,7 @@ ol {
     justify-content: center;
     padding: 0.75rem 1.5rem;
     border-radius: var(--radius);
-    gap: 8px;
+    gap: 0.5rem;
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
@@ -668,6 +670,39 @@ ol {
     color: var(--text-light);
 }
 
+/* Notifications (global) */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: var(--radius);
+    color: var(--white);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 300px;
+    box-shadow: var(--shadow-lg);
+    animation: slideIn 0.3s ease;
+    gap: 12px;
+}
+
+.notification-success { background-color: var(--success-color); }
+.notification-error { background-color: var(--danger-color); }
+.notification-info { background-color: var(--primary-light); }
+.notification-warning { background-color: var(--warning-color); }
+
+.notification-close {
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 8px;
+    line-height: 1;
+}
+
 /* Animations */
 @keyframes fadeInUp {
     from {
@@ -723,6 +758,16 @@ ol {
     100% {
         background-position: -200% 0;
     }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
 }
 
 /* Respect reduced motion */
