@@ -986,4 +986,28 @@ document.addEventListener('DOMContentLoaded', function () {
     initUserData();
     loadPhotos();
     loadProjectsForDropdown();
+
+    // End of main logic
+
+    // Throttled scroll-triggered dashboard animations
+    // Animation targets: dashboard cards, stats, tables, photo cards
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const animatedEls = document.querySelectorAll('.dashboard-card, .dashboard-stat, .dashboard-table, .photo-card');
+
+        function animateOnScroll() {
+            animatedEls.forEach((el, i) => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 60) {
+                    el.classList.add('animate');
+                    el.style.animationDelay = `${i * 80}ms`;
+                }
+            });
+        }
+
+        // Use global throttle from main.js
+        const throttledScroll = window.throttle ? window.throttle(animateOnScroll, 16) : animateOnScroll;
+        window.addEventListener('scroll', throttledScroll);
+        animateOnScroll(); // Initial trigger
+    });
 });

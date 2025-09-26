@@ -1,3 +1,19 @@
+// Animation on scroll with throttling for performance
+function animateOnScroll() {
+    const elements = document.querySelectorAll('.login-card');
+    elements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        if (elementTop < window.innerHeight - elementVisible) {
+            element.classList.add('animate');
+        }
+    });
+}
+
+// Use global throttle from main.js
+const throttledAnimateOnScroll = throttle(animateOnScroll, 16); // ~60fps
+window.addEventListener('scroll', throttledAnimateOnScroll);
+window.addEventListener('DOMContentLoaded', animateOnScroll);
 // Initialize Supabase
 const supabaseUrl = 'https://qjswuwcqyzeuqqqltykz.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3d1d2NxeXpldXFxcWx0eWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMjk0MDUsImV4cCI6MjA3MDgwNTQwNX0.qgH8DMJEoJVuYOXSyr0RAj01Yt7bBR8EYL6qw3YXyAs';

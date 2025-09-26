@@ -533,3 +533,25 @@ document.addEventListener('click', (e) => {
 
 // Initialize dashboard
 initDashboard();
+
+// Throttled scroll-triggered dashboard animations
+// Animation targets: dashboard cards, stats, tables
+
+document.addEventListener('DOMContentLoaded', function () {
+    const animatedEls = document.querySelectorAll('.dashboard-card, .dashboard-stat, .dashboard-table');
+
+    function animateOnScroll() {
+        animatedEls.forEach((el, i) => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 60) {
+                el.classList.add('animate');
+                el.style.animationDelay = `${i * 80}ms`;
+            }
+        });
+    }
+
+    // Use global throttle from main.js
+    const throttledScroll = window.throttle ? window.throttle(animateOnScroll, 16) : animateOnScroll;
+    window.addEventListener('scroll', throttledScroll);
+    animateOnScroll(); // Initial trigger
+});

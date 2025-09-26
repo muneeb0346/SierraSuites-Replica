@@ -1422,3 +1422,27 @@ if (!document.getElementById('notification-styles')) {
             `;
     document.head.appendChild(styles);
 }
+
+// End of main logic
+
+// Throttled scroll-triggered dashboard animations
+// Animation targets: summary cards, table rows, status badges, empty states
+
+document.addEventListener('DOMContentLoaded', function () {
+    const animatedEls = document.querySelectorAll('.summary-card, .table-row, .status-badge, .empty-state');
+
+    function animateOnScroll() {
+        animatedEls.forEach((el, i) => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 60) {
+                el.classList.add('animate');
+                el.style.animationDelay = `${i * 80}ms`;
+            }
+        });
+    }
+
+    // Use global throttle from main.js
+    const throttledScroll = window.throttle ? window.throttle(animateOnScroll, 16) : animateOnScroll;
+    window.addEventListener('scroll', throttledScroll);
+    animateOnScroll(); // Initial trigger
+});

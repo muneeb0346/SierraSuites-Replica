@@ -1,3 +1,19 @@
+// Animation on scroll with throttling for performance
+function animateOnScroll() {
+    const elements = document.querySelectorAll('.register-card');
+    elements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        if (elementTop < window.innerHeight - elementVisible) {
+            element.classList.add('animate');
+        }
+    });
+}
+
+// Use global throttle from main.js
+const throttledAnimateOnScroll = throttle(animateOnScroll, 16); // ~60fps
+window.addEventListener('scroll', throttledAnimateOnScroll);
+window.addEventListener('DOMContentLoaded', animateOnScroll);
 // Initialize Stripe with your publishable key
 // Replace 'pk_test_your_publishable_key_here' with your actual Stripe publishable key
 const stripe = Stripe('pk_test_your_publishable_key_here');
