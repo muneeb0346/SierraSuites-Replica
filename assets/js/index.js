@@ -1,4 +1,4 @@
-// Animation on scroll
+// Animation on scroll with throttling for performance
 function animateOnScroll() {
     const elements = document.querySelectorAll('.metric-card, .feature-card, .pricing-card, .benefit-card, .benefits-cta');
 
@@ -12,6 +12,9 @@ function animateOnScroll() {
     });
 }
 
-window.addEventListener('scroll', animateOnScroll);
+// Use throttle function from main.js for performance optimization
+const throttledAnimateOnScroll = throttle(animateOnScroll, 16); // ~60fps
+
+window.addEventListener('scroll', throttledAnimateOnScroll);
 // Initial call to check elements in view on page load
 animateOnScroll();
