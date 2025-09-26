@@ -5,6 +5,131 @@
     overflow: hidden;
 }
 
+/* Animation for scroll-triggered elements */
+.animate {
+    opacity: 1;
+    transform: none;
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+.value-card {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: none;
+}
+
+.value-card.animate {
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+.value-card:nth-child(1).animate {
+    animation-delay: 0.1s;
+}
+
+.value-card:nth-child(2).animate {
+    animation-delay: 0.2s;
+}
+
+.value-card:nth-child(3).animate {
+    animation-delay: 0.3s;
+}
+
+.value-card:nth-child(4).animate {
+    animation-delay: 0.4s;
+}
+
+.value-card:nth-child(5).animate {
+    animation-delay: 0.5s;
+}
+
+.value-card:nth-child(6).animate {
+    animation-delay: 0.6s;
+}
+
+.feature-highlight {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: none;
+}
+
+.feature-highlight.animate {
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+.feature-highlight:nth-child(1).animate {
+    animation-delay: 0.1s;
+}
+
+.feature-highlight:nth-child(2).animate {
+    animation-delay: 0.2s;
+}
+
+.feature-highlight:nth-child(3).animate {
+    animation-delay: 0.3s;
+}
+
+.feature-highlight:nth-child(4).animate {
+    animation-delay: 0.4s;
+}
+
+.feature-highlight:nth-child(5).animate {
+    animation-delay: 0.5s;
+}
+
+.feature-highlight:nth-child(6).animate {
+    animation-delay: 0.6s;
+}
+
+.stat-item {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: none;
+}
+
+.stat-item.animate {
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+.stat-item:nth-child(1).animate {
+    animation-delay: 0.1s;
+}
+
+.stat-item:nth-child(2).animate {
+    animation-delay: 0.2s;
+}
+
+.stat-item:nth-child(3).animate {
+    animation-delay: 0.3s;
+}
+
+.stat-item:nth-child(4).animate {
+    animation-delay: 0.4s;
+}
+
+.stat-item:nth-child(5).animate {
+    animation-delay: 0.5s;
+}
+
+.stat-item:nth-child(6).animate {
+    animation-delay: 0.6s;
+}
+
+.features-highlight,
+.about-cta,
+.mission-image,
+.experience-image {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: none;
+}
+
+.features-highlight.animate,
+.about-cta.animate,
+.mission-image.animate,
+.experience-image.animate {
+    animation: fadeInUp 0.8s ease forwards;
+}
+
 .about-hero::before {
     content: '';
     position: absolute;
