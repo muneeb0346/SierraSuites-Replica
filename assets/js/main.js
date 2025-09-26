@@ -1,3 +1,16 @@
+// Throttle function for performance optimization
+function throttle(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 // Mobile menu toggle functionality
 const menuToggle = document.querySelector(".mobile-menu-toggle");
 const mobileNav = document.querySelector(".mobile-nav");
@@ -45,8 +58,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Active navigation highlighting
-window.addEventListener("scroll", () => {
+// Active navigation highlighting with throttling for performance
+const handleScroll = throttle(() => {
     const sections = document.querySelectorAll("section[id]");
     const navLinks = document.querySelectorAll(".nav a[href^='#'], .mobile-nav a[href^='#']");
     const header = document.querySelector(".header");
@@ -67,9 +80,21 @@ window.addEventListener("scroll", () => {
     if (header) {
         header.classList.toggle("scrolled", window.scrollY > 50);
     }
-});
+}, 16); // ~60fps
 
-// Modal functionality
+window.addEventListener("scroll", handleScroll);
+
+// Modal functionality - consolidated and optimized
+function closeModal(modal) {
+    modal.classList.remove("active");
+    document.body.style.overflow = "auto";
+}
+
+function openModal(modal) {
+    modal.classList.add("active");
+    document.body.style.overflow = "hidden";
+}
+
 function setupModal(triggerSelector, modalId, closeId) {
     const modal = document.getElementById(modalId);
     const closeBtn = document.getElementById(closeId);
@@ -79,22 +104,17 @@ function setupModal(triggerSelector, modalId, closeId) {
     document.querySelectorAll(triggerSelector).forEach(link => {
         link.addEventListener("click", e => {
             e.preventDefault();
-            modal.classList.add("active");
-            document.body.style.overflow = "hidden";
+            openModal(modal);
         });
     });
 
     if (closeBtn) {
-        closeBtn.addEventListener("click", () => {
-            modal.classList.remove("active");
-            document.body.style.overflow = "auto";
-        });
+        closeBtn.addEventListener("click", () => closeModal(modal));
     }
 
     modal.addEventListener("click", e => {
         if (e.target === modal) {
-            modal.classList.remove("active");
-            document.body.style.overflow = "auto";
+            closeModal(modal);
         }
     });
 }
@@ -108,42 +128,38 @@ setupModal(".contact-link", "contactModal", "closeContact");
 // Close modal with Escape key
 document.addEventListener("keydown", e => {
     if (e.key === "Escape") {
-        document.querySelectorAll(".modal.active").forEach(modal => modal.classList.remove("active"));
-        document.body.style.overflow = "auto";
+        document.querySelectorAll(".modal-overlay.active").forEach(modal => closeModal(modal));
     }
 });
 
-// Generic [data-modal] triggers and modal close handlers (shared across pages)
-// Opens a modal when any element with [data-modal] is clicked
+// Generic modal handlers with event delegation
 document.addEventListener("click", (e) => {
+    // Open modal with [data-modal] attribute
     const trigger = e.target.closest("[data-modal]");
     if (trigger) {
         e.preventDefault();
         const modalId = trigger.getAttribute("data-modal");
         const modal = modalId ? document.getElementById(modalId) : null;
         if (modal) {
-            modal.classList.add("active");
-            document.body.style.overflow = "hidden";
+            openModal(modal);
         }
-        return; // don't fall through on same click
+        return;
     }
 
-    // Close when clicking a .modal-close inside a modal
+    // Close modal with .modal-close button
     const closeBtn = e.target.closest(".modal-close");
     if (closeBtn) {
         const modal = closeBtn.closest(".modal");
         if (modal) {
-            modal.classList.remove("active");
-            document.body.style.overflow = "auto";
+            closeModal(modal);
         }
         return;
     }
-});
 
-// Close modal when clicking on the overlay/background
-document.addEventListener("click", (e) => {
-    if (e.target.classList && e.target.classList.contains("modal")) {
-        e.target.classList.remove("active");
-        document.body.style.overflow = "auto";
+    // Close modal when clicking on overlay
+    if (e.target.classList && e.target.classList.contains("modal-overlay")) {
+        closeModal(e.target);
     }
 });
+
+
