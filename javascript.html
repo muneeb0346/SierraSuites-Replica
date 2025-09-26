@@ -7,14 +7,14 @@
     <title>TaskFlow - Complete Integration</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
-    <script defer src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/javascript.css">
 </head>
 
-<body class="page-taskflow">
+<body>
     <div class="container">
         <!-- Sidebar -->
         <aside class="sidebar">
@@ -223,22 +223,22 @@
                 <form id="task-form">
                     <div class="form-group">
                         <label for="task-title" class="form-label">Task Title *</label>
-                        <input type="text" id="task-title" name="title" class="form-control" required>
+                        <input type="text" id="task-title" class="form-control" required>
                     </div>
 
                     <div class="form-group">
                         <label for="task-description" class="form-label">Description</label>
-                        <textarea id="task-description" name="description" class="form-control"></textarea>
+                        <textarea id="task-description" class="form-control"></textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="task-due-date" class="form-label">Due Date</label>
-                        <input type="date" id="task-due-date" name="due_date" class="form-control">
+                        <input type="date" id="task-due-date" class="form-control">
                     </div>
 
                     <div class="form-group">
                         <label for="task-priority" class="form-label">Priority</label>
-                        <select id="task-priority" name="priority" class="form-control">
+                        <select id="task-priority" class="form-control">
                             <option value="low">Low</option>
                             <option value="medium" selected>Medium</option>
                             <option value="high">High</option>
@@ -247,7 +247,7 @@
 
                     <div class="form-group">
                         <label for="task-project" class="form-label">Project</label>
-                        <select id="task-project" name="project_id" class="form-control">
+                        <select id="task-project" class="form-control">
                             <option value="">Select a project</option>
                             <option value="1">Sunset Villa</option>
                             <option value="2">Office Renovation</option>
@@ -257,7 +257,7 @@
 
                     <div class="form-group">
                         <label for="task-assignee" class="form-label">Assign To</label>
-                        <select id="task-assignee" name="assigned_to" class="form-control team-assign-select" disabled>
+                        <select id="task-assignee" class="form-control team-assign-select" disabled>
                             <option value="">Select team member</option>
                             <option value="1">John Doe</option>
                             <option value="2">Jane Smith</option>
@@ -286,27 +286,27 @@
                 <form id="event-form">
                     <div class="form-group">
                         <label for="event-title" class="form-label">Event Title *</label>
-                        <input type="text" id="event-title" name="title" class="form-control" required>
+                        <input type="text" id="event-title" class="form-control" required>
                     </div>
 
                     <div class="form-group">
                         <label for="event-description" class="form-label">Description</label>
-                        <textarea id="event-description" name="description" class="form-control"></textarea>
+                        <textarea id="event-description" class="form-control"></textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="event-start-time" class="form-label">Start Time</label>
-                        <input type="datetime-local" id="event-start-time" name="start_time" class="form-control">
+                        <input type="datetime-local" id="event-start-time" class="form-control">
                     </div>
 
                     <div class="form-group">
                         <label for="event-end-time" class="form-label">End Time</label>
-                        <input type="datetime-local" id="event-end-time" name="end_time" class="form-control">
+                        <input type="datetime-local" id="event-end-time" class="form-control">
                     </div>
 
                     <div class="form-group">
                         <label for="event-type" class="form-label">Event Type</label>
-                        <select id="event-type" name="event_type" class="form-control">
+                        <select id="event-type" class="form-control">
                             <option value="general">General</option>
                             <option value="meeting">Meeting</option>
                             <option value="deadline">Deadline</option>
@@ -317,7 +317,7 @@
 
                     <div class="form-group">
                         <label for="event-project" class="form-label">Project</label>
-                        <select id="event-project" name="project_id" class="form-control">
+                        <select id="event-project" class="form-control">
                             <option value="">Select a project</option>
                             <option value="1">Sunset Villa</option>
                             <option value="2">Office Renovation</option>
