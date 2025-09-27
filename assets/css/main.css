@@ -4,6 +4,7 @@
     --primary-20: rgba(37, 99, 235, 0.2);
     --primary-10: rgba(37, 99, 235, 0.1);
     --primary-color-2: #1a56db;
+    --primary-color-3: #1E3A8A;
     --primary-dark: #1e40af;
     --primary-dark-2: #1e429f;
     --primary-light: #3b82f6;
@@ -693,10 +694,21 @@ html {
     gap: 12px;
 }
 
-.notification-success { background-color: var(--success-color); }
-.notification-error { background-color: var(--danger-color); }
-.notification-info { background-color: var(--primary-light); }
-.notification-warning { background-color: var(--warning-color); }
+.notification-success {
+    background-color: var(--success-color);
+}
+
+.notification-error {
+    background-color: var(--danger-color);
+}
+
+.notification-info {
+    background-color: var(--primary-light);
+}
+
+.notification-warning {
+    background-color: var(--warning-color);
+}
 
 .notification-close {
     background: none;
@@ -766,13 +778,27 @@ html {
 }
 
 @keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
 @keyframes slideOut {
-    from { transform: translateX(0); opacity: 1; }
-    to { transform: translateX(100%); opacity: 0; }
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
 }
 
 /* Respect reduced motion */
