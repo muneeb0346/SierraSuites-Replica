@@ -14,10 +14,6 @@ function animateOnScroll() {
 const throttledAnimateOnScroll = throttle(animateOnScroll, 16); // ~60fps
 window.addEventListener('scroll', throttledAnimateOnScroll);
 window.addEventListener('DOMContentLoaded', animateOnScroll);
-// Initialize Supabase
-const supabaseUrl = 'https://qjswuwcqyzeuqqqltykz.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3d1d2NxeXpldXFxcWx0eWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMjk0MDUsImV4cCI6MjA3MDgwNTQwNX0.qgH8DMJEoJVuYOXSyr0RAj01Yt7bBR8EYL6qw3YXyAs';
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 // DOM Elements
 const loginForm = document.getElementById('loginForm');
@@ -94,8 +90,13 @@ loginForm.addEventListener('submit', async function (e) {
     loginButton.disabled = true;
 
     try {
+        // Check if Supabase is initialized
+        if (!window.supabaseClient) {
+            throw new Error('Supabase client not initialized. Please ensure init_supabase.js is loaded.');
+        }
+
         // Sign in with Supabase
-        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        const { data: authData, error: authError } = await window.supabaseClient.auth.signInWithPassword({
             email: email,
             password: password
         });
@@ -109,7 +110,7 @@ loginForm.addEventListener('submit', async function (e) {
         }
 
         // Get user's company data to check if they're an admin
-        const { data: companyData, error: companyError } = await supabase
+        const { data: companyData, error: companyError } = await window.supabaseClient
             .from('user_companies')
             .select('company_id, companies(subscription_tier)')
             .eq('user_id', authData.user.id)

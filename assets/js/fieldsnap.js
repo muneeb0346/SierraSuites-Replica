@@ -1,13 +1,13 @@
-// Initialize Supabase client with your credentials
-const supabaseUrl = 'https://qjswuwcqyzeuqqqltykz.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3d1d2NxeXpldXFxcWx0eWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMjk0MDUsImV4cCI6MjA3MDgwNTQwNX0.qgH8DMJEoJVuYOXSyr0RAj01Yt7bBR8EYL6qw3YXyAs';
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
 // Security and API functions using PostgreSQL functions
 const PhotoAPI = {
     // Get current user's ID
     getCurrentUser: async function () {
-        const { data: { user }, error } = await supabase.auth.getUser();
+        // Check if Supabase is initialized
+        if (!window.supabaseClient) {
+            throw new Error('Supabase client not initialized. Please ensure init_supabase.js is loaded.');
+        }
+
+        const { data: { user }, error } = await window.supabaseClient.auth.getUser();
         if (error) throw new Error('Authentication error: ' + error.message);
         if (!user) throw new Error('No authenticated user');
 
@@ -23,7 +23,7 @@ const PhotoAPI = {
             const user = await this.getCurrentUser();
 
             // Call the PostgreSQL function you created
-            const { data: photos, error } = await supabase
+            const { data: photos, error } = await window.supabaseClient
                 .rpc('get_user_photos', {
                     p_user_id: user.id
                 });
@@ -101,7 +101,7 @@ const PhotoAPI = {
             const user = await this.getCurrentUser();
 
             // Call the PostgreSQL function you created
-            const { data, error } = await supabase
+            const { data, error } = await window.supabaseClient
                 .rpc('add_photo', {
                     p_url: photoData.url,
                     p_description: photoData.description,
@@ -126,7 +126,7 @@ const PhotoAPI = {
             const user = await this.getCurrentUser();
 
             // First verify the photo belongs to user's company
-            const { data: photo, error: fetchError } = await supabase
+            const { data: photo, error: fetchError } = await window.supabaseClient
                 .from('project_photos')
                 .select('company_id')
                 .eq('id', photoId)
@@ -139,7 +139,7 @@ const PhotoAPI = {
             }
 
             // Delete the photo
-            const { error } = await supabase
+            const { error } = await window.supabaseClient
                 .from('project_photos')
                 .delete()
                 .eq('id', photoId);
@@ -159,7 +159,7 @@ const PhotoAPI = {
             const user = await this.getCurrentUser();
 
             // First verify the photo belongs to user's company
-            const { data: photo, error: fetchError } = await supabase
+            const { data: photo, error: fetchError } = await window.supabaseClient
                 .from('project_photos')
                 .select('company_id')
                 .eq('id', photoId)
@@ -172,7 +172,7 @@ const PhotoAPI = {
             }
 
             // Update the photo with annotation data
-            const { data, error } = await supabase
+            const { data, error } = await window.supabaseClient
                 .from('project_photos')
                 .update({
                     annotations: annotationData.annotations,
@@ -199,7 +199,7 @@ const PhotoAPI = {
         try {
             const user = await this.getCurrentUser();
 
-            const { data, error } = await supabase
+            const { data, error } = await window.supabaseClient
                 .rpc('get_storage_usage', {
                     p_company_id: user.company_id
                 });
@@ -306,7 +306,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initialize user data
     async function initUserData() {
         try {
-            const { data: { user }, error } = await supabase.auth.getUser();
+            // Check if Supabase is initialized
+            if (!window.supabaseClient) {
+                console.error('Supabase client not initialized. Please ensure init_supabase.js is loaded.');
+                return;
+            }
+
+            const { data: { user }, error } = await window.supabaseClient.auth.getUser();
 
             if (error || !user) {
                 console.error('Error getting user:', error);
@@ -314,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             // Get user profile
-            const { data: profile, error: profileError } = await supabase
+            const { data: profile, error: profileError } = await window.supabaseClient
                 .from('user_profiles')
                 .select('*')
                 .eq('id', user.id)
@@ -323,7 +329,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (profileError) {
                 console.error('Error fetching profile:', profileError);
                 // Create default profile if doesn't exist
-                const { data: newProfile, error: insertError } = await supabase
+                const { data: newProfile, error: insertError } = await window.supabaseClient
                     .from('user_profiles')
                     .insert([{
                         id: user.id,
@@ -847,11 +853,17 @@ document.addEventListener('DOMContentLoaded', function () {
     // Load projects for dropdowns
     async function loadProjectsForDropdown() {
         try {
-            const { data: { user } } = await supabase.auth.getUser();
+            // Check if Supabase is initialized
+            if (!window.supabaseClient) {
+                console.error('Supabase client not initialized. Please ensure init_supabase.js is loaded.');
+                return;
+            }
+
+            const { data: { user } } = await window.supabaseClient.auth.getUser();
 
             if (!user) return;
 
-            const { data: projects, error } = await supabase
+            const { data: projects, error } = await window.supabaseClient
                 .from('projects')
                 .select('id, name')
                 .eq('company_id', user.user_metadata?.company_id)

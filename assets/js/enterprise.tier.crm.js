@@ -1,8 +1,3 @@
-// Initialize Supabase client with your credentials
-const supabaseUrl = 'https://qjswuwcqyzeuqqqltykz.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3d1d2NxeXpldXFxcWx0eWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMjk0MDUsImV4cCI6MjA3MDgwNTQwNX0.qgH8DMJEoJVuYOXSyr0RAj01Yt7bBR8EYL6qw3YXyAs';
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
 // Chart initialization
 document.addEventListener('DOMContentLoaded', function () {
     const ctx = document.getElementById('costChart').getContext('2d');
@@ -82,6 +77,12 @@ window.onclick = function (event) {
 async function handleNewProject(event) {
     event.preventDefault();
 
+    // Check if Supabase is initialized
+    if (!window.supabaseClient) {
+        alert('Supabase client not initialized. Please ensure init_supabase.js is loaded.');
+        return;
+    }
+
     const projectData = {
         name: document.getElementById('projectName').value,
         description: document.getElementById('projectDescription').value,
@@ -93,7 +94,7 @@ async function handleNewProject(event) {
     };
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await window.supabaseClient
             .from('projects')
             .insert([projectData])
             .select();
@@ -118,6 +119,14 @@ async function handleNewProject(event) {
 // Database initialization function
 async function initializeDatabase() {
     const dbStatus = document.getElementById('db-status');
+
+    // Check if Supabase is initialized
+    if (!window.supabaseClient) {
+        dbStatus.style.display = 'flex';
+        dbStatus.className = 'db-status status-error';
+        dbStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>Supabase client not initialized. Please ensure init_supabase.js is loaded.</span>';
+        return;
+    }
 
     try {
         dbStatus.style.display = 'flex';
@@ -297,7 +306,7 @@ async function initializeDatabase() {
 
         // Execute each SQL statement
         for (const sql of sqlStatements) {
-            const { error } = await supabase.rpc('exec_sql', { query: sql });
+            const { error } = await window.supabaseClient.rpc('exec_sql', { query: sql });
             if (error) {
                 console.warn('SQL execution warning:', error.message);
                 // Continue with next statement

@@ -1,8 +1,3 @@
-// Initialize Supabase with your credentials
-const supabaseUrl = 'https://qjswuwcqyzeuqqqltykz.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3d1d2NxeXpldXFxcWx0eWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMjk0MDUsImV4cCI6MjA3MDgwNTQwNX0.qgH8DMJEoJVuYOXSyr0RAj01Yt7bBR8EYL6qw3YXyAs';
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
 // Global variables
 let currentUser = null;
 let currentCompanyId = null;
@@ -10,20 +5,28 @@ let currentSubscriptionTier = 'starter';
 let calendar = null;
 
 // Authentication state listener
-supabase.auth.onAuthStateChange(async (event, session) => {
-    if (session?.user) {
-        currentUser = session.user;
-        await loadUserCompanyData();
-        initializeTaskFlow();
-    } else {
-        // Redirect to login or show login UI
-        console.log('User not authenticated');
+function setupAuthListener() {
+    // Check if Supabase is initialized
+    if (!window.supabaseClient) {
+        console.error('Supabase client not initialized. Please ensure init_supabase.js is loaded.');
+        return;
     }
-});
+
+    window.supabaseClient.auth.onAuthStateChange(async (event, session) => {
+        if (session?.user) {
+            currentUser = session.user;
+            await loadUserCompanyData();
+            initializeTaskFlow();
+        } else {
+            // Redirect to login or show login UI
+            console.log('User not authenticated');
+        }
+    });
+}
 
 async function loadUserCompanyData() {
     // Get user's company and subscription data
-    const { data, error } = await supabase
+    const { data, error } = await window.supabaseClient
         .from('user_companies')
         .select('company_id, companies(subscription_tier)')
         .eq('user_id', currentUser.id)
@@ -37,7 +40,7 @@ async function loadUserCompanyData() {
 
 // CRUD Operations for Tasks
 async function createTask(taskData) {
-    const { data, error } = await supabase
+    const { data, error } = await window.supabaseClient
         .from('tasks')
         .insert([{ ...taskData, company_id: currentCompanyId, created_by: currentUser.id }])
         .select();
@@ -53,7 +56,7 @@ async function createTask(taskData) {
 }
 
 async function getTasks(filters = {}) {
-    let query = supabase
+    let query = window.supabaseClient
         .from('tasks')
         .select('*, projects(name), users(full_name)')
         .eq('company_id', currentCompanyId);
@@ -74,7 +77,7 @@ async function getTasks(filters = {}) {
 }
 
 async function updateTask(taskId, updates) {
-    const { data, error } = await supabase
+    const { data, error } = await window.supabaseClient
         .from('tasks')
         .update({ ...updates, updated_at: new Date() })
         .eq('id', taskId)
@@ -91,7 +94,7 @@ async function updateTask(taskId, updates) {
 }
 
 async function deleteTask(taskId) {
-    const { error } = await supabase
+    const { error } = await window.supabaseClient
         .from('tasks')
         .delete()
         .eq('id', taskId);
@@ -108,7 +111,7 @@ async function deleteTask(taskId) {
 
 // CRUD Operations for Events
 async function createEvent(eventData) {
-    const { data, error } = await supabase
+    const { data, error } = await window.supabaseClient
         .from('events')
         .insert([{ ...eventData, company_id: currentCompanyId, created_by: currentUser.id }])
         .select();
@@ -124,7 +127,7 @@ async function createEvent(eventData) {
 }
 
 async function getEvents(startDate, endDate) {
-    const { data, error } = await supabase
+    const { data, error } = await window.supabaseClient
         .from('events')
         .select('*, projects(name), users(full_name)')
         .eq('company_id', currentCompanyId)
@@ -141,7 +144,7 @@ async function getEvents(startDate, endDate) {
 }
 
 async function updateEvent(eventId, updates) {
-    const { data, error } = await supabase
+    const { data, error } = await window.supabaseClient
         .from('events')
         .update({ ...updates, updated_at: new Date() })
         .eq('id', eventId)
@@ -158,7 +161,7 @@ async function updateEvent(eventId, updates) {
 }
 
 async function deleteEvent(eventId) {
-    const { error } = await supabase
+    const { error } = await window.supabaseClient
         .from('events')
         .delete()
         .eq('id', eventId);
@@ -175,6 +178,7 @@ async function deleteEvent(eventId) {
 
 // TaskFlow initialization
 function initializeTaskFlow() {
+    setupAuthListener();
     loadTasksAndEvents();
     setupEventListeners();
     checkSubscriptionTier();
@@ -455,7 +459,7 @@ function enableTeamFeatures() {
 
 async function loadTeamMembers() {
     // Get users from the same company
-    const { data, error } = await supabase
+    const { data, error } = await window.supabaseClient
         .from('users')
         .select('id, full_name')
         .eq('company_id', currentCompanyId);
@@ -557,7 +561,7 @@ async function initProjectsPage() {
 
 // Load clients for dropdown
 async function loadClients() {
-    const { data: clients, error } = await supabase
+    const { data: clients, error } = await window.supabaseClient
         .from('clients')
         .select('*')
         .order('name', { ascending: true });
@@ -633,7 +637,7 @@ async function createNewProject() {
     };
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await window.supabaseClient
             .from('projects')
             .insert([projectData])
             .select();
@@ -643,7 +647,7 @@ async function createNewProject() {
         }
 
         // Add activity log
-        await supabase
+        await window.supabaseClient
             .from('activities')
             .insert([{
                 project_id: data[0].id,
@@ -707,6 +711,9 @@ function getInitials(name) {
 
 // Your existing DOMContentLoaded code
 document.addEventListener('DOMContentLoaded', function () {
+    // Initialize TaskFlow application
+    initializeTaskFlow();
+
     // Mobile menu toggle
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
     const sidebar = document.querySelector('.sidebar');

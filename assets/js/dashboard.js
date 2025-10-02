@@ -1,11 +1,6 @@
-// Initialize Supabase
-const supabaseUrl = 'https://qjswuwcqyzeuqqqltykz.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhbmFzZSIsInJlZiI6InFqc3d1d2NxeXpldXFxcWx0eWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMjk0MDUsImV4cCI6MjA3MDgwNTQwNX0.qgH8DMJEoJVuYOXSyr0RAj01Yt7bBR8EYL6qw3YXyAs';
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
 // DOM Elements
 const sidebar = document.getElementById('sidebar');
-const menuToggle = document.getElementById('menuToggle');
+const dashboardMenuToggle = document.getElementById('menuToggle');
 const userName = document.getElementById('userName');
 const userCompany = document.getElementById('userCompany');
 const userAvatar = document.getElementById('userAvatar');
@@ -42,7 +37,14 @@ let userProjects = [];
 
 // Check authentication and load data
 async function initDashboard() {
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    // Check if Supabase is initialized
+    if (!window.supabaseClient) {
+        console.error('Supabase client not initialized. Please ensure init_supabase.js is loaded.');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    const { data: { session }, error: sessionError } = await window.supabaseClient.auth.getSession();
 
     if (sessionError || !session) {
         window.location.href = 'login.html';
@@ -50,7 +52,7 @@ async function initDashboard() {
     }
 
     // Get user data
-    const { data: user, error: userError } = await supabase.auth.getUser();
+    const { data: user, error: userError } = await window.supabaseClient.auth.getUser();
     if (userError) {
         console.error('Error getting user:', userError);
         return;
@@ -64,7 +66,7 @@ async function initDashboard() {
     }
 
     // Get user profile
-    const { data: profile, error: profileError } = await supabase
+    const { data: profile, error: profileError } = await window.supabaseClient
         .from('user_profiles')
         .select('*')
         .eq('id', userData.id)
@@ -73,7 +75,7 @@ async function initDashboard() {
     if (profileError) {
         console.error('Error fetching profile:', profileError);
         // Create default profile if doesn't exist
-        const { data: newProfile, error: insertError } = await supabase
+        const { data: newProfile, error: insertError } = await window.supabaseClient
             .from('user_profiles')
             .insert([{
                 id: userData.id,
@@ -92,7 +94,7 @@ async function initDashboard() {
     }
 
     // Get company data
-    const { data: company, error: companyError } = await supabase
+    const { data: company, error: companyError } = await window.supabaseClient
         .from('companies')
         .select('*')
         .eq('id', userData.user_metadata.company_id)
@@ -152,7 +154,7 @@ function updateUserUI(profile, company) {
 // Load dashboard data
 async function loadDashboardData() {
     // Load projects
-    const { data: projects, error: projectsError } = await supabase
+    const { data: projects, error: projectsError } = await window.supabaseClient
         .from('projects')
         .select('*')
         .order('created_at', { ascending: false })
@@ -170,7 +172,7 @@ async function loadDashboardData() {
 
     // Load tasks
     const today = new Date().toISOString().split('T')[0];
-    const { data: tasks, error: tasksError } = await supabase
+    const { data: tasks, error: tasksError } = await window.supabaseClient
         .from('tasks')
         .select('*')
         .gte('due_date', today)
@@ -184,7 +186,7 @@ async function loadDashboardData() {
     }
 
     // Load activities
-    const { data: activities, error: activitiesError } = await supabase
+    const { data: activities, error: activitiesError } = await window.supabaseClient
         .from('activities')
         .select('*')
         .order('created_at', { ascending: false })
@@ -195,7 +197,7 @@ async function loadDashboardData() {
     }
 
     // Load timeline events (from tasks with due dates)
-    const { data: timelineTasks, error: timelineError } = await supabase
+    const { data: timelineTasks, error: timelineError } = await window.supabaseClient
         .from('tasks')
         .select('*')
         .gte('due_date', new Date().toISOString())
@@ -464,7 +466,7 @@ async function resendVerificationEmail() {
         return;
     }
 
-    const { error } = await supabase.auth.resend({
+    const { error } = await window.supabaseClient.auth.resend({
         type: "signup",
         email: userData.email
     });
@@ -488,7 +490,7 @@ function filterTasks() {
 }
 
 // Event Listeners
-menuToggle.addEventListener('click', () => {
+dashboardMenuToggle.addEventListener('click', () => {
     sidebar.classList.toggle('active');
 });
 
@@ -499,7 +501,7 @@ profileMenu.addEventListener('click', () => {
 
 // Logout functionality
 logoutBtn.addEventListener('click', async () => {
-    const { error } = await supabase.auth.signOut();
+    const { error } = await window.supabaseClient.auth.signOut();
     if (!error) {
         window.location.href = 'login.html';
     }

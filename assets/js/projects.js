@@ -1,12 +1,7 @@
-// Initialize Supabase
-const supabaseUrl = 'https://qjswuwcqyzeuqqqltykz.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3d1d2NxeXpldXFxcWx0eWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMjk4MDUsImV4cCI6MjA3MDgwNTgwNX0.qgH8DMJEoJVuYOXSyr0RAj01Yt7bBR8EYL6qw3YXyAs';
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
 // DOM Elements
 const sidebar = document.getElementById('sidebar');
 const sidebarToggle = document.getElementById('sidebarToggle');
-const menuToggle = document.getElementById('menuToggle');
+const projectsMenuToggle = document.getElementById('menuToggle');
 const userName = document.getElementById('userName');
 const userCompany = document.getElementById('userCompany');
 const userAvatar = document.getElementById('userAvatar');
@@ -30,7 +25,7 @@ const projectModal = document.getElementById('projectModal');
 const modalTitle = document.getElementById('modalTitle');
 const projectForm = document.getElementById('projectForm');
 const projectId = document.getElementById('projectId');
-const closeModal = document.getElementById('closeModal');
+const closeProjectModal = document.getElementById('closeModal');
 const cancelProject = document.getElementById('cancelProject');
 const saveProject = document.getElementById('saveProject');
 const toastContainer = document.getElementById('toastContainer');
@@ -44,7 +39,7 @@ let filteredProjects = [];
 
 // Check authentication and load data
 async function initProjectsPage() {
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    const { data: { session }, error: sessionError } = await window.supabaseClient.auth.getSession();
 
     if (sessionError || !session) {
         window.location.href = 'login.html';
@@ -52,7 +47,7 @@ async function initProjectsPage() {
     }
 
     // Get user data
-    const { data: user, error: userError } = await supabase.auth.getUser();
+    const { data: user, error: userError } = await window.supabaseClient.auth.getUser();
     if (userError) {
         console.error('Error getting user:', userError);
         showToast('error', 'Authentication Error', 'Unable to verify your session. Please try again.');
@@ -62,7 +57,7 @@ async function initProjectsPage() {
     userData = user.user;
 
     // Get user profile
-    const { data: profile, error: profileError } = await supabase
+    const { data: profile, error: profileError } = await window.supabaseClient
         .from('user_profiles')
         .select('*')
         .eq('id', userData.id)
@@ -73,7 +68,7 @@ async function initProjectsPage() {
     }
 
     // Get company data
-    const { data: company, error: companyError } = await supabase
+    const { data: company, error: companyError } = await window.supabaseClient
         .from('companies')
         .select('*')
         .eq('id', userData.user_metadata.company_id)
@@ -115,7 +110,7 @@ async function loadProjectsData() {
             `;
 
     // Load projects
-    const { data: projectsData, error: projectsError } = await supabase
+    const { data: projectsData, error: projectsError } = await window.supabaseClient
         .from('projects')
         .select('*')
         .order('created_at', { ascending: false });
@@ -464,7 +459,7 @@ async function saveProjectHandler() {
 
     if (id) {
         // Update existing project
-        const { error: updateError } = await supabase
+        const { error: updateError } = await window.supabaseClient
             .from('projects')
             .update(projectData)
             .eq('id', id);
@@ -476,7 +471,7 @@ async function saveProjectHandler() {
         projectData.company_id = userData.user_metadata.company_id;
         projectData.created_by = userData.id;
 
-        const { error: insertError } = await supabase
+        const { error: insertError } = await window.supabaseClient
             .from('projects')
             .insert([projectData]);
 
@@ -542,7 +537,7 @@ function setupEventListeners() {
         }
     });
 
-    menuToggle.addEventListener('click', () => {
+    projectsMenuToggle.addEventListener('click', () => {
         sidebar.classList.toggle('active');
     });
 
@@ -553,7 +548,7 @@ function setupEventListeners() {
 
     // Logout functionality
     logoutBtn.addEventListener('click', async () => {
-        const { error } = await supabase.auth.signOut();
+        const { error } = await window.supabaseClient.auth.signOut();
         if (!error) {
             window.location.href = 'login.html';
         }
@@ -594,7 +589,7 @@ function setupEventListeners() {
     });
 
     // Modal events
-    closeModal.addEventListener('click', () => {
+    closeProjectModal.addEventListener('click', () => {
         projectModal.classList.remove('active');
     });
 
@@ -681,6 +676,9 @@ function debounce(func, wait) {
 // Animation targets: project cards, project rows, stats
 
 document.addEventListener('DOMContentLoaded', function () {
+    // Initialize the projects page
+    initProjectsPage();
+
     const animatedEls = document.querySelectorAll('.project-card, .project-row, .project-status, .project-meta-item, .progress-bar, .empty-state');
 
     function animateOnScroll() {

@@ -1,8 +1,3 @@
-// Initialize Supabase client
-const supabaseUrl = 'https://qjswuwcqyzeuqqqltykz.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3d1d2NxeXpldXFxcWx0eWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMjk0MDUsImV4cCI6MjA3MDgwNTQwNX0.qgH8DMJEoJVuYOXSyr0RAj01Yt7bBR8EYL6qw3YXyAs';
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
 // Global state
 let currentUser = null;
 
@@ -38,8 +33,13 @@ async function loadAllData() {
     refreshBtn.disabled = true;
 
     try {
+        // Check if Supabase is initialized
+        if (!window.supabaseClient) {
+            throw new Error('Supabase client not initialized. Please ensure init_supabase.js is loaded.');
+        }
+
         // Load companies count
-        const { count: companiesCount, error: companiesError } = await supabase
+        const { count: companiesCount, error: companiesError } = await window.supabaseClient
             .from('companies')
             .select('*', { count: 'exact', head: true })
             .eq('status', 'active');
@@ -50,7 +50,7 @@ async function loadAllData() {
         }
 
         // Load users count
-        const { count: usersCount, error: usersError } = await supabase
+        const { count: usersCount, error: usersError } = await window.supabaseClient
             .from('users')
             .select('*', { count: 'exact', head: true })
             .eq('status', 'active');
@@ -61,7 +61,7 @@ async function loadAllData() {
         }
 
         // Load projects count
-        const { count: projectsCount, error: projectsError } = await supabase
+        const { count: projectsCount, error: projectsError } = await window.supabaseClient
             .from('projects')
             .select('*', { count: 'exact', head: true })
             .eq('status', 'active');
@@ -72,7 +72,7 @@ async function loadAllData() {
         }
 
         // Load support tickets count
-        const { count: ticketsCount, error: ticketsError } = await supabase
+        const { count: ticketsCount, error: ticketsError } = await window.supabaseClient
             .from('support_tickets')
             .select('*', { count: 'exact', head: true })
             .eq('status', 'open');
@@ -83,7 +83,7 @@ async function loadAllData() {
         }
 
         // Load revenue data
-        const { data: revenueData, error: revenueError } = await supabase
+        const { data: revenueData, error: revenueError } = await window.supabaseClient
             .from('revenue')
             .select('amount')
             .eq('time_period', 'current_month')
@@ -95,7 +95,7 @@ async function loadAllData() {
         }
 
         // Load subscriptions data
-        const { count: subscriptionsCount, error: subscriptionsError } = await supabase
+        const { count: subscriptionsCount, error: subscriptionsError } = await window.supabaseClient
             .from('subscriptions')
             .select('*', { count: 'exact', head: true })
             .eq('status', 'active');
@@ -106,7 +106,7 @@ async function loadAllData() {
         }
 
         // Load signups data
-        const { count: signupsCount, error: signupsError } = await supabase
+        const { count: signupsCount, error: signupsError } = await window.supabaseClient
             .from('users')
             .select('*', { count: 'exact', head: true })
             .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
@@ -117,7 +117,7 @@ async function loadAllData() {
         }
 
         // Load completion rate
-        const { data: completionData, error: completionError } = await supabase
+        const { data: completionData, error: completionError } = await window.supabaseClient
             .from('projects')
             .select('*');
 
@@ -129,7 +129,7 @@ async function loadAllData() {
         }
 
         // Load recent activity
-        const { data: activityData, error: activityError } = await supabase
+        const { data: activityData, error: activityError } = await window.supabaseClient
             .from('activities')
             .select(`
                         id,

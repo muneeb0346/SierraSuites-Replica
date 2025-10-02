@@ -1,8 +1,3 @@
-// Initialize Supabase with your credentials
-const supabaseUrl = 'https://qjswuwcqyzeuqqqltykz.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3d1d2NxeXpldXFxcWx0eWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMjk0MDUsImV4cCI6MjA3MDgwNTQwNX0.qgH8DMJEoJVuYOXSyr0RAj01Yt7bBR8EYL6qw3YXyAs';
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
 // DOM elements
 const loginScreen = document.getElementById('loginScreen');
 const signupScreen = document.getElementById('signupScreen');
@@ -32,47 +27,49 @@ function showDbNotification(message, isError = false) {
     dbToast.show();
 }
 
-// Check authentication state
-supabase.auth.onAuthStateChange(async (event, session) => {
-    if (event === 'SIGNED_IN' && session) {
-        // User is signed in
-        loginScreen.style.display = 'none';
-        signupScreen.style.display = 'none';
-        appContainer.style.display = 'block';
+// Authentication state change handler
+function setupAuthListener() {
+    window.supabaseClient.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'SIGNED_IN' && session) {
+            // User is signed in
+            loginScreen.style.display = 'none';
+            signupScreen.style.display = 'none';
+            appContainer.style.display = 'block';
 
-        // Set user name
-        userName.textContent = session.user.email;
+            // Set user name
+            userName.textContent = session.user.email;
 
-        // Check if user has Pro or Enterprise access
-        const { data: company, error } = await supabase
-            .from('companies')
-            .select('subscription_tier')
-            .eq('id', session.user.user_metadata.company_id)
-            .single();
+            // Check if user has Pro or Enterprise access
+            const { data: company, error } = await window.supabaseClient
+                .from('companies')
+                .select('subscription_tier')
+                .eq('id', session.user.user_metadata.company_id)
+                .single();
 
-        if (error) {
-            console.error('Error fetching company data:', error);
-            showDbNotification('Error verifying subscription: ' + error.message, true);
-            return;
-        }
+            if (error) {
+                console.error('Error fetching company data:', error);
+                showDbNotification('Error verifying subscription: ' + error.message, true);
+                return;
+            }
 
-        if (company.subscription_tier !== 'pro' && company.subscription_tier !== 'enterprise') {
-            // User doesn't have access to CRM features
-            tierVerification.style.display = 'flex';
+            if (company.subscription_tier !== 'pro' && company.subscription_tier !== 'enterprise') {
+                // User doesn't have access to CRM features
+                tierVerification.style.display = 'flex';
+                appContainer.style.display = 'none';
+                return;
+            }
+
+            // Setup database and load data
+            setupDatabase();
+        } else if (event === 'SIGNED_OUT') {
+            // User is signed out
+            loginScreen.style.display = 'flex';
+            signupScreen.style.display = 'none';
             appContainer.style.display = 'none';
-            return;
+            tierVerification.style.display = 'none';
         }
-
-        // Setup database and load data
-        setupDatabase();
-    } else if (event === 'SIGNED_OUT') {
-        // User is signed out
-        loginScreen.style.display = 'flex';
-        signupScreen.style.display = 'none';
-        appContainer.style.display = 'none';
-        tierVerification.style.display = 'none';
-    }
-});
+    });
+}
 
 // Login form submission
 loginForm.addEventListener('submit', async (e) => {
@@ -80,7 +77,7 @@ loginForm.addEventListener('submit', async (e) => {
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
 
-    const { user, error } = await supabase.auth.signIn({
+    const { data, error } = await window.supabaseClient.auth.signInWithPassword({
         email: email,
         password: password,
     });
@@ -107,7 +104,7 @@ signupForm.addEventListener('submit', async (e) => {
     }
 
     // First create the company
-    const { data: company, error: companyError } = await supabase
+    const { data: company, error: companyError } = await window.supabaseClient
         .from('companies')
         .insert([{
             name: companyName,
@@ -122,7 +119,7 @@ signupForm.addEventListener('submit', async (e) => {
     }
 
     // Then create the user with company_id
-    const { user, error } = await supabase.auth.signUp({
+    const { user, error } = await window.supabaseClient.auth.signUp({
         email: email,
         password: password,
         options: {
@@ -159,7 +156,7 @@ showLogin.addEventListener('click', (e) => {
 // Logout button
 logoutBtn.addEventListener('click', async (e) => {
     e.preventDefault();
-    const { error } = await supabase.auth.signOut();
+    const { error } = await window.supabaseClient.auth.signOut();
     if (error) {
         showDbNotification('Logout error: ' + error.message, true);
     }
@@ -196,7 +193,7 @@ async function setupRLS() {
 
         for (const table of tables) {
             // Check if table exists
-            const { error: checkError } = await supabase
+            const { error: checkError } = await window.supabaseClient
                 .from(table)
                 .select('id')
                 .limit(1);
@@ -207,7 +204,7 @@ async function setupRLS() {
             }
 
             // Enable RLS
-            const { error: rlsError } = await supabase.rpc('enable_rls', { table_name: table });
+            const { error: rlsError } = await window.supabaseClient.rpc('enable_rls', { table_name: table });
             if (rlsError && !rlsError.message.includes('already')) {
                 console.error(`Error enabling RLS on ${table}:`, rlsError);
             }
@@ -225,7 +222,7 @@ async function fetchContacts() {
     try {
         showDbNotification('Loading contacts...');
 
-        let { data: contacts, error } = await supabase
+        let { data: contacts, error } = await window.supabaseClient
             .from('contacts')
             .select('*')
             .order('name', { ascending: true });
@@ -285,7 +282,7 @@ async function fetchPipeline() {
     try {
         showDbNotification('Loading pipeline data...');
 
-        let { data: leads, error } = await supabase
+        let { data: leads, error } = await window.supabaseClient
             .from('leads')
             .select('*')
             .order('created_at', { ascending: true });
@@ -374,7 +371,7 @@ function setupDragAndDrop() {
                 showDbNotification('Updating lead status...');
 
                 // Update lead status in Supabase
-                const { error } = await supabase
+                const { error } = await window.supabaseClient
                     .from('leads')
                     .update({ status: newStatus })
                     .eq('id', leadId);
@@ -440,8 +437,11 @@ function formatDate(dateString) {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function () {
+    // Setup authentication listener
+    setupAuthListener();
+
     // Check if user is already logged in
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    window.supabaseClient.auth.getSession().then(({ data: { session } }) => {
         if (session) {
             loginScreen.style.display = 'none';
             signupScreen.style.display = 'none';
@@ -449,7 +449,7 @@ document.addEventListener('DOMContentLoaded', function () {
             userName.textContent = session.user.email;
 
             // Check if user has Pro or Enterprise access
-            supabase
+            window.supabaseClient
                 .from('companies')
                 .select('subscription_tier')
                 .eq('id', session.user.user_metadata.company_id)

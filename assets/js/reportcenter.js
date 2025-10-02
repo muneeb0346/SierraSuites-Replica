@@ -1,12 +1,5 @@
-// Supabase configuration
-const SUPABASE_URL = 'https://qjswuwcqyzeuqqqltykz.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3d1d2NxeXpldXFxcWx0eWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMjk0MDAsImV4cCI6MjA3MDgwNTQwMH0.qgH8DMJEoJVuYOXSyr0RAj01Yt7bBR8EYL6qw3YXyAs';
-
-// Initialize Supabase client
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
 // DOM Elements
-const menuToggle = document.querySelector('.menu-toggle');
+const reportMenuToggle = document.querySelector('.menu-toggle');
 const sidebar = document.querySelector('.sidebar');
 const sidebarToggle = document.querySelector('.sidebar-toggle');
 const exportReportBtn = document.getElementById('export-report-btn');
@@ -42,7 +35,7 @@ let chartInstances = {};
 let reportData = {};
 
 // Mobile menu toggle
-menuToggle.addEventListener('click', () => {
+reportMenuToggle.addEventListener('click', () => {
     sidebar.classList.toggle('active');
 });
 
@@ -156,7 +149,7 @@ function calculateDateRange() {
 async function loadUserData() {
     try {
         // Get the current user from Supabase
-        const { data: { user }, error } = await supabase.auth.getUser();
+        const { data: { user }, error } = await window.supabaseClient.auth.getUser();
 
         if (error) {
             console.error('Error fetching user:', error);
@@ -170,7 +163,7 @@ async function loadUserData() {
             userAvatarElement.textContent = user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0) || 'U';
 
             // Fetch user profile from your profiles table
-            const { data: profile, error: profileError } = await supabase
+            const { data: profile, error: profileError } = await window.supabaseClient
                 .from('profiles')
                 .select('*')
                 .eq('id', user.id)
@@ -211,7 +204,7 @@ async function loadReportData() {
         const endDateStr = currentEndDate.toISOString();
 
         // Get the current user
-        const { data: { user } } = await supabase.auth.getUser();
+        const { data: { user } } = await window.supabaseClient.auth.getUser();
 
         if (!user) {
             console.error('No user logged in');
@@ -259,7 +252,7 @@ async function loadReportData() {
 async function fetchTimeTrackingData(userId, startDate, endDate) {
     try {
         // Fetch time entries for the user within the date range
-        const { data: timeEntries, error } = await supabase
+        const { data: timeEntries, error } = await window.supabaseClient
             .from('time_entries')
             .select('*')
             .eq('user_id', userId)
@@ -273,13 +266,13 @@ async function fetchTimeTrackingData(userId, startDate, endDate) {
         }
 
         // Fetch projects for the user
-        const { data: projects } = await supabase
+        const { data: projects } = await window.supabaseClient
             .from('projects')
             .select('*')
             .eq('user_id', userId);
 
         // Fetch milestones for the user
-        const { data: milestones } = await supabase
+        const { data: milestones } = await window.supabaseClient
             .from('milestones')
             .select('*')
             .eq('user_id', userId)
@@ -338,7 +331,7 @@ async function fetchTimeTrackingData(userId, startDate, endDate) {
 async function fetchProjectPerformanceData(userId, startDate, endDate) {
     try {
         // Fetch projects with budget and actual costs
-        const { data: projects, error } = await supabase
+        const { data: projects, error } = await window.supabaseClient
             .from('projects')
             .select('*')
             .eq('user_id', userId)

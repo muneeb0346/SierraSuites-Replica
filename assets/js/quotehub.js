@@ -1,8 +1,3 @@
-// Initialize Supabase
-const supabaseUrl = 'https://qjswuwcqyzeuqqqltykz.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3d1d2NxeXpldXFxcWx0eWt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyMjk0MDUsImV4cCI6MjA3MDgwNTQwNX0.qgH8DMJEoJVuYOXSyr0RAj01Yt7bBR8EYL6qw3YXyAs';
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
 // Global variables
 let currentUser = null;
 let currentCompanyId = null;
@@ -21,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
 async function initializeApp() {
     try {
         // Get current session
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session } } = await window.supabaseClient.auth.getSession();
 
         if (session) {
             currentUser = session.user;
@@ -57,7 +52,7 @@ async function updateUserInfo() {
         if (!currentUser) return;
 
         // Get user profile
-        const { data: profile, error } = await supabase
+        const { data: profile, error } = await window.supabaseClient
             .from('user_profiles')
             .select('first_name, last_name, company_name')
             .eq('id', currentUser.id)
@@ -82,7 +77,7 @@ async function loadUserCompanyData() {
     if (!currentUser) return;
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await window.supabaseClient
             .from('user_companies')
             .select('company_id, companies(subscription_tier)')
             .eq('user_id', currentUser.id)
@@ -182,7 +177,7 @@ async function loadEstimates() {
     if (!currentCompanyId) return;
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await window.supabaseClient
             .from('estimates')
             .select(`*, projects(name), clients(name, email, phone)`)
             .eq('company_id', currentCompanyId)
@@ -208,7 +203,7 @@ async function loadProjects() {
     if (!currentCompanyId) return;
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await window.supabaseClient
             .from('projects')
             .select('id, name')
             .eq('company_id', currentCompanyId)
@@ -239,7 +234,7 @@ async function loadClients() {
     if (!currentCompanyId) return;
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await window.supabaseClient
             .from('clients')
             .select('id, name')
             .eq('company_id', currentCompanyId)
@@ -269,7 +264,7 @@ async function loadRateLibrary() {
     if (!currentCompanyId) return;
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await window.supabaseClient
             .from('rate_libraries')
             .select('*')
             .eq('company_id', currentCompanyId)
@@ -371,7 +366,7 @@ async function loadSubcontractors() {
     if (!currentCompanyId) return;
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await window.supabaseClient
             .from('contacts')
             .select('id, name, email')
             .eq('company_id', currentCompanyId)
@@ -402,7 +397,7 @@ async function loadProposalTemplates() {
     if (!currentCompanyId) return;
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await window.supabaseClient
             .from('proposal_templates')
             .select('*')
             .eq('company_id', currentCompanyId)
@@ -565,7 +560,7 @@ function updatePagination(totalPages) {
 // View estimate details
 async function viewEstimate(estimateId) {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await window.supabaseClient
             .from('estimates')
             .select(`*, projects(name, address), clients(name, email, phone), estimate_items(*)`)
             .eq('id', estimateId)
@@ -632,7 +627,7 @@ async function viewEstimate(estimateId) {
 // Load change orders for an estimate
 async function loadChangeOrders(estimateId) {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await window.supabaseClient
             .from('change_orders')
             .select('*')
             .eq('estimate_id', estimateId)
@@ -669,7 +664,7 @@ async function loadChangeOrders(estimateId) {
 // Download estimate as PDF
 async function downloadEstimate(estimateId) {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await window.supabaseClient
             .from('estimates')
             .select(`*, projects(name, address), clients(name, email, phone), estimate_items(*), companies(name, address, phone, email)`)
             .eq('id', estimateId)
@@ -968,7 +963,7 @@ async function saveEstimate(status, callback) {
         const estimateNumber = `EST-${new Date().getFullYear()}-${estimateCount.toString().padStart(4, '0')}`;
 
         // Save to Supabase
-        const { data: estimateData, error: estimateError } = await supabase
+        const { data: estimateData, error: estimateError } = await window.supabaseClient
             .from('estimates')
             .insert({
                 estimate_number: estimateNumber,
@@ -997,7 +992,7 @@ async function saveEstimate(status, callback) {
 
         // Save line items
         for (const item of lineItems) {
-            const { error: itemError } = await supabase
+            const { error: itemError } = await window.supabaseClient
                 .from('estimate_items')
                 .insert({
                     estimate_id: estimateData.id,
@@ -1084,7 +1079,7 @@ async function sendEmail(estimateId, toEmail, subject, body, includePdf, request
         // For now, we'll simulate the process
 
         // Log the email
-        const { error: emailError } = await supabase
+        const { error: emailError } = await window.supabaseClient
             .from('email_logs')
             .insert({
                 company_id: currentCompanyId,
@@ -1103,7 +1098,7 @@ async function sendEmail(estimateId, toEmail, subject, body, includePdf, request
             // This would integrate with DocuSign API
             // For now, we'll simulate the process
 
-            const { error: docusignError } = await supabase
+            const { error: docusignError } = await window.supabaseClient
                 .from('document_signatures')
                 .insert({
                     document_type: 'estimate',
@@ -1122,7 +1117,7 @@ async function sendEmail(estimateId, toEmail, subject, body, includePdf, request
         }
 
         // Update estimate status to "sent"
-        const { error: updateError } = await supabase
+        const { error: updateError } = await window.supabaseClient
             .from('estimates')
             .update({ status: 'sent' })
             .eq('id', estimateId);
@@ -1147,7 +1142,7 @@ async function requestSubcontractorQuote(subcontractorId, itemDescription, notes
         showNotification('Requesting quote...', 'info');
 
         // This would create a record in the subcontractor_quotes table
-        const { error } = await supabase
+        const { error } = await window.supabaseClient
             .from('subcontractor_quotes')
             .insert({
                 subcontractor_id: subcontractorId,
@@ -1177,7 +1172,7 @@ async function createChangeOrder(estimateId, reason, items) {
         const total = items.reduce((sum, item) => sum + (item.quantity * item.unit_price), 0);
 
         // Save to Supabase
-        const { error } = await supabase
+        const { error } = await window.supabaseClient
             .from('change_orders')
             .insert({
                 estimate_id: estimateId,
