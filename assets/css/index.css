@@ -21,23 +21,15 @@
     animation: rotate 20s linear infinite;
 }
 
+.hero h1 {
+    font-size: 4.5rem;
+}
+
 .hero-content {
     position: relative;
     z-index: 1;
     max-width: 800px;
     margin: 0 auto;
-}
-
-.hero h1 {
-    font-size: 4.5rem;
-    font-weight: 800;
-    margin-bottom: 1.5rem;
-    color: var(--white);
-    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -0.03em;
 }
 
 .hero .subtitle {
@@ -776,18 +768,7 @@ input:checked+.slider:before {
     color: var(--primary-color);
 }
 
-/* Responsive Design */
-@media (max-width: 1280px) {
-    .hero h1 {
-        font-size: 4rem;
-    }
-}
-
 @media (max-width: 1024px) {
-    .hero h1 {
-        font-size: 3.5rem;
-    }
-
     .pricing-cards {
         grid-template-columns: 1fr;
         max-width: 600px;
@@ -805,10 +786,6 @@ input:checked+.slider:before {
 }
 
 @media (max-width: 768px) {
-    .hero h1 {
-        font-size: 3rem;
-    }
-
     .hero .subtitle {
         font-size: 1.25rem;
     }
@@ -825,10 +802,6 @@ input:checked+.slider:before {
 }
 
 @media (max-width: 480px) {
-    .hero h1 {
-        font-size: 2.5rem;
-    }
-
     .hero-buttons {
         flex-direction: column;
     }

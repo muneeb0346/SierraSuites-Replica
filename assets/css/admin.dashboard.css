@@ -119,6 +119,8 @@ p {
 .dashboard-header h1 {
     margin-bottom: 0;
     font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: normal;
     color: var(--text-color-2);
 }
 

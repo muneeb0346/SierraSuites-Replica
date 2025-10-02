@@ -50,8 +50,10 @@ header {
 }
 
 .header-title h1 {
-    font-size: 32px;
-    margin-bottom: 5px;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: normal;
+    margin-bottom: 0.5rem;
 }
 
 .header-title p {

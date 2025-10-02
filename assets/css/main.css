@@ -127,6 +127,12 @@ h6 {
 
 h1 {
     font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--white);
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 h2 {
@@ -156,6 +162,14 @@ p {
     color: var(--text-light);
 }
 
+.p-small {
+    font-size: 1.125rem;
+}
+
+.p-smaller {
+    font-size: 1rem;
+}
+
 a {
     color: var(--primary-light);
     text-decoration: none;
@@ -181,6 +195,18 @@ ol {
     max-width: 1280px;
     margin: 0 auto;
     padding: 0 1.5rem;
+}
+
+.margin-0 {
+    margin: 0;
+}
+
+.max-width-90p {
+    max-width: 90%;
+}
+
+.max-width-80p {
+    max-width: 80%;
 }
 
 /* Scrollbar */
@@ -527,7 +553,6 @@ html {
 
 .footer-description {
     color: var(--white-70);
-    font-size: 1.125rem;
     margin-top: 1.5rem;
     max-width: 400px;
 }
@@ -545,12 +570,6 @@ html {
     justify-content: space-between;
     align-items: center;
     color: var(--white-50);
-    font-size: 1rem;
-}
-
-.footer-bottom p {
-    font-size: 1rem;
-    margin: 0;
 }
 
 .footer-links {
@@ -618,7 +637,6 @@ html {
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     margin-bottom: 0;
     color: var(--white);
-    font-size: 1.75rem;
 }
 
 .modal-header h3 {
@@ -715,7 +733,7 @@ html {
     background: none;
     border: none;
     color: var(--white);
-    font-size: 20px;
+    font-size: 1.25rem;
     cursor: pointer;
     margin-left: 8px;
     line-height: 1;

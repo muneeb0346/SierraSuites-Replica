@@ -23,7 +23,7 @@
 .register-container {
     position: relative;
     z-index: 1;
-    max-width: 500px;
+    max-width: 600px;
     margin: 0 auto;
     color: var(--text-color);
     width: 100%;
@@ -32,18 +32,9 @@
 .register-header {
     text-align: center;
     margin-bottom: 2.5rem;
-}
-
-.register-header h1 {
-    font-size: 2.75rem;
-    font-weight: 800;
-    margin-bottom: 1rem;
-    color: var(--white);
-    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -0.03em;
+    display: flex;
+    flex-direction: column;
+    place-items: center;
 }
 
 .register-subtitle {
@@ -361,17 +352,7 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1280px) {
-    .register-header h1 {
-        font-size: 2.5rem;
-    }
-}
-
 @media (max-width: 768px) {
-    .register-header h1 {
-        font-size: 2.25rem;
-    }
-
     .social-login {
         grid-template-columns: 1fr;
     }
@@ -382,10 +363,6 @@
 }
 
 @media (max-width: 480px) {
-    .register-header h1 {
-        font-size: 2rem;
-    }
-
     .register-card {
         padding: 1.5rem;
     }

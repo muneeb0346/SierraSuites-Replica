@@ -148,16 +148,6 @@
     max-width: 900px;
 }
 
-.about-hero h1 {
-    font-size: 3.75rem;
-    font-weight: 800;
-    margin-bottom: 1.5rem;
-    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
 .about-hero .subtitle {
     font-size: 1.375rem;
     color: var(--text-light);
@@ -527,9 +517,6 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-    .about-hero h1 {
-        font-size: 3.5rem;
-    }
 
     .mission-content,
     .experience-content {
@@ -551,10 +538,6 @@
 @media (max-width: 768px) {
     .about-hero {
         padding: 9rem 0 5rem;
-    }
-
-    .about-hero h1 {
-        font-size: 2.75rem;
     }
 
     .mission-section,
@@ -583,10 +566,6 @@
 @media (max-width: 480px) {
     .about-hero {
         padding: 8rem 0 4rem;
-    }
-
-    .about-hero h1 {
-        font-size: 2.5rem;
     }
 
     .value-card,
