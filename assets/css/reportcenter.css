@@ -84,7 +84,7 @@ a:hover {
 /* Dashboard Layout */
 .dashboard-container {
     display: flex;
-    min-height: 100vh;
+    min-height: 100dvh;
 }
 
 /* Sidebar */

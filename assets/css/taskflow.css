@@ -46,13 +46,13 @@ body {
     font-family: 'Montserrat', sans-serif;
     color: var(--text-color);
     background-color: var(--bg-color);
-    height: 100vh;
+    height: 100dvh;
     overflow: hidden;
 }
 
 .dashboard-container {
     display: flex;
-    min-height: 100vh;
+    min-height: 100dvh;
     height: 100%;
 }
 
@@ -981,7 +981,7 @@ body {
     .sidebar {
         position: fixed;
         left: -280px;
-        height: 100vh;
+        height: 100dvh;
     }
 
     .sidebar.active {

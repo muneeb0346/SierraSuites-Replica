@@ -52,7 +52,7 @@ body {
 
 .dashboard-container {
     display: flex;
-    min-height: 100vh;
+    min-height: 100dvh;
 }
 
 /* Sidebar Styles */
@@ -997,7 +997,7 @@ body {
     .sidebar {
         position: fixed;
         left: -280px;
-        height: 100vh;
+        height: 100dvh;
         z-index: 100;
     }
 
