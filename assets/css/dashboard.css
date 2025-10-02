@@ -933,7 +933,7 @@ p {
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
     .content-row {
         grid-template-columns: 1fr;
     }
@@ -955,9 +955,7 @@ p {
     .search-bar input {
         width: 200px;
     }
-}
 
-@media (max-width: 768px) {
     .stats-grid {
         grid-template-columns: 1fr;
     }

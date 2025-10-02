@@ -770,7 +770,7 @@ body {
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
     .sidebar {
         position: fixed;
         left: -280px;
@@ -785,13 +785,7 @@ body {
     .menu-toggle {
         display: block;
     }
-
-    .search-bar input {
-        width: 200px;
-    }
-}
-
-@media (max-width: 768px) {
+    
     .topbar {
         flex-direction: column;
         align-items: flex-start;
@@ -821,7 +815,7 @@ body {
     }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 480px) {
     .toolbar {
         flex-direction: column;
         align-items: flex-start;

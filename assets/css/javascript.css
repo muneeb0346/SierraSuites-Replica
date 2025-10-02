@@ -630,7 +630,7 @@ textarea.form-control {
 }
 
 /* Mobile Responsive */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .sidebar {
         width: 100%;
         position: fixed;

@@ -783,19 +783,27 @@ a:hover {
     font-family: inherit;
 }
 
+/* Accessibility improvements */
+.btn:focus,
+select:focus,
+a:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.export-option:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
 /* Responsive Design */
-@media (max-width: 1024px) {
-    .sidebar {
-        width: 240px;
-    }
+@media (max-width: 900px) {
 
     .report-charts,
     .report-details {
         grid-template-columns: 1fr;
     }
-}
 
-@media (max-width: 768px) {
     .dashboard-container {
         flex-direction: column;
     }
@@ -855,36 +863,5 @@ a:hover {
 
     .entry-details {
         align-items: flex-start;
-    }
-}
-
-/* Accessibility improvements */
-.btn:focus,
-select:focus,
-a:focus {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-}
-
-.export-option:focus {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-
-    .summary-card,
-    .chart-card,
-    .card {
-        border: 1px solid var(--text-color);
-    }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        transition: none !important;
-        animation: none !important;
     }
 }

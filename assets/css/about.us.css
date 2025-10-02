@@ -516,7 +516,7 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
 
     .mission-content,
     .experience-content {
@@ -530,12 +530,6 @@
         text-align: center;
     }
 
-    .cta-buttons {
-        justify-content: center;
-    }
-}
-
-@media (max-width: 768px) {
     .about-hero {
         padding: 9rem 0 5rem;
     }
@@ -559,6 +553,7 @@
 
     .cta-buttons {
         flex-direction: column;
+        justify-content: center;
         align-items: center;
     }
 }

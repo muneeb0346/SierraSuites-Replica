@@ -828,6 +828,16 @@ html {
     }
 }
 
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+
+    .summary-card,
+    .chart-card,
+    .card {
+        border: 1px solid var(--text-color);
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 900px) {
     html {

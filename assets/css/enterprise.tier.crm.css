@@ -477,7 +477,8 @@ footer {
     margin-top: 15px;
 }
 
-@media (max-width: 1024px) {
+/* Responsive Design */
+@media (max-width: 900px) {
     .dashboard {
         grid-template-columns: 1fr;
     }
@@ -495,7 +496,7 @@ footer {
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 480px) {
     .stats-container {
         grid-template-columns: 1fr;
     }

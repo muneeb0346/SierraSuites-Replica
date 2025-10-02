@@ -266,11 +266,8 @@ body {
     font-size: 1rem;
 }
 
-@media (max-width: 992px) {
-    .sidebar {
-        width: 80px;
-    }
-
+/* Responsive Design */
+@media (max-width: 900px) {
     .sidebar .nav-text {
         display: none;
     }
@@ -279,13 +276,6 @@ body {
         margin-left: 80px;
     }
 
-    .navbar {
-        width: calc(100% - 80px);
-        margin-left: 80px;
-    }
-}
-
-@media (max-width: 768px) {
     .sidebar {
         width: 0;
         padding-top: 70px;

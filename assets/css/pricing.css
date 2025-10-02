@@ -520,7 +520,7 @@ input:checked+.slider:before {
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
     .pricing-cards {
         grid-template-columns: 1fr;
         max-width: 600px;
@@ -535,9 +535,7 @@ input:checked+.slider:before {
     .pricing-card.featured:hover {
         transform: translateY(-8px);
     }
-}
 
-@media (max-width: 768px) {
     .subtitle {
         font-size: 1.125rem;
     }
