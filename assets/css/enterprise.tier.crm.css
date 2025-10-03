@@ -3,6 +3,13 @@ body {
     color: var(--dark);
 }
 
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: normal;
+    margin-bottom: 0.5rem;
+}
+
 .container {
     padding: 1.5rem;
 }
@@ -47,13 +54,6 @@ header {
 .header-title {
     text-align: center;
     margin-bottom: 10px;
-}
-
-.header-title h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: normal;
-    margin-bottom: 0.5rem;
 }
 
 .header-title p {

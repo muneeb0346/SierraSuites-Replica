@@ -766,7 +766,7 @@ input:checked+.slider:before {
 
 /* For Desktop Only */
 @media (min-width: 901px) {
-    .hero h1 {
+    h1 {
         font-size: 4.5rem;
     }
 }

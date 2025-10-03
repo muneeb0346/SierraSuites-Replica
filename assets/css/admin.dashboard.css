@@ -1,6 +1,13 @@
 body {
-    color: var(--text-color-2);
+    color: var(--text-color-dark);
     background-color: var(--bg-light);
+}
+
+h1 {
+    margin-bottom: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: normal;
 }
 
 p {
@@ -92,7 +99,7 @@ p {
 
 .user-name {
     font-weight: 600;
-    color: var(--text-color-2);
+    color: var(--text-color-dark);
 }
 
 .user-role {
@@ -114,14 +121,6 @@ p {
     margin-bottom: 2rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--gray-light);
-}
-
-.dashboard-header h1 {
-    margin-bottom: 0;
-    font-size: 1.75rem;
-    font-weight: 700;
-    letter-spacing: normal;
-    color: var(--text-color-2);
 }
 
 /* Dashboard Cards */
@@ -193,7 +192,7 @@ p {
 .card-value {
     font-size: 2.25rem;
     font-weight: 800;
-    color: var(--text-color-2);
+    color: var(--text-color-dark);
     margin-bottom: 0.5rem;
 }
 
@@ -224,7 +223,7 @@ p {
 .data-section h2 {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
-    color: var(--text-color-2);
+    color: var(--text-color-dark);
     padding-bottom: 0.75rem;
     border-bottom: 1px solid var(--gray-light);
 }
@@ -251,7 +250,7 @@ p {
 .stat-value {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--text-color-2);
+    color: var(--text-color-dark);
 }
 
 .stat-change {
@@ -290,7 +289,7 @@ p {
 
 .data-table th {
     background-color: var(--bg-light);
-    color: var(--text-color-2);
+    color: var(--text-color-dark);
     font-weight: 600;
 }
 

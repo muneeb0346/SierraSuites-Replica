@@ -1,6 +1,13 @@
 body {
     background-color: var(--bg-light);
-    color: var(--text-color-4);
+    color: var(--text-color-dark);
+}
+
+h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    letter-spacing: normal;
 }
 
 .container {
@@ -119,12 +126,6 @@ body {
 /* Dashboard Styles */
 .dashboard {
     padding: 2rem;
-}
-
-.page-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
 }
 
 .stats-grid {
@@ -321,7 +322,7 @@ body {
 
 .btn-icon:hover {
     background: var(--light-color);
-    color: var(--text-color-4);
+    color: var(--text-color-dark);
 }
 
 /* Modal */
@@ -346,7 +347,7 @@ body {
     display: flex;
     transform: none;
     border-radius: 0;
-    color: var(--text-color-4);
+    color: var(--text-color-dark);
 }
 
 .modal-content {
@@ -498,7 +499,7 @@ textarea.form-control {
 }
 
 .notification-close:hover {
-    color: var(--text-color-4);
+    color: var(--text-color-dark);
 }
 
 /* Project Card Styles */
