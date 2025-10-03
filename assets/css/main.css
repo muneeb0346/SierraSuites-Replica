@@ -844,6 +844,57 @@ html {
         font-size: 14px;
     }
 
+    h1 {
+        font-size: 3rem;
+    }
+
+    h2 {
+        font-size: 2.25rem;
+    }
+
+    h3 {
+        font-size: 1.75rem;
+    }
+
+    h4 {
+        font-size: 1.375rem;
+    }
+
+    h5 {
+        font-size: 1.125rem;
+    }
+
+    h6 {
+        font-size: 1rem;
+    }
+
+    p {
+        font-size: 1.125rem;
+    }
+
+    .p-small {
+        font-size: 1rem;
+    }
+
+    .p-smaller {
+        font-size: 0.875rem;
+    }
+
+    .btn {
+        padding: 0.65rem 1.25rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-small {
+        padding: 0.45rem 0.85rem;
+        font-size: 0.8rem;
+    }
+
+    .btn-large {
+        padding: 0.85rem 1.5rem;
+        font-size: 1rem;
+    }
+
     .nav {
         display: none;
     }
@@ -865,34 +916,6 @@ html {
         border: 2px solid var(--primary-color);
     }
 
-    h1 {
-        font-size: 2.75rem;
-    }
-
-    h2 {
-        font-size: 2.25rem;
-    }
-
-    h3 {
-        font-size: 1.75rem;
-    }
-
-    h4 {
-        font-size: 1.25rem;
-    }
-
-    h5 {
-        font-size: 1.125rem;
-    }
-
-    h6 {
-        font-size: 1rem;
-    }
-
-    p {
-        font-size: 1.125rem;
-    }
-
     .footer-bottom {
         flex-direction: column;
         gap: 1.5rem;
@@ -902,21 +925,6 @@ html {
     .footer-links {
         justify-content: center;
     }
-
-    .btn {
-        padding: 0.65rem 1.25rem;
-        font-size: 0.95rem;
-    }
-
-    .btn-small {
-        padding: 0 .45rem 0.9rem;
-        font-size: 0.8rem;
-    }
-
-    .btn-large {
-        padding: 0.75rem 2rem;
-        font-size: 1rem;
-    }
 }
 
 @media (max-width: 480px) {
@@ -925,11 +933,11 @@ html {
     }
 
     h1 {
-        font-size: 2.5rem;
+        font-size: 2.25rem;
     }
 
     h2 {
-        font-size: 2rem;
+        font-size: 1.75rem;
     }
 
     h3 {
@@ -937,7 +945,7 @@ html {
     }
 
     h4 {
-        font-size: 1.125rem;
+        font-size: 1.25rem;
     }
 
     h5 {
@@ -950,6 +958,29 @@ html {
 
     p {
         font-size: 1rem;
+    }
+
+    .p-small {
+        font-size: 0.875rem;
+    }
+
+    .p-smaller {
+        font-size: 0.75rem;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .btn-small {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.75rem;
+    }
+
+    .btn-large {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.9rem;
     }
 
     .mobile-nav {
@@ -986,20 +1017,5 @@ html {
 
     .modal-body {
         padding: 1.5rem;
-    }
-
-    .btn {
-        padding: 0.55rem 1rem;
-        font-size: 0.9rem;
-    }
-
-    .btn-small {
-        padding: 0.4rem 0.75rem;
-        font-size: 0.75rem;
-    }
-
-    .btn-large {
-        padding: 0.75rem 1.5rem;
-        font-size: 0.95rem;
     }
 }

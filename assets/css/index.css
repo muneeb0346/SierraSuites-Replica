@@ -21,10 +21,6 @@
     animation: rotate 20s linear infinite;
 }
 
-.hero h1 {
-    font-size: 4.5rem;
-}
-
 .hero-content {
     position: relative;
     z-index: 1;
@@ -766,6 +762,13 @@ input:checked+.slider:before {
 .cta-section .btn-outline:hover {
     background-color: var(--white);
     color: var(--primary-color);
+}
+
+/* For Desktop Only */
+@media (min-width: 901px) {
+    .hero h1 {
+        font-size: 4.5rem;
+    }
 }
 
 /* Responsive Design */
