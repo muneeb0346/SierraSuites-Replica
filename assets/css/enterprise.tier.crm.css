@@ -15,7 +15,7 @@ h1 {
 }
 
 header {
-    background: linear-gradient(120deg, var(--primary-color-2), var(--primary-dark-2));
+    background: linear-gradient(120deg, var(--primary-color), var(--primary-dark-2));
     color: white;
     padding: 20px;
     border-radius: var(--radius-md);
@@ -100,7 +100,7 @@ header {
 
 .nav-item:hover,
 .nav-item.active {
-    background-color: var(--primary-color-2);
+    background-color: var(--primary-color);
     color: white;
 }
 
@@ -145,7 +145,7 @@ header {
 }
 
 .btn-primary {
-    background-color: var(--primary-color-2);
+    background-color: var(--primary-color);
 }
 
 .btn-primary:hover {
@@ -189,7 +189,7 @@ header {
 .feature-icon {
     width: 50px;
     height: 50px;
-    background-color: var(--primary-color-2);
+    background-color: var(--primary-color);
     color: white;
     border-radius: 10px;
     display: flex;
@@ -250,7 +250,7 @@ header {
 .stat-value {
     font-size: 24px;
     font-weight: 700;
-    color: var(--primary-color-2);
+    color: var(--primary-color);
     margin: 10px 0;
 }
 
@@ -262,7 +262,7 @@ header {
 .pricing-card {
     text-align: center;
     padding: 30px;
-    background: linear-gradient(135deg, var(--primary-color-2) 0%, var(--primary-dark-2) 100%);
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark-2) 100%);
     color: white;
     border-radius: var(--radius-md);
 }
@@ -346,7 +346,7 @@ header {
 }
 
 .multi-user-info h3 {
-    color: var(--primary-color-2);
+    color: var(--primary-color);
     margin-bottom: 15px;
 }
 
@@ -435,7 +435,7 @@ footer {
     justify-content: center;
     align-items: center;
     min-height: 100dvh;
-    background: linear-gradient(135deg, var(--primary-color-2) 0%, var(--primary-dark-2) 100%);
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark-2) 100%);
 }
 
 .login-card {
@@ -459,7 +459,7 @@ footer {
 .login-btn {
     width: 100%;
     padding: 12px;
-    background-color: var(--primary-color-2);
+    background-color: var(--primary-color);
     color: white;
     border: none;
     border-radius: 6px;

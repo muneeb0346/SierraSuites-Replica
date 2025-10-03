@@ -15,7 +15,6 @@ p {
     text-align: center;
     position: relative;
     box-shadow: var(--shadow-sm-2);
-    max-width: var(--max-width);
 }
 
 .banner-content {
@@ -24,6 +23,7 @@ p {
     justify-content: center;
     gap: 1rem;
     margin: 0 auto;
+    max-width: var(--max-width);
 }
 
 .banner-content i {
