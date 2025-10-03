@@ -41,11 +41,6 @@
     box-sizing: border-box;
 }
 
-body {
-    color: var(--text-color-dark);
-    background-color: var(--bg-light);
-}
-
 /* Dashboard Layout */
 .dashboard-container {
     display: flex;

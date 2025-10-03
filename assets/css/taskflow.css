@@ -43,8 +43,6 @@
 }
 
 body {
-    color: var(--text-color-dark);
-    background-color: var(--bg-light);
     height: 100dvh;
     overflow: hidden;
 }
