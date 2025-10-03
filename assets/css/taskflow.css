@@ -43,9 +43,8 @@
 }
 
 body {
-    font-family: 'Montserrat', sans-serif;
-    color: var(--text-color);
-    background-color: var(--bg-color);
+    color: var(--text-color-dark);
+    background-color: var(--bg-light);
     height: 100dvh;
     overflow: hidden;
 }

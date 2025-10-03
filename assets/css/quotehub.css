@@ -42,9 +42,8 @@
 }
 
 body {
-    font-family: 'Inter', sans-serif;
-    color: var(--text-color);
-    background-color: #f8fafc;
+    color: var(--text-color-dark);
+    background-color: var(--bg-light);
 }
 
 /* Dashboard Layout */

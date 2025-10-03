@@ -1,6 +1,6 @@
 body {
-    color: var(--text-color-3);
-    background-color: var(--text-color);
+    color: var(--text-color-dark);
+    background-color: var(--bg-light);
 }
 
 /* Dashboard Layout */

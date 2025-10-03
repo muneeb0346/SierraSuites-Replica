@@ -42,10 +42,8 @@
 }
 
 body {
-    font-family: 'Montserrat', sans-serif;
-    color: var(--text-color);
-    background-color: var(--bg-color);
-    font-weight: 400;
+    color: var(--text-color-dark);
+    background-color: var(--bg-light);
 }
 
 h2,

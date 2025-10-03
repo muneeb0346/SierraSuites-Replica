@@ -1,6 +1,6 @@
 body {
-    background-color: var(--text-color);
-    color: var(--dark);
+    color: var(--text-color-dark);
+    background-color: var(--bg-light);
 }
 
 h1 {
