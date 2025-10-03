@@ -145,7 +145,7 @@ input:checked+.slider:before {
     border-radius: var(--radius-xl);
     padding: 2.5rem;
     box-shadow: var(--shadow);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: var(--transition-2);
     position: relative;
     text-align: center;
     border: 1px solid transparent;
@@ -411,7 +411,7 @@ input:checked+.slider:before {
     border-radius: var(--radius-xl);
     padding: 2rem;
     box-shadow: var(--shadow);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: var(--transition-2);
     border: 1px solid transparent;
     opacity: 0;
     transform: translateY(20px);

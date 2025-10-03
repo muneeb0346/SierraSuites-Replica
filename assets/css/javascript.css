@@ -22,7 +22,7 @@ h1 {
     width: 260px;
     background: var(--primary-color-3);
     color: white;
-    transition: all 0.3s ease;
+    transition: var(--transition);
     overflow-y: auto;
 }
 
@@ -462,7 +462,7 @@ textarea.form-control {
     z-index: 10000;
     transform: translateX(100%);
     opacity: 0;
-    transition: all 0.3s ease;
+    transition: var(--transition);
     max-width: 350px;
 }
 

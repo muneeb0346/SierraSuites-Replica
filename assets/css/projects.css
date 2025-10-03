@@ -400,7 +400,7 @@ body {
     display: flex;
     align-items: center;
     gap: 1rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: var(--transition);
     position: relative;
     overflow: hidden;
 }
@@ -468,7 +468,7 @@ body {
     display: flex;
     align-items: center;
     padding: 1rem 1.5rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: var(--transition);
 }
 
 .project-row:hover {
@@ -489,7 +489,7 @@ body {
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow);
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: var(--transition);
     position: relative;
 }
 

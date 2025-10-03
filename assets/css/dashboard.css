@@ -478,7 +478,7 @@ p {
     display: flex;
     align-items: center;
     gap: 1rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: var(--transition);
     position: relative;
     overflow: hidden;
     border: 1px solid var(--border-light);
@@ -550,7 +550,7 @@ p {
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-2);
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: var(--transition);
     border: 1px solid var(--border-light);
 }
 
