@@ -132,6 +132,58 @@ document.addEventListener("keydown", e => {
     }
 });
 
+// Billing toggle functionality for pricing sections
+function initBillingToggle() {
+    const billingToggle = document.querySelector('.billing-toggle input');
+    if (!billingToggle) return; // Exit if no billing toggle found on page
+
+    const pricingCards = document.querySelectorAll('.pricing-card');
+    
+    // Store original prices from the DOM
+    const prices = [];
+    pricingCards.forEach(card => {
+        const amountElement = card.querySelector('.price .amount');
+        if (amountElement) {
+            prices.push(parseInt(amountElement.textContent));
+        }
+    });
+
+    const annualDiscount = 0.8; // 20% discount
+
+    billingToggle.addEventListener('change', function () {
+        pricingCards.forEach((card, index) => {
+            const amountElement = card.querySelector('.price .amount');
+            const annualElement = card.querySelector('.billed-annually');
+            
+            if (!amountElement || !prices[index]) return;
+
+            if (this.checked) {
+                // Switch to annual pricing (monthly rate with discount)
+                const discountedMonthly = Math.round(prices[index] * annualDiscount);
+                const annualTotal = Math.round(prices[index] * 12 * annualDiscount);
+                amountElement.textContent = discountedMonthly;
+                if (annualElement) {
+                    annualElement.textContent = `$${annualTotal} billed annually`;
+                }
+            } else {
+                // Switch back to monthly pricing
+                const annualTotal = Math.round(prices[index] * 12 * annualDiscount);
+                amountElement.textContent = prices[index];
+                if (annualElement) {
+                    annualElement.textContent = `$${annualTotal} billed annually`;
+                }
+            }
+        });
+    });
+}
+
+// Initialize billing toggle when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initBillingToggle);
+} else {
+    initBillingToggle();
+}
+
 // Generic modal handlers with event delegation
 document.addEventListener("click", (e) => {
     // Open modal with [data-modal] attribute
