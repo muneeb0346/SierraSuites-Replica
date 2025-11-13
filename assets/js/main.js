@@ -11,6 +11,15 @@ function throttle(func, wait) {
     };
 }
 
+// DOM ready utility function
+function domReady(callback) {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', callback);
+    } else {
+        callback();
+    }
+}
+
 // Mobile menu toggle functionality
 const menuToggle = document.querySelector(".mobile-menu-toggle");
 const mobileNav = document.querySelector(".mobile-nav");
@@ -59,13 +68,21 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 // Active navigation highlighting with throttling for performance
+// Cache selectors for better performance
+let cachedSections = null;
+let cachedNavLinks = null;
+let cachedHeader = null;
+
 const handleScroll = throttle(() => {
-    const sections = document.querySelectorAll("section[id]");
-    const navLinks = document.querySelectorAll(".nav a[href^='#'], .mobile-nav a[href^='#']");
-    const header = document.querySelector(".header");
+    // Lazy initialization of cached selectors
+    if (!cachedSections) {
+        cachedSections = document.querySelectorAll("section[id]");
+        cachedNavLinks = document.querySelectorAll(".nav a[href^='#'], .mobile-nav a[href^='#']");
+        cachedHeader = document.querySelector(".header");
+    }
 
     let current = "";
-    sections.forEach(section => {
+    cachedSections.forEach(section => {
         const sectionTop = section.offsetTop - 100;
         const sectionHeight = section.offsetHeight;
         if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
@@ -73,12 +90,12 @@ const handleScroll = throttle(() => {
         }
     });
 
-    navLinks.forEach(link => {
+    cachedNavLinks.forEach(link => {
         link.classList.toggle("active", link.getAttribute("href") === `#${current}`);
     });
 
-    if (header) {
-        header.classList.toggle("scrolled", window.scrollY > 50);
+    if (cachedHeader) {
+        cachedHeader.classList.toggle("scrolled", window.scrollY > 50);
     }
 }, 16); // ~60fps
 
@@ -119,11 +136,16 @@ function setupModal(triggerSelector, modalId, closeId) {
     });
 }
 
-setupModal(".terms-link", "termsModal", "closeTerms");
-setupModal(".privacy-link", "privacyModal", "closePrivacy");
-setupModal(".cookie-link", "cookieModal", "closeCookie");
-setupModal(".careers-link", "careersModal", "closeCareers");
-setupModal(".contact-link", "contactModal", "closeContact");
+// Initialize all modals from configuration
+const modalConfigs = [
+    { trigger: ".terms-link", modal: "termsModal", close: "closeTerms" },
+    { trigger: ".privacy-link", modal: "privacyModal", close: "closePrivacy" },
+    { trigger: ".cookie-link", modal: "cookieModal", close: "closeCookie" },
+    { trigger: ".careers-link", modal: "careersModal", close: "closeCareers" },
+    { trigger: ".contact-link", modal: "contactModal", close: "closeContact" }
+];
+
+modalConfigs.forEach(config => setupModal(config.trigger, config.modal, config.close));
 
 // Close modal with Escape key
 document.addEventListener("keydown", e => {
@@ -138,7 +160,7 @@ function initBillingToggle() {
     if (!billingToggle) return; // Exit if no billing toggle found on page
 
     const pricingCards = document.querySelectorAll('.pricing-card');
-    
+
     // Store original prices from the DOM
     const prices = [];
     pricingCards.forEach(card => {
@@ -154,7 +176,7 @@ function initBillingToggle() {
         pricingCards.forEach((card, index) => {
             const amountElement = card.querySelector('.price .amount');
             const annualElement = card.querySelector('.billed-annually');
-            
+
             if (!amountElement || !prices[index]) return;
 
             if (this.checked) {
@@ -177,12 +199,40 @@ function initBillingToggle() {
     });
 }
 
-// Initialize billing toggle when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initBillingToggle);
-} else {
-    initBillingToggle();
+// Universal animation on scroll for all pages
+function initAnimateOnScroll() {
+    // Select all elements that should animate on scroll across all pages
+    const elements = document.querySelectorAll(
+        '.metric-card, .feature-card, .pricing-card, .benefit-card, .benefits-cta, ' +
+        '.faq-card, .login-card, .register-card, ' +
+        '.features-highlight, .about-cta, .value-card, .feature-highlight, ' +
+        '.stat-item, .mission-image, .experience-image'
+    );
+
+    elements.forEach(element => {
+        // Skip if already animated
+        if (element.classList.contains('animate')) return;
+
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+
+        if (elementTop < window.innerHeight - elementVisible) {
+            element.classList.add('animate');
+        }
+    });
 }
+
+// Use throttle for performance optimization
+const throttledAnimateOnScroll = throttle(initAnimateOnScroll, 16); // ~60fps
+
+// Initialize all DOM-dependent functionality when ready
+domReady(() => {
+    initBillingToggle();
+    initAnimateOnScroll();
+});
+
+// Add scroll listener for animations
+window.addEventListener('scroll', throttledAnimateOnScroll);
 
 // Generic modal handlers with event delegation
 document.addEventListener("click", (e) => {
@@ -213,5 +263,3 @@ document.addEventListener("click", (e) => {
         closeModal(e.target);
     }
 });
-
-
